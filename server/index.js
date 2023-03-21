@@ -32,7 +32,7 @@ app.use("/management", managementRoutes);
 app.use("/raid", raidRoutes);
 
 /* MONGOOSE SETUP */
-const PORT = process.env.port || 9000;
+const PORT = process.env.PORT || 9000;
 mongoose
   .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
