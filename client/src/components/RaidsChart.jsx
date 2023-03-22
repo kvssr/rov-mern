@@ -3,7 +3,7 @@ import { ResponsiveBar } from "@nivo/bar";
 import { useTheme } from "@mui/material";
 import { useGetRaidsQuery } from "state/api";
 
-const RaidsChart = ({ isDashboard = false, view, max }) => {
+const RaidsChart = ({ isDashboard = false, view, max = 15 }) => {
   const profColors = {
     Guardian: "#72C1D9",
     Dragonhunter: "#72C1D9",
@@ -122,7 +122,7 @@ const RaidsChart = ({ isDashboard = false, view, max }) => {
       axisBottom={{
         tickSize: 5,
         tickPadding: 5,
-        tickRotation: 0,
+        tickRotation: 20,
         legend: "total",
         legendPosition: "middle",
         legendOffset: 32,
