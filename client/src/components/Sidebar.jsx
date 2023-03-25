@@ -57,6 +57,10 @@ const navItems = [
     icon: <InsightsOutlined />,
   },
   {
+    text: "Characters",
+    icon: <Groups2Outlined />,
+  },
+  {
     text: "Raid",
     icon: null,
   },
