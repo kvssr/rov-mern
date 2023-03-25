@@ -7,6 +7,8 @@ import { themeSettings } from "theme";
 import Layout from "scenes/layout";
 import Dashboard from "scenes/dashboard";
 import Raids from "scenes/raids";
+import Characters from "scenes/characters";
+import Logs from "scenes/logs";
 
 function App() {
   const mode = useSelector((state) => state.global.mode);
@@ -34,6 +36,14 @@ function App() {
               <Route
                 path="/details"
                 element={<Raids />}
+              />{" "}
+              <Route
+                path="/characters"
+                element={<Characters />}
+              />{" "}
+              <Route
+                path="/logs"
+                element={<Logs />}
               />{" "}
             </Route>{" "}
           </Routes>{" "}
