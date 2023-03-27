@@ -1,28 +1,12 @@
 import React from "react";
 import FlexBetween from "components/FlexBetween";
 import Header from "components/Header";
-import {
-  DownloadDoneOutlined,
-  Email,
-  PointOfSale,
-  PersonAdd,
-  Traffic,
-} from "@mui/icons-material";
-import {
-  Box,
-  Button,
-  Typography,
-  useTheme,
-  useMediaQuery,
-} from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
 import RaidsChart from "components/RaidsChart";
-import { useGetRaidsQuery } from "state/api";
 
 const Dashboard = () => {
   const theme = useTheme();
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
-  const { data, isLoading } = useGetRaidsQuery();
 
   const statItems = [
     {
