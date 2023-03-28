@@ -9,22 +9,39 @@ import {
   GridToolbar,
 } from "@mui/x-data-grid";
 import FlexBetween from "./FlexBetween";
-import { UploadFileOutlined } from "@mui/icons-material";
-import { usePostRaidLogsQuery } from "state/api";
+import { UploadFileOutlined, DeleteOutlineOutlined } from "@mui/icons-material";
+import { useAddRaidLogsMutation, useDeleteRaidLogsMutation } from "state/api";
 
-const ReadFiles = (files) => {
-  console.log("files_elm", files);
-  const filesArray = Array.from(files);
-  console.log("files_array", filesArray);
-  usePostRaidLogsQuery(filesArray);
-  return "Files added";
-};
+const DataGridCustomToolbar = (props) => {
+  const [addFile] = useAddRaidLogsMutation();
+  const [deleteRow] = useDeleteRaidLogsMutation();
+  console.log("Passed selected Ids:", props.selectedRows);
 
-const DataGridCustomToolbar = () => {
-  const [files, setFiles] = useState();
-  console.log("files", files);
-  ReadFiles(files);
-  setFiles();
+  const fileUploadHandler = (files) => {
+    console.log("files", files);
+    const filesArray = Array.from(files);
+    filesArray.forEach((file) => {
+      new Response(file).json().then(
+        (json) => {
+          console.log("json", json);
+          addFile(json);
+        },
+        (err) => {
+          // not json
+          console.log("not a json file", err);
+        }
+      );
+    });
+  };
+
+  const handleDeleteClicks = () => {
+    console.log("delete click getting called");
+    props.selectedRows.forEach((row) => {
+      console.log("Deleting row", row);
+      deleteRow(row);
+    });
+  };
+
   return (
     <GridToolbarContainer>
       <FlexBetween width="100%">
@@ -44,9 +61,16 @@ const DataGridCustomToolbar = () => {
               accept="*/json"
               multiple
               type="file"
-              onChange={(e) => setFiles(e.target.files)}
-              //   onChange={(e) => console.log(e.target.files)}
+              onChange={(e) => fileUploadHandler(e.target.files)}
             />
+          </Button>
+          <Button
+            variant="text"
+            component="label"
+            onClick={(e) => handleDeleteClicks()}
+          >
+            <DeleteOutlineOutlined />
+            Delete
           </Button>
         </FlexBetween>
         <TextField

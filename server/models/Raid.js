@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 
 const RaidSchema = new mongoose.Schema({
+  overall_raid_stats: {},
+  overall_squad_stats: {},
   top_total_players: {
     dmg: Array,
     rips: Array,
@@ -22,6 +24,13 @@ const RaidSchema = new mongoose.Schema({
     dmg_taken: Array,
     deaths: Array,
   },
+  fights: [],
+  players: [],
+  top_average_players: {},
+  top_consistent_players: {},
+  top_percentage_players: {},
+  top_late_players: {},
+  top_jack_of_all_trades_players: {},
 });
 
 const Raid = mongoose.model("Raid", RaidSchema);

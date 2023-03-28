@@ -7,16 +7,16 @@ import DataGridCustomToolbar from "components/DataGridCustomToolbar";
 
 const Logs = () => {
   const theme = useTheme();
-
+  const [selectedRows, setSelectedRows] = useState([]);
   const { data, isLoading } = useGetRaidsQuery();
   if (isLoading || !data) {
+    console.log("Loading");
     return "Loading...";
   }
 
   const newData = data.map(({ _id, overall_raid_stats }) => {
     return { ...overall_raid_stats, _id };
   });
-  console.log("newData", newData);
 
   const columns = [
     {
@@ -94,7 +94,16 @@ const Logs = () => {
           rows={newData}
           columns={columns}
           checkboxSelection
-          components={{ Toolbar: DataGridCustomToolbar }}
+          // components={{ Toolbar: DataGridCustomToolbar }}
+          onRowSelectionModelChange={(rowSelectionModel, details) => {
+            setSelectedRows(rowSelectionModel);
+          }}
+          slots={{
+            toolbar: DataGridCustomToolbar,
+          }}
+          slotProps={{
+            toolbar: { selectedRows: selectedRows },
+          }}
         ></DataGrid>
       </Box>
     </Box>

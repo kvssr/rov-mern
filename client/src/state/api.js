@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const api = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_BASE_URL }),
   reducerPath: "adminApi",
-  tagTypes: ["Account", "Raid", "Logs"],
+  tagTypes: ["Account", "Raid", "Logs", "Exists"],
   endpoints: (build) => ({
     getAccount: build.query({
       query: (id) => `general/account/${id}`,
@@ -13,12 +13,33 @@ export const api = createApi({
       query: () => `raid/details`,
       providesTags: ["Raid"],
     }),
-    postRaidLogs: build.query({
-      query: (logs) => ({ url: `log/post`, data: logs }),
-      providesTags: ["Logs"],
+    checkRaid: build.query({
+      query: (start_date, start_time) =>
+        `raid/exists/${start_date}/${start_time}`,
+      providesTags: ["Exists"],
+    }),
+    addRaidLogs: build.mutation({
+      query: (body) => ({
+        url: `log/post`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Logs"],
+    }),
+    deleteRaidLogs: build.mutation({
+      query: (id) => ({
+        url: `raid/delete/${id}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Raid"],
     }),
   }),
 });
 
-export const { useGetAccountQuery, useGetRaidsQuery, usePostRaidLogsQuery } =
-  api;
+export const {
+  useGetAccountQuery,
+  useGetRaidsQuery,
+  useAddRaidLogsMutation,
+  useCheckRaidQuery,
+  useDeleteRaidLogsMutation,
+} = api;
