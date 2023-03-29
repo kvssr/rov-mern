@@ -9,9 +9,8 @@ import {
 } from "@mui/material";
 import Header from "components/Header";
 import RaidsChart from "components/RaidsChart";
-import FlexBetween from "components/FlexBetween";
-import { palette } from "@mui/system";
 import { useTheme } from "@mui/material";
+import { useGetRaidsInfoListQuery, useGetRaidByIdQuery } from "state/api";
 
 const statItems = [
   {
@@ -64,6 +63,19 @@ const Raids = () => {
   const [view, setView] = useState("dmg");
   const [max, setMax] = useState(15);
   const theme = useTheme();
+  const { data: raidInfoList, isLoading } = useGetRaidsInfoListQuery();
+  const [selectedRaid, setSelectedRaid] = useState("");
+  const { data: raidData } = useGetRaidByIdQuery(
+    selectedRaid ? selectedRaid : raidInfoList ? raidInfoList[0]["_id"] : "-1"
+  );
+
+  if (!raidInfoList || isLoading) {
+    return "Is Loading...";
+  }
+
+  const handleRaidSelect = (id) => {
+    setSelectedRaid(id);
+  };
   return (
     <Box m="1.5rem 2.5rem">
       <Header
@@ -71,6 +83,20 @@ const Raids = () => {
         subtitle="Overview of Raid"
       />
       <Box height="80vh">
+        <FormControl sx={{ m: "1rem" }}>
+          <InputLabel>Raid</InputLabel>
+          <Select
+            value={selectedRaid ? selectedRaid : raidInfoList[0]["_id"]}
+            label="Raid"
+            onChange={(e) => handleRaidSelect(e.target.value)}
+          >
+            {raidInfoList.map((raid) => {
+              const info = raid["overall_raid_stats"];
+              const text = `${info["date"]} | ${info["start_time"]} - ${info["end_time"]}`;
+              return <MenuItem value={raid["_id"]}>{text}</MenuItem>;
+            })}
+          </Select>
+        </FormControl>
         <FormControl sx={{ mt: "1rem" }}>
           <InputLabel>Stat</InputLabel>
           <Select
@@ -102,6 +128,8 @@ const Raids = () => {
         </FormControl>
         <RaidsChart
           view={view}
+          data={raidData ? raidData["top_total_players"][view] : undefined}
+          players={raidData ? raidData["players"] : undefined}
           max={max}
         />
       </Box>

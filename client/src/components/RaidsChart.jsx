@@ -1,7 +1,6 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { ResponsiveBar } from "@nivo/bar";
 import { useTheme } from "@mui/material";
-import { useGetRaidsQuery } from "state/api";
 
 const RaidsChart = ({ isDashboard = false, data, view, players, max = 15 }) => {
   const profColors = {
@@ -97,6 +96,41 @@ const RaidsChart = ({ isDashboard = false, data, view, players, max = 15 }) => {
         },
       }}
       keys={["y"]}
+      // tooltip={(data) => `Name: ${data.indexValue}`}
+      tooltip={(data) => {
+        return (
+          <div style={{}}>
+            <h4
+              style={{
+                backgroundColor: data.color,
+                padding: "0rem 1rem",
+                margin: "0rem",
+              }}
+            >
+              {data.indexValue}
+            </h4>
+            <p
+              style={{
+                backgroundColor: theme.palette.primary[600],
+                padding: "0rem 1rem",
+                margin: "0rem",
+              }}
+            >
+              <b>Prof</b>: {data.data.prof}
+              <br />
+              <b>Total</b>:{" "}
+              {data.value.toLocaleString(undefined, {
+                minimumFractionDigits: 0,
+              })}
+              <br />
+              <b>Average</b>:{" "}
+              {data.data.avg.toLocaleString(undefined, {
+                minimumFractionDigits: 0,
+              })}
+            </p>
+          </div>
+        );
+      }}
       indexBy="name"
       margin={{ top: 50, right: 50, bottom: 50, left: 130 }}
       padding={0.3}
@@ -132,7 +166,17 @@ const RaidsChart = ({ isDashboard = false, data, view, players, max = 15 }) => {
         from: "color",
         modifiers: [["darker", 1.8]],
       }}
-      label={(bar) => `${bar.value} (${bar.data.avg})`}
+      label={(bar) =>
+        `${bar.value.toLocaleString(undefined, {
+          minimumFractionDigits: 0,
+        })} (${
+          bar.data.avg
+            ? bar.data.avg.toLocaleString(undefined, {
+                minimumFractionDigits: 0,
+              })
+            : ""
+        })`
+      }
       enableGridY={false}
       enableGridX={true}
       role="application"
