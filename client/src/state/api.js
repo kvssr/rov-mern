@@ -13,6 +13,14 @@ export const api = createApi({
       query: () => `raid/details`,
       providesTags: ["Raid"],
     }),
+    getRaidById: build.query({
+      query: (id) => `raid/details/${id}`,
+      providesTags: ["Raid"],
+    }),
+    getRaidsInfoList: build.query({
+      query: () => `raid/infolist`,
+      providesTags: ["Raid"],
+    }),
     checkRaid: build.query({
       query: (start_date, start_time) =>
         `raid/exists/${start_date}/${start_time}`,
@@ -39,7 +47,9 @@ export const api = createApi({
 export const {
   useGetAccountQuery,
   useGetRaidsQuery,
+  useGetRaidByIdQuery,
   useAddRaidLogsMutation,
   useCheckRaidQuery,
   useDeleteRaidLogsMutation,
+  useGetRaidsInfoListQuery,
 } = api;

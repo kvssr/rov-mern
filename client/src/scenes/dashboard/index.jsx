@@ -1,12 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import FlexBetween from "components/FlexBetween";
 import Header from "components/Header";
-import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  Typography,
+  useTheme,
+  useMediaQuery,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import RaidsChart from "components/RaidsChart";
+import { useGetRaidsInfoListQuery, useGetRaidByIdQuery } from "state/api";
 
 const Dashboard = () => {
   const theme = useTheme();
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
+  const { data: raidInfoList, isLoading } = useGetRaidsInfoListQuery();
+  const [selectedRaid, setSelectedRaid] = useState("");
+  const { data: raidData } = useGetRaidByIdQuery(
+    selectedRaid ? selectedRaid : raidInfoList ? raidInfoList[0]["_id"] : "-1"
+  );
+  console.log("Loading dashboard page...");
+  console.log("Dashboard page data: ", raidInfoList);
+  console.log("Selected Raid: ", selectedRaid);
+  console.log("Raid data", raidData);
+  if (!raidInfoList || isLoading) {
+    return "Is Loading...";
+  }
+
+  const handleRaidSelect = (id) => {
+    setSelectedRaid(id);
+  };
 
   const statItems = [
     {
@@ -87,6 +111,21 @@ const Dashboard = () => {
           subtitle="Welcome to the dashboard"
         />
       </FlexBetween>
+      <FlexBetween>
+        <Box>
+          <Select
+            value={selectedRaid ? selectedRaid : raidInfoList[0]["_id"]}
+            label="Raid"
+            onChange={(e) => handleRaidSelect(e.target.value)}
+          >
+            {raidInfoList.map((raid) => {
+              const info = raid["overall_raid_stats"];
+              const text = `${info["date"]} | ${info["start_time"]} - ${info["end_time"]}`;
+              return <MenuItem value={raid["_id"]}>{text}</MenuItem>;
+            })}
+          </Select>
+        </Box>
+      </FlexBetween>
 
       <Box
         mt="20px"
@@ -118,6 +157,10 @@ const Dashboard = () => {
               <RaidsChart
                 isDashboard={true}
                 view={value}
+                data={
+                  raidData ? raidData["top_total_players"][value] : undefined
+                }
+                players={raidData ? raidData["players"] : undefined}
                 max={10}
               ></RaidsChart>
             </Box>

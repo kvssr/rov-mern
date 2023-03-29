@@ -3,7 +3,7 @@ import { ResponsiveBar } from "@nivo/bar";
 import { useTheme } from "@mui/material";
 import { useGetRaidsQuery } from "state/api";
 
-const RaidsChart = ({ isDashboard = false, view, max = 15 }) => {
+const RaidsChart = ({ isDashboard = false, data, view, players, max = 15 }) => {
   const profColors = {
     Guardian: "#72C1D9",
     Dragonhunter: "#72C1D9",
@@ -36,22 +36,16 @@ const RaidsChart = ({ isDashboard = false, view, max = 15 }) => {
   const getColor = (bar) => profColors[bar.data.prof];
 
   const theme = useTheme();
-  const { data, isLoading } = useGetRaidsQuery();
-  console.log("data", data);
 
-  if (!data) return [];
-  console.log("data[0]", data[0]);
+  if (!data) return "Is loading...";
 
-  const { top_total_players, players } = data[0];
-  console.log("top_total_player", top_total_players);
-  console.log("players", players);
+  // const { top_total_players, players } = data[0];
 
-  const toppers = top_total_players[view];
-  console.log(`${view}`, toppers);
+  // const toppers = top_total_players[view];
 
   const raidBars = [];
 
-  toppers.map((topper) => {
+  data.map((topper) => {
     const playerName = players[topper]["name"];
     const total = players[topper]["total_stats"][view];
     const prof = players[topper]["profession"];
@@ -66,9 +60,6 @@ const RaidsChart = ({ isDashboard = false, view, max = 15 }) => {
     return raidBars;
   });
 
-  console.log("raidBars", raidBars);
-
-  if (!data || isLoading) return "Loading...";
   return (
     <ResponsiveBar
       data={raidBars.slice(0, max).reverse()}

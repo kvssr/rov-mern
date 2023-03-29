@@ -9,6 +9,19 @@ export const getRaid = async (req, res) => {
   }
 };
 
+export const getRaidById = async (req, res) => {
+  try {
+    const raid_id = req.params.id;
+    console.log("server getRaidById raid_id", raid_id);
+    if (raid_id === "-1") return res.status(200).json("");
+    const raid = await Raid.findById(raid_id);
+    console.log("server getRaidById raid", raid_id);
+    res.status(200).json(raid);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
 export const checkRaidByDateAndTime = async (req, res) => {
   try {
     const start_date = req.params.start_date;
@@ -32,6 +45,15 @@ export const deleteRaid = async (req, res) => {
     console.log("Deleting raid", raid_id);
     const raid = await Raid.findByIdAndDelete(raid_id);
     res.status(200).json({ message: "Raid deleted successfully" });
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+export const getListRaidsInfo = async (req, res) => {
+  try {
+    const raids = await Raid.find(null, "_id overall_raid_stats");
+    res.status(200).json(raids);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
