@@ -7,13 +7,16 @@ import globalReducer from "state";
 import { Provider } from "react-redux";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { api } from "state/api";
+import { gwapi } from "state/gwapi";
 
 const store = configureStore({
   reducer: {
     global: globalReducer,
     [api.reducerPath]: api.reducer,
+    [gwapi.reducerPath]: gwapi.reducer,
   },
-  middleware: (getDefault) => getDefault().concat(api.middleware),
+  middleware: (getDefault) =>
+    getDefault().concat(api.middleware).concat(gwapi.middleware),
 });
 
 setupListeners(store.dispatch);
