@@ -9,6 +9,7 @@ import Dashboard from "scenes/dashboard";
 import Raids from "scenes/raids";
 import Characters from "scenes/characters";
 import Logs from "scenes/logs";
+import ApiKey from "scenes/apikey";
 
 function App() {
   const mode = useSelector((state) => state.global.mode);
@@ -44,6 +45,10 @@ function App() {
               <Route
                 path="/logs"
                 element={<Logs />}
+              />{" "}
+              <Route
+                path="/api key"
+                element={<ApiKey />}
               />{" "}
             </Route>{" "}
           </Routes>{" "}
