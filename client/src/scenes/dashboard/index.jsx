@@ -121,7 +121,14 @@ const Dashboard = () => {
             {raidInfoList.map((raid) => {
               const info = raid["overall_raid_stats"];
               const text = `${info["date"]} | ${info["start_time"]} - ${info["end_time"]}`;
-              return <MenuItem value={raid["_id"]}>{text}</MenuItem>;
+              return (
+                <MenuItem
+                  value={raid["_id"]}
+                  key={raid["_id"]}
+                >
+                  {text}
+                </MenuItem>
+              );
             })}
           </Select>
         </Box>
@@ -144,6 +151,7 @@ const Dashboard = () => {
               backgroundColor={theme.palette.background.alt}
               borderRadius="0.55rem"
               pb="1rem"
+              key={text}
             >
               <Typography
                 fontWeight="bold"
