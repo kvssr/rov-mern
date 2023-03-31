@@ -213,7 +213,7 @@ const Sidebar = ({
           >
             <Divider />
             <FlexBetween
-              textTrasnform="none"
+              textTransform="none"
               gap="1rem"
               m="1.5rem 2rem 0 3rem"
             >
