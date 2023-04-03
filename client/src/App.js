@@ -39,6 +39,7 @@ function App() {
               )}{" "}
               {account && [
                 <Route
+                  key="root"
                   path="/"
                   element={
                     <Navigate
@@ -48,18 +49,22 @@ function App() {
                   }
                 />,
                 <Route
+                  key="dashboard"
                   path="/dashboard"
                   element={<Dashboard />}
                 />,
                 <Route
+                  key="details"
                   path="/details"
                   element={<Raids />}
                 />,
                 <Route
+                  key="characters"
                   path="/characters"
                   element={<Characters />}
                 />,
                 <Route
+                  key="logs"
                   path="/logs"
                   element={<Logs />}
                 />,
