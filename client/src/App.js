@@ -14,6 +14,9 @@ import ApiKey from "scenes/apikey";
 function App() {
   const mode = useSelector((state) => state.global.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
+  const account = localStorage.getItem("apikey")
+    ? JSON.parse(localStorage.getItem("apikey"))
+    : undefined;
   return (
     <div className="app">
       <BrowserRouter>
@@ -21,35 +24,50 @@ function App() {
           <CssBaseline />
           <Routes>
             <Route element={<Layout />}>
-              <Route
-                path="/"
-                element={
-                  <Navigate
-                    to="/dashboard"
-                    replace
-                  />
-                }
-              />{" "}
-              <Route
-                path="/dashboard"
-                element={<Dashboard />}
-              />{" "}
-              <Route
-                path="/details"
-                element={<Raids />}
-              />{" "}
-              <Route
-                path="/characters"
-                element={<Characters />}
-              />{" "}
-              <Route
-                path="/logs"
-                element={<Logs />}
-              />{" "}
+              {" "}
+              {!account && (
+                <Route
+                  path="/*"
+                  element={
+                    <Navigate
+                      to="/api key"
+                      replace
+                    />
+                  }
+                />
+              )}{" "}
+              {account && [
+                <Route
+                  path="/"
+                  element={
+                    <Navigate
+                      to="/dashboard"
+                      replace
+                    />
+                  }
+                />,
+                <Route
+                  path="/dashboard"
+                  element={<Dashboard />}
+                />,
+                <Route
+                  path="/details"
+                  element={<Raids />}
+                />,
+                <Route
+                  path="/characters"
+                  element={<Characters />}
+                />,
+                <Route
+                  path="/logs"
+                  element={<Logs />}
+                />,
+              ]}{" "}
               <Route
                 path="/api key"
                 element={<ApiKey />}
-              />{" "}
+              />
+              ,{" "}
             </Route>{" "}
           </Routes>{" "}
         </ThemeProvider>{" "}
