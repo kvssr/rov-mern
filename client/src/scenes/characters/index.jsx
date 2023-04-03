@@ -81,10 +81,9 @@ const Characters = () => {
       >
         <DataGrid
           loading={isLoading || !data}
-          getRowId={(row) => row.account}
+          getRowId={(row) => row.average_stats.alac + row.average_stats.dist}
           rows={players || []}
           columns={columns}
-          checkboxSelection
         />
       </Box>
     </Box>
