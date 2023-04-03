@@ -1,6 +1,6 @@
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { themeSettings } from "theme";
@@ -17,6 +17,7 @@ function App() {
   const account = localStorage.getItem("apikey")
     ? JSON.parse(localStorage.getItem("apikey"))
     : undefined;
+  const [accountAdded, setAccountAdded] = useState(false);
   return (
     <div className="app">
       <BrowserRouter>
@@ -65,8 +66,8 @@ function App() {
               ]}{" "}
               <Route
                 path="/api key"
-                element={<ApiKey />}
-              />
+                element={<ApiKey setAccountAdded={setAccountAdded} />}
+              />{" "}
               ,{" "}
             </Route>{" "}
           </Routes>{" "}
