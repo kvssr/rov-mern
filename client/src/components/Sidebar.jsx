@@ -208,7 +208,7 @@ const Sidebar = ({
           </Box>
 
           <Box
-            position="absolute"
+            // position="absolute"
             bottom="2rem"
           >
             <Divider />
