@@ -17,7 +17,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useGetCharactersQuery, useGetAccountQuery } from "state/gwapi";
 import { useGetRaidsQuery, useAddAccountMutation } from "state/api";
 
-const ApiKey = () => {
+const ApiKey = ({ setAccountAdded }) => {
   // const apikeylocal = JSON.parse(localStorage.getItem("apikey"));
   // console.log("local key", apikeylocal);
 
@@ -54,6 +54,7 @@ const ApiKey = () => {
       console.log("Effect account", accountData);
       localStorage.setItem("accountId", JSON.stringify(accountData["id"]));
       addAccount(accountData);
+      setAccountAdded(true);
     }
   }, accountData);
 
