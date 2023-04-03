@@ -2,16 +2,28 @@ import mongoose from "mongoose";
 
 const AccountSchema = new mongoose.Schema(
   {
+    apiId: {
+      type: String,
+      required: true,
+      min: 2,
+      max: 100,
+    },
     name: {
       type: String,
       required: true,
       min: 2,
       max: 100,
     },
-    guild: {
-      type: String,
+    world: {
+      type: Number,
       required: false,
     },
+    guilds: [
+      {
+        type: String,
+        required: false,
+      },
+    ],
     characters: Array,
   },
   { timestamps: true }

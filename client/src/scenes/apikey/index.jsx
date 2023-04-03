@@ -14,8 +14,8 @@ import {
 import { PersonOutlineOutlined } from "@mui/icons-material";
 import Header from "components/Header";
 import { DataGrid } from "@mui/x-data-grid";
-import { useGetCharactersQuery } from "state/gwapi";
-import { useGetRaidsQuery } from "state/api";
+import { useGetCharactersQuery, useGetAccountQuery } from "state/gwapi";
+import { useGetRaidsQuery, useAddAccountMutation } from "state/api";
 
 const ApiKey = () => {
   // const apikeylocal = JSON.parse(localStorage.getItem("apikey"));
@@ -30,6 +30,11 @@ const ApiKey = () => {
   const [characters, setCharacters] = useState();
 
   const { data, isLoading } = useGetCharactersQuery(apikey, { skip: skip });
+  const { data: accountData, isLoading: accountLoading } = useGetAccountQuery(
+    apikey,
+    { skip: skip }
+  );
+  const [addAccount] = useAddAccountMutation();
 
   useEffect(() => {
     if (data) {
@@ -43,6 +48,14 @@ const ApiKey = () => {
       }
     }
   }, data);
+
+  useEffect(() => {
+    if (accountData) {
+      console.log("Effect account", accountData);
+      localStorage.setItem("accountId", JSON.stringify(accountData["id"]));
+      addAccount(accountData);
+    }
+  }, accountData);
 
   console.log("characters", characters);
 

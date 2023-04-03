@@ -9,7 +9,11 @@ export const gwapi = createApi({
       query: (apikey) => `characters?access_token=${apikey}`,
       providesTags: ["Characters"],
     }),
+    getAccount: build.query({
+      query: (apikey) => `account?access_token=${apikey}`,
+      providesTags: ["Account"],
+    }),
   }),
 });
 
-export const { useGetCharactersQuery } = gwapi;
+export const { useGetCharactersQuery, useGetAccountQuery } = gwapi;

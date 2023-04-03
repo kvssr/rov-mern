@@ -9,6 +9,14 @@ export const api = createApi({
       query: (id) => `general/account/${id}`,
       providesTags: ["Account"],
     }),
+    addAccount: build.mutation({
+      query: (body) => ({
+        url: `general/account/add`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Account"],
+    }),
     getRaids: build.query({
       query: () => `raid/details`,
       providesTags: ["Raid"],
@@ -46,6 +54,7 @@ export const api = createApi({
 
 export const {
   useGetAccountQuery,
+  useAddAccountMutation,
   useGetRaidsQuery,
   useGetRaidByIdQuery,
   useAddRaidLogsMutation,
