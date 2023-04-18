@@ -4,7 +4,7 @@ const AccountSchema = new mongoose.Schema(
   {
     apiId: {
       type: String,
-      required: true,
+      required: false,
       min: 2,
       max: 100,
     },
@@ -24,7 +24,13 @@ const AccountSchema = new mongoose.Schema(
         required: false,
       },
     ],
-    characters: Array,
+    characters: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Character",
+        required: false,
+      },
+    ],
   },
   { timestamps: true }
 );

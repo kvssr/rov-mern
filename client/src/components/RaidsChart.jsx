@@ -1,6 +1,6 @@
 import React from "react";
 import { ResponsiveBar } from "@nivo/bar";
-import { useTheme } from "@mui/material";
+import { useTheme, CircularProgress } from "@mui/material";
 
 const RaidsChart = ({ isDashboard = false, data, view, players, max = 15 }) => {
   const profColors = {
@@ -36,7 +36,7 @@ const RaidsChart = ({ isDashboard = false, data, view, players, max = 15 }) => {
 
   const theme = useTheme();
 
-  if (!data) return "Is loading...";
+  if (!data) return <CircularProgress color="secondary" />;
 
   // const { top_total_players, players } = data[0];
 

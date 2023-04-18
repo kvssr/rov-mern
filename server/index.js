@@ -10,10 +10,16 @@ import generalRoutes from "./routes/general.js";
 import managementRoutes from "./routes/management.js";
 import raidRoutes from "./routes/raid.js";
 import logRoutes from "./routes/log.js";
+import { PrismaClient } from "@prisma/client";
 
 // data imports
 import Account from "./models/Account.js";
-import { dataAccount } from "./data/index.js";
+import {
+  dataStatType,
+  dataProfession,
+  dataRaidType,
+  dataValueType,
+} from "./data/index.js";
 
 /* CONFIGURATION */
 dotenv.config();
@@ -33,16 +39,37 @@ app.use("/management", managementRoutes);
 app.use("/raid", raidRoutes);
 app.use("/log", logRoutes);
 
+/* PRISMA */
+export const prisma = new PrismaClient();
+
+const createManyStatT = await prisma.statType.createMany({
+  data: dataStatType,
+  skipDuplicates: true,
+});
+const createManyRaidT = await prisma.raidType.createMany({
+  data: dataRaidType,
+  skipDuplicates: true,
+});
+const createManyValueT = await prisma.valueType.createMany({
+  data: dataValueType,
+  skipDuplicates: true,
+});
+const createManyProf = await prisma.profession.createMany({
+  data: dataProfession,
+  skipDuplicates: true,
+});
+
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 9000;
-mongoose
-  .connect(process.env.MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
+const server = app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
+// mongoose
+//   .connect(process.env.MONGO_URL, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//   })
+//   .then(() => {
+//     app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
 
-    /* ONLY ADD ONCE */
-  })
-  .catch((error) => console.log(`${error} did not connect`));
+//     /* ONLY ADD ONCE */
+//   })
+//   .catch((error) => console.log(`${error} did not connect`));

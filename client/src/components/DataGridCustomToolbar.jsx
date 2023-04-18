@@ -24,7 +24,11 @@ const DataGridCustomToolbar = (props) => {
       new Response(file).json().then(
         (json) => {
           console.log("json", json);
-          addFile(json);
+          addFile(json).then(() => {
+            props.setRowsAdded(
+              json["overall_raid_stats"]["used_fights_duration"]
+            );
+          });
         },
         (err) => {
           // not json

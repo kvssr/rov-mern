@@ -1,8 +1,9 @@
 import Raid from "../models/Raid.js";
+import { prisma } from "../index.js";
 
 export const getRaid = async (req, res) => {
   try {
-    const raids = await Raid.find();
+    const raids = await prisma.raid.findMany({ include: { raidType: true } });
     res.status(200).json(raids);
   } catch (err) {
     res.status(404).json({ message: err.message });
@@ -43,9 +44,12 @@ export const deleteRaid = async (req, res) => {
     const raid_id = req.params.id;
     console.log("deleteRaid params", req.params);
     console.log("Deleting raid", raid_id);
-    const raid = await Raid.findByIdAndDelete(raid_id);
+    const raid = await prisma.raid.delete({
+      where: { id: parseInt(raid_id, 10) },
+    });
     res.status(200).json({ message: "Raid deleted successfully" });
   } catch (err) {
+    console.log(err);
     res.status(404).json({ message: err.message });
   }
 };
@@ -54,6 +58,15 @@ export const getListRaidsInfo = async (req, res) => {
   try {
     const raids = await Raid.find(null, "_id overall_raid_stats");
     res.status(200).json(raids);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+export const getRaidTypes = async (req, res) => {
+  try {
+    const raidTypes = await prisma.raidType.findMany();
+    res.status(200).json(raidTypes);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }

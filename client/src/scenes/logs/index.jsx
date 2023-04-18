@@ -8,35 +8,78 @@ import DataGridCustomToolbar from "components/DataGridCustomToolbar";
 const Logs = () => {
   const theme = useTheme();
   const [selectedRows, setSelectedRows] = useState([]);
+  const [rowAdded, setRowAdded] = useState("");
   const { data, isLoading } = useGetRaidsQuery();
   if (isLoading || !data) {
     console.log("Loading");
     return "Loading...";
   }
 
-  const newData = data.map(({ _id, overall_raid_stats }) => {
-    return { ...overall_raid_stats, _id };
-  });
+  // const newData = data.map(({ _id, overall_raid_stats }) => {
+  //   return { ...overall_raid_stats, _id };
+  // });
+  console.log("Data log", data);
 
   const columns = [
     {
-      field: "date",
+      field: "start_date",
       headerName: "Date",
-      flex: 1,
+      flex: 0.5,
+      type: "dateTime",
+      valueFormatter: (param) => {
+        if (param.value == null) {
+          return "";
+        }
+        const valueFormatted = param.value.split("T")[0];
+        return `${valueFormatted}`;
+      },
     },
     {
       field: "start_time",
       headerName: "Start Time",
-      flex: 1,
+      flex: 0.5,
+      type: "dateTime",
+      valueFormatter: (param) => {
+        if (param.value == null) {
+          return "";
+        }
+        const valueFormatted = param.value.split("T")[1].split(".")[0];
+        return `${valueFormatted}`;
+      },
     },
     {
       field: "end_time",
       headerName: "End Time",
+      flex: 0.5,
+      type: "dateTime",
+      valueFormatter: (param) => {
+        if (param.value == null) {
+          return "";
+        }
+        const valueFormatted = param.value.split("T")[1].split(".")[0];
+        return `${valueFormatted}`;
+      },
+    },
+    {
+      field: "name",
+      headerName: "Title",
       flex: 1,
     },
     {
-      field: "num_used_fights",
-      headerName: "used fights",
+      field: "raidType",
+      headerName: "Type",
+      flex: 0.5,
+      valueFormatter: (param) => {
+        if (param.value == null) {
+          return "";
+        }
+        const valueFormatted = param.value["name"];
+        return `${valueFormatted}`;
+      },
+    },
+    {
+      field: "total_kills",
+      headerName: "Kills",
       flex: 0.5,
     },
     {
@@ -90,8 +133,7 @@ const Logs = () => {
       >
         <DataGrid
           loading={isLoading || !data}
-          getRowId={(row) => row._id}
-          rows={newData}
+          rows={data}
           columns={columns}
           checkboxSelection
           // components={{ Toolbar: DataGridCustomToolbar }}
@@ -102,7 +144,10 @@ const Logs = () => {
             toolbar: DataGridCustomToolbar,
           }}
           slotProps={{
-            toolbar: { selectedRows: selectedRows },
+            toolbar: {
+              selectedRows: selectedRows,
+              setRowAdded: { setRowAdded },
+            },
           }}
         ></DataGrid>
       </Box>

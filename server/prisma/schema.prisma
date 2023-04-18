@@ -1,0 +1,234 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Character {
+  id                 Int                  @id @default(autoincrement())
+  created_at         DateTime             @default(now())
+  updated_at         DateTime             @updatedAt
+  name               String               @unique @db.VarChar(100)
+  profession         Profession?          @relation(fields: [professionId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  professionId       Int?
+  account            Account              @relation(fields: [accountId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  accountId          Int
+  characterRaidStats CharacterRaidStat[]
+  CharacterRaidInfo  CharacterRaidInfo[]
+  characterFightInfo CharacterFightInfo[]
+  characterFightStat CharacterFightStat[]
+
+  @@unique([name, professionId])
+}
+
+model Profession {
+  id         Int         @id @default(autoincrement())
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  name       String      @unique @db.VarChar(100)
+  name_short String      @unique @db.VarChar(10)
+  color      String      @db.VarChar(100)
+  characters Character[]
+}
+
+model BuildType {
+  id                 Int                  @id @default(autoincrement())
+  created_at         DateTime             @default(now())
+  updated_at         DateTime             @updatedAt
+  name               String               @db.VarChar(100)
+  name_short         String               @db.VarChar(10)
+  characterFightStat CharacterFightStat[]
+}
+
+model StatType {
+  id                  Int                  @id @default(autoincrement())
+  created_at          DateTime             @default(now())
+  updated_at          DateTime             @updatedAt
+  name                String               @unique @db.VarChar(100)
+  name_short          String               @unique @db.VarChar(10)
+  name_json           String               @unique @db.VarChar(50)
+  raidStats           RaidStat[]
+  fightStats          FightStat[]
+  characterFightStats CharacterFightStat[]
+  characterRaidStat   CharacterRaidStat[]
+}
+
+model ValueType {
+  id                  Int                  @id @default(autoincrement())
+  created_at          DateTime             @default(now())
+  updated_at          DateTime             @updatedAt
+  name                String               @unique @db.VarChar(100)
+  name_short          String               @unique @db.VarChar(10)
+  raidStats           RaidStat[]
+  fightStats          FightStat[]
+  characterFightStats CharacterFightStat[]
+  characterRaidStat   CharacterRaidStat[]
+}
+
+model Account {
+  id         Int         @id @default(autoincrement())
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  name       String      @unique @db.VarChar(100)
+  characters Character[]
+}
+
+model Raid {
+  id                Int                 @id @default(autoincrement())
+  created_at        DateTime            @default(now())
+  updated_at        DateTime            @updatedAt
+  name              String              @db.VarChar(100)
+  start_date        DateTime
+  start_time        DateTime
+  end_time          DateTime
+  min_allies        Int
+  max_allies        Int
+  mean_allies       Float
+  min_enemies       Int
+  max_enemies       Int
+  mean_enemies      Float
+  total_kills       Int
+  raidType          RaidType?           @relation(fields: [raidTypeId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  raidStats         RaidStat[]
+  fights            Fight[]
+  characterRaidStat CharacterRaidStat[]
+  CharacterRaidInfo CharacterRaidInfo[]
+  raidTypeId        Int?
+
+  @@unique([start_date, start_time, end_time])
+}
+
+model RaidType {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  name       String   @unique
+  raids      Raid[]
+}
+
+model RaidStat {
+  id          Int       @id @default(autoincrement())
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  raid        Raid      @relation(fields: [raidId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  raidId      Int
+  statType    StatType  @relation(fields: [statTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  statTypeId  Int
+  valueType   ValueType @relation(fields: [valueTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  valueTypeId Int
+  value       Float
+
+  @@unique([raidId, statTypeId, valueTypeId])
+}
+
+model Fight {
+  id                  Int                  @id @default(autoincrement())
+  created_at          DateTime             @default(now())
+  updated_at          DateTime             @updatedAt
+  raid                Raid                 @relation(fields: [raidId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  raidId              Int
+  fight_number        Int
+  start_time          DateTime
+  end_time            DateTime
+  allies              Int
+  enemies             Int
+  duration            Int
+  kills               Int
+  skipped             Boolean
+  fightStats          FightStat[]
+  characterFightStats CharacterFightStat[]
+  characterFightInfo  CharacterFightInfo[]
+
+  @@unique([raidId, start_time, end_time])
+}
+
+model FightStat {
+  id          Int       @id @default(autoincrement())
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  fight       Fight     @relation(fields: [fightId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  fightId     Int
+  statType    StatType  @relation(fields: [statTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  statTypeId  Int
+  valueType   ValueType @relation(fields: [valueTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  valueTypeId Int
+  value       Float
+
+  @@unique([fightId, statTypeId, valueTypeId])
+}
+
+model CharacterFightStat {
+  id          Int        @id @default(autoincrement())
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+  character   Character  @relation(fields: [characterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  characterId Int
+  fight       Fight      @relation(fields: [fightId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  fightId     Int
+  statType    StatType   @relation(fields: [statTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  statTypeId  Int
+  valueType   ValueType  @relation(fields: [valueTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  valueTypeId Int
+  buildType   BuildType? @relation(fields: [buildTypeId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  buildTypeId Int?
+  value       Float
+
+  @@unique([characterId, fightId, statTypeId, valueTypeId])
+}
+
+model CharacterFightInfo {
+  id             Int       @id @default(autoincrement())
+  created_at     DateTime  @default(now())
+  updated_at     DateTime  @updatedAt
+  fight          Fight     @relation(fields: [fightId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  fightId        Int
+  character      Character @relation(fields: [characterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  characterId    Int
+  group          Int
+  time_active    Int
+  time_in_combat Int
+
+  @@unique([characterId, fightId])
+}
+
+model CharacterRaidStat {
+  id          Int       @id @default(autoincrement())
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  raid        Raid      @relation(fields: [raidId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  raidId      Int
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  characterId Int
+  statType    StatType  @relation(fields: [statTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  statTypeId  Int
+  valueType   ValueType @relation(fields: [valueTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  valueTypeId Int
+  value       Float
+
+  @@unique([characterId, raidId, statTypeId, valueTypeId])
+}
+
+model CharacterRaidInfo {
+  id                        Int       @id @default(autoincrement())
+  created_at                DateTime  @default(now())
+  updated_at                DateTime  @updatedAt
+  raid                      Raid      @relation(fields: [raidId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  raidId                    Int
+  character                 Character @relation(fields: [characterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  characterId               Int
+  attendance_percentage     Float
+  duration_active           Int
+  duration_fights_present   Int
+  duration_in_combat        Int
+  normalization_time_allies Float
+  num_fights_present        Int
+  swapped_builds            Boolean
+
+  @@unique([raidId, characterId])
+}

@@ -9,8 +9,10 @@ import { useGetAccountQuery } from "state/api";
 function Layout() {
   const isNonMobile = useMediaQuery("(min-width: 600px)");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const accountId = useSelector((state) => state.global.accountId);
+  // const accountId = useSelector((state) => state.global.accountId);
+  const accountId = JSON.parse(localStorage.getItem("accountId"));
   const { data } = useGetAccountQuery(accountId);
+  console.log("🚀 ~ file: index.jsx:15 ~ Layout ~ data:", data);
 
   return (
     <Box
