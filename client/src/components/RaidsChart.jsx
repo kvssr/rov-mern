@@ -1,8 +1,15 @@
 import React from "react";
 import { ResponsiveBar } from "@nivo/bar";
 import { useTheme, CircularProgress } from "@mui/material";
+import { useGetRaidByIdQuery } from "state/api";
 
-const RaidsChart = ({ isDashboard = false, data, view, players, max = 15 }) => {
+const RaidsChart = ({
+  isDashboard = false,
+  raid_id,
+  view,
+  players,
+  max = 15,
+}) => {
   const profColors = {
     Guardian: "#72C1D9",
     Dragonhunter: "#72C1D9",
@@ -33,7 +40,7 @@ const RaidsChart = ({ isDashboard = false, data, view, players, max = 15 }) => {
     Scourge: "#52A76F",
   };
   const getColor = (bar) => profColors[bar.data.prof];
-
+  const { data } = useGetRaidByIdQuery({ id: raid_id, stat: view });
   const theme = useTheme();
 
   if (!data) return <CircularProgress color="secondary" />;
@@ -174,6 +181,7 @@ const RaidsChart = ({ isDashboard = false, data, view, players, max = 15 }) => {
       label={(bar) =>
         `${bar.value.toLocaleString(undefined, {
           minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
         })} (${
           bar.data.avg
             ? bar.data.avg.toLocaleString(undefined, {

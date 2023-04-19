@@ -66,15 +66,15 @@ const Raids = () => {
   const theme = useTheme();
   const { data: raidInfoList, isLoading } = useGetRaidsInfoListQuery();
   const [selectedRaid, setSelectedRaid] = useState("");
-  const { data: raidData } = useGetRaidByIdQuery({
-    id: selectedRaid
-      ? selectedRaid
-      : raidInfoList
-      ? raidInfoList[0]["id"]
-      : "-1",
-    stat: view,
-  });
-  console.log("🚀 ~ file: index.jsx:69 ~ Raids ~ raidData:", raidData);
+  // const { data: raidData } = useGetRaidByIdQuery({
+  //   id: selectedRaid
+  //     ? selectedRaid
+  //     : raidInfoList
+  //     ? raidInfoList[0]["id"]
+  //     : "-1",
+  //   stat: view,
+  // });
+  // console.log("🚀 ~ file: index.jsx:69 ~ Raids ~ raidData:", raidData);
 
   if (!raidInfoList || isLoading) {
     return "Is Loading...";
@@ -103,7 +103,14 @@ const Raids = () => {
               const start_time = raid["start_time"].split("T")[1].split(".")[0];
               const end_time = raid["end_time"].split("T")[1].split(".")[0];
               const text = `${start_date} | ${start_time} - ${end_time}`;
-              return <MenuItem value={raid["id"]}>{text}</MenuItem>;
+              return (
+                <MenuItem
+                  value={raid["id"]}
+                  key={raid["id"]}
+                >
+                  {text}
+                </MenuItem>
+              );
             })}
           </Select>
         </FormControl>
@@ -115,7 +122,14 @@ const Raids = () => {
             onChange={(e) => setView(e.target.value)}
           >
             {statItems.map(({ text, value }) => {
-              return <MenuItem value={value}>{text}</MenuItem>;
+              return (
+                <MenuItem
+                  value={value}
+                  key={value}
+                >
+                  {text}
+                </MenuItem>
+              );
             })}
           </Select>
         </FormControl>
@@ -139,8 +153,7 @@ const Raids = () => {
         </FormControl>
         <RaidsChart
           view={view}
-          data={raidData ? raidData : undefined}
-          players={raidData ? raidData : undefined}
+          raid_id={selectedRaid ? selectedRaid : raidInfoList[0]["id"]}
           max={max}
         />
       </Box>

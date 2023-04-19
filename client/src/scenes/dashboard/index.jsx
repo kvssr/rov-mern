@@ -17,13 +17,13 @@ const Dashboard = () => {
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
   const { data: raidInfoList, isLoading } = useGetRaidsInfoListQuery();
   const [selectedRaid, setSelectedRaid] = useState("");
-  const { data: raidData } = useGetRaidByIdQuery(
-    selectedRaid ? selectedRaid : raidInfoList ? raidInfoList[0]["_id"] : "-1"
-  );
+  // const { data: raidData } = useGetRaidByIdQuery(
+  //   selectedRaid ? selectedRaid : raidInfoList ? raidInfoList[0]["_id"] : "-1"
+  // );
   console.log("Loading dashboard page...");
   console.log("Dashboard page data: ", raidInfoList);
   console.log("Selected Raid: ", selectedRaid);
-  console.log("Raid data", raidData);
+  // console.log("Raid data", raidData);
   if (!raidInfoList || isLoading) {
     return "Is Loading...";
   }
@@ -114,17 +114,21 @@ const Dashboard = () => {
       <FlexBetween>
         <Box>
           <Select
-            value={selectedRaid ? selectedRaid : raidInfoList[0]["_id"]}
+            value={selectedRaid ? selectedRaid : raidInfoList[0]["id"]}
             label="Raid"
             onChange={(e) => handleRaidSelect(e.target.value)}
           >
             {raidInfoList.map((raid) => {
-              const info = raid["overall_raid_stats"];
-              const text = `${info["date"]} | ${info["start_time"]} - ${info["end_time"]}`;
+              // const info = raid["overall_raid_stats"];
+              const start_date = raid["start_date"].split("T")[0];
+              const start_time = raid["start_time"].split("T")[1].split(".")[0];
+              const end_time = raid["end_time"].split("T")[1].split(".")[0];
+              const text = `${start_date} | ${start_time} - ${end_time}`;
+              // const text = `${info["date"]} | ${info["start_time"]} - ${info["end_time"]}`;
               return (
                 <MenuItem
-                  value={raid["_id"]}
-                  key={raid["_id"]}
+                  value={raid["id"]}
+                  key={raid["id"]}
                 >
                   {text}
                 </MenuItem>
@@ -165,10 +169,7 @@ const Dashboard = () => {
               <RaidsChart
                 isDashboard={true}
                 view={value}
-                data={
-                  raidData ? raidData["top_total_players"][value] : undefined
-                }
-                players={raidData ? raidData["players"] : undefined}
+                raid_id={selectedRaid ? selectedRaid : raidInfoList[0]["id"]}
                 max={10}
               ></RaidsChart>
             </Box>
