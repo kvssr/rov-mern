@@ -3,11 +3,15 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const api = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_BASE_URL }),
   reducerPath: "adminApi",
-  tagTypes: ["Account", "Raid", "Logs", "Exists"],
+  tagTypes: ["Account", "Raid", "Logs", "Exists", "Characters"],
   endpoints: (build) => ({
     getAccount: build.query({
       query: (id) => `general/account/${id}`,
       providesTags: ["Account"],
+    }),
+    getCharacters: build.query({
+      query: () => `general/character`,
+      providesTags: ["Characters"],
     }),
     addAccount: build.mutation({
       query: (body) => ({
@@ -61,4 +65,5 @@ export const {
   useCheckRaidQuery,
   useDeleteRaidLogsMutation,
   useGetRaidsInfoListQuery,
+  useGetCharactersQuery,
 } = api;
