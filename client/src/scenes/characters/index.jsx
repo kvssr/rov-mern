@@ -1,17 +1,28 @@
 import React from "react";
 import { Box, useTheme } from "@mui/material";
-import { useGetRaidsQuery } from "state/api";
+import { useGetCharactersQuery } from "state/api";
 import Header from "components/Header";
 import { DataGrid } from "@mui/x-data-grid";
 
 const Characters = () => {
   const theme = useTheme();
-  const { data, isLoading } = useGetRaidsQuery();
+  const { data, isLoading } = useGetCharactersQuery();
   if (!data || isLoading) return "Is Loading...";
-  console.log("data", data[0]);
+  console.log("data", data);
 
-  const { players } = data[0];
-  console.log("players", players);
+  // console.log("players", players);
+
+  let players = [];
+
+  for (const character of data) {
+    players.push({
+      id: character.id,
+      name: character.name,
+      account: character.account.name,
+      profession: character.profession.name,
+      num_raids: character.characterRaidInfo.length,
+    });
+  }
 
   const columns = [
     {
@@ -30,13 +41,8 @@ const Characters = () => {
       flex: 1,
     },
     {
-      field: "num_fights_present",
-      headerName: "# fights",
-      flex: 0.5,
-    },
-    {
-      field: "attendance_percentage",
-      headerName: "Attendance %",
+      field: "num_raids",
+      headerName: "# raids",
       flex: 0.5,
     },
   ];
@@ -81,7 +87,7 @@ const Characters = () => {
       >
         <DataGrid
           loading={isLoading || !data}
-          getRowId={(row) => row.average_stats.alac + row.average_stats.dist}
+          // getRowId={}
           rows={players || []}
           columns={columns}
         />

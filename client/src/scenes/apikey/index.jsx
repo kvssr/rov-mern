@@ -46,6 +46,9 @@ const ApiKey = ({ setAccountAdded }) => {
       if (localStorage.getItem("characters")) {
         setCharacters(JSON.parse(localStorage.getItem("characters")));
       }
+      if (localStorage.getItem("apikey")) {
+        setApikey(JSON.parse(localStorage.getItem("apikey")));
+      }
     }
   }, data);
 
@@ -94,7 +97,9 @@ const ApiKey = ({ setAccountAdded }) => {
           id="api-key-input"
           label="Api key"
           variant="outlined"
-          defaultValue={apikey}
+          defaultValue={
+            apikey || JSON.parse(localStorage.getItem("apikey")) || ""
+          }
           sx={{ width: isNonMobile ? "630px" : "100%" }}
           onChange={(e) => setTextkey(e.target.value)}
         />
