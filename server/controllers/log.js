@@ -240,9 +240,11 @@ const addCharacterData = async (raid_id, data) => {
     character.id,
     data
   );
-  // Adding Raid stats
+  // Adding Raid stats Total
   for (const key in data.total_stats) {
-    const value_type = await getValueType(data.total_stats[key]);
+    const value_type = await prisma.valueType.findFirst({
+      where: { name: "Total" },
+    });
     const stat_type = await prisma.statType.findFirst({
       where: { name_json: key },
     });
@@ -252,6 +254,23 @@ const addCharacterData = async (raid_id, data) => {
       stat_type.id,
       value_type.id,
       data.total_stats[key]
+    );
+  }
+
+  // Adding Raid stats Average
+  for (const key in data.average_stats) {
+    const value_type = await prisma.valueType.findFirst({
+      where: { name: "Average" },
+    });
+    const stat_type = await prisma.statType.findFirst({
+      where: { name_json: key },
+    });
+    const character_raid_stat = addCharacterRaidStat(
+      raid_id,
+      character.id,
+      stat_type.id,
+      value_type.id,
+      data.average_stats[key]
     );
   }
 

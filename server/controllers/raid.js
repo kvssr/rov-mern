@@ -10,6 +10,46 @@ export const getRaid = async (req, res) => {
   }
 };
 
+export const getRaidDetailsById = async (req, res) => {
+  try {
+    const raid_id = Number(req.params.id);
+    const stat_type = req.params.stat;
+    console.log("server getRaidDetailsById raid_id", raid_id);
+    console.log("server getRaidDetailsById stat", stat_type);
+    if (raid_id === "-1") return res.status(200).json("");
+    const characters = await prisma.character.findMany({
+      where: {
+        characterRaidStats: {
+          some: {
+            raidId: raid_id,
+          },
+        },
+      },
+      select: {
+        name: true,
+        profession: true,
+        account: true,
+        characterRaidStats: {
+          where: {
+            raidId: raid_id,
+            statType: {
+              name_json: stat_type,
+            },
+          },
+          orderBy: { value: "desc" },
+        },
+      },
+    });
+
+    console.log("server getRaidById raid", raid_id);
+    // console.log("server getRaidById raid", raid);
+    console.log("server getRaidsdasdasdBasdasdayId raid");
+    res.status(200).json(characters);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
 export const getRaidById = async (req, res) => {
   try {
     const raid_id = req.params.id;
@@ -56,7 +96,8 @@ export const deleteRaid = async (req, res) => {
 
 export const getListRaidsInfo = async (req, res) => {
   try {
-    const raids = await Raid.find(null, "_id overall_raid_stats");
+    // const raids = await Raid.find(null, "_id overall_raid_stats");
+    const raids = await prisma.raid.findMany();
     res.status(200).json(raids);
   } catch (err) {
     res.status(404).json({ message: err.message });

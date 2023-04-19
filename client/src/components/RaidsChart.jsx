@@ -44,11 +44,11 @@ const RaidsChart = ({ isDashboard = false, data, view, players, max = 15 }) => {
 
   const raidBars = [];
 
-  data.map((topper) => {
-    const playerName = players[topper]["name"];
-    const total = players[topper]["total_stats"][view];
-    const prof = players[topper]["profession"];
-    const avg = players[topper]["average_stats"][view];
+  data.map((row) => {
+    const playerName = row["name"];
+    const total = row["characterRaidStats"][0]["value"];
+    const prof = row["profession"]["name"];
+    const avg = row["characterRaidStats"][1]["value"];
     raidBars.push({
       name: playerName,
       y: total,
@@ -59,9 +59,14 @@ const RaidsChart = ({ isDashboard = false, data, view, players, max = 15 }) => {
     return raidBars;
   });
 
+  raidBars.sort((a, b) => {
+    return b.y - a.y;
+  });
+
   return (
     <ResponsiveBar
       data={raidBars.slice(0, max).reverse()}
+      // data={raidBars}
       theme={{
         axis: {
           domain: {

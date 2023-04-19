@@ -22,7 +22,7 @@ export const api = createApi({
       providesTags: ["Raid"],
     }),
     getRaidById: build.query({
-      query: (id) => `raid/details/${id}`,
+      query: (details) => `raid/details/${details.id}/${details.stat}`,
       providesTags: ["Raid"],
     }),
     getRaidsInfoList: build.query({
