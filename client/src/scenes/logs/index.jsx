@@ -15,10 +15,8 @@ const Logs = () => {
     return "Loading...";
   }
 
-  // const newData = data.map(({ _id, overall_raid_stats }) => {
-  //   return { ...overall_raid_stats, _id };
-  // });
   console.log("Data log", data);
+  console.log("🚀 ~ file: index.jsx:12 ~ Logs ~ rowAdded:", rowAdded);
 
   const columns = [
     {
@@ -136,7 +134,6 @@ const Logs = () => {
           rows={data}
           columns={columns}
           checkboxSelection
-          // components={{ Toolbar: DataGridCustomToolbar }}
           onRowSelectionModelChange={(rowSelectionModel, details) => {
             setSelectedRows(rowSelectionModel);
           }}
@@ -146,7 +143,7 @@ const Logs = () => {
           slotProps={{
             toolbar: {
               selectedRows: selectedRows,
-              setRowAdded: { setRowAdded },
+              setRowAdded: setRowAdded,
             },
           }}
         ></DataGrid>

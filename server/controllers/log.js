@@ -75,6 +75,7 @@ export const addLog = async (req, res) => {
     // console.log("raid", raid[""]);
     if (raid) {
       console.log("Raid already exists");
+      res.status(200).json({ message: "raid already exists" });
     } else {
       const end_time = req.body["overall_raid_stats"]["end_time"];
       const full_end_time = new Date(`${start_date} ${end_time}`);
@@ -89,11 +90,11 @@ export const addLog = async (req, res) => {
       );
       const fights = await addFights(raid.id, req.body["fights"]);
       req.body["players"].forEach(async (player) => {
-        const character_data = await addCharacterData(raid.id, player);
+        const character_data = addCharacterData(raid.id, player);
       });
+      console.log("Successfully added log");
+      res.status(200).json({ message: "raid added" });
     }
-    console.log("Successfully added log");
-    res.status(200).json({ message: "raid added" });
   } catch (err) {
     console.log("server, postLog data error", err);
     res.status(404).json({ message: err.message });
@@ -209,31 +210,31 @@ const addFightStats = async (fight_id, value_type_id, data) => {
 };
 
 const addCharacterData = async (raid_id, data) => {
-  console.log("Adding character data");
-  console.log("🚀 ~ file: log.js:211 ~ addCharacterData ~ data:", data.account);
+  // console.log("Adding character data");
+  // console.log("🚀 ~ file: log.js:211 ~ addCharacterData ~ data:", data.account);
   let account = await getAccountByName(data.account);
   if (!account) {
     account = await addAccount(data.account);
   }
-  console.log("🚀 ~ file: log.js:213 ~ addCharacterData ~ account:", account);
+  // console.log("🚀 ~ file: log.js:213 ~ addCharacterData ~ account:", account);
 
   let profession = await getProfessionByName(data.profession);
   if (!profession) {
     profession = await addProfession(data.profession);
   }
-  console.log(
-    "🚀 ~ file: log.js:219 ~ addCharacterData ~ profession:",
-    profession
-  );
+  // console.log(
+  //   "🚀 ~ file: log.js:219 ~ addCharacterData ~ profession:",
+  //   profession
+  // );
   let character = await getCharacterByName(data.name);
   if (!character) {
     console.log(`Adding ${data.name}, ${account.id}, ${profession.id}`);
     character = await addCharacter(data.name, account.id, profession.id);
   }
-  console.log(
-    "🚀 ~ file: log.js:224 ~ addCharacterData ~ character:",
-    character
-  );
+  // console.log(
+  //   "🚀 ~ file: log.js:224 ~ addCharacterData ~ character:",
+  //   character
+  // );
 
   const character_raid_info = await addCharacterRaidInfo(
     raid_id,
@@ -287,7 +288,7 @@ const addCharacterData = async (raid_id, data) => {
         fight_number: i,
       },
     });
-    console.log(`CFI ${row.time_active} ---- ${row.group}`);
+    // console.log(`CFI ${row.time_active} ---- ${row.group}`);
     const character_fight_info = await addCharacterFightInfo(
       fight.id,
       character.id,
@@ -302,6 +303,11 @@ const addCharacterData = async (raid_id, data) => {
         where: { name_json: key },
       });
       if (!stat_type) continue;
+      // console.log(
+      //   "🚀 ~ file: log.js:314 ~ addCharacterData ~ stat_type:",
+      //   stat_type.name
+      // );
+
       const character_fight_stat = await addCharacterFightStat(
         fight.id,
         character.id,
@@ -311,6 +317,8 @@ const addCharacterData = async (raid_id, data) => {
       );
     }
   }
+  // console.log("Characters added successfully");
+  return "Characters added successfully";
 };
 
 const getCharacterByName = async (name) => {
