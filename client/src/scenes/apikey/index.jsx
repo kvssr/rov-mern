@@ -24,8 +24,10 @@ const ApiKey = ({ setAccountAdded }) => {
   const isNonMobile = useMediaQuery("(min-width: 600px)");
   const theme = useTheme();
 
-  const [textkey, setTextkey] = useState();
   const [apikey, setApikey] = useState();
+  const [textkey, setTextkey] = useState(
+    apikey || JSON.parse(localStorage.getItem("apikey")) || ""
+  );
   const [skip, setSkip] = useState(true);
   const [characters, setCharacters] = useState();
 
