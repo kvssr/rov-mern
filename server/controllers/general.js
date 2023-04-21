@@ -73,3 +73,12 @@ export const getCharacters = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 };
+
+export const getStatTypes = async (req, res) => {
+  try {
+    const statTypes = await prisma.statType.findMany();
+    res.status(200).json(statTypes);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};

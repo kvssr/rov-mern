@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import helmet from "helmet";
 import morgan from "morgan";
 import playerRoutes from "./routes/player.js";
+import characterRoutes from "./routes/character.js";
 import generalRoutes from "./routes/general.js";
 import managementRoutes from "./routes/management.js";
 import raidRoutes from "./routes/raid.js";
@@ -34,6 +35,7 @@ app.use(cors());
 
 /* ROUTES */
 app.use("/player", playerRoutes);
+app.use("/character", characterRoutes);
 app.use("/general", generalRoutes);
 app.use("/management", managementRoutes);
 app.use("/raid", raidRoutes);

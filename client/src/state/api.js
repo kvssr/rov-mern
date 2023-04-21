@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const api = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_BASE_URL }),
   reducerPath: "adminApi",
-  tagTypes: ["Account", "Raid", "Logs", "Exists", "Characters"],
+  tagTypes: ["Account", "Raid", "Logs", "Exists", "Characters", "StatTypes"],
   endpoints: (build) => ({
     getAccount: build.query({
       query: (id) => `general/account/${id}`,
@@ -11,6 +11,14 @@ export const api = createApi({
     }),
     getCharacters: build.query({
       query: () => `general/character`,
+      providesTags: ["Characters"],
+    }),
+    getStatTypes: build.query({
+      query: () => `general/stattypes`,
+      providesTags: ["StatTypes"],
+    }),
+    getCharacterRaidStats: build.query({
+      query: (name) => `character/raidstats/${name}`,
       providesTags: ["Characters"],
     }),
     addAccount: build.mutation({
@@ -58,6 +66,7 @@ export const api = createApi({
 
 export const {
   useGetAccountQuery,
+  useGetStatTypesQuery,
   useAddAccountMutation,
   useGetRaidsQuery,
   useGetRaidByIdQuery,
@@ -66,4 +75,5 @@ export const {
   useDeleteRaidLogsMutation,
   useGetRaidsInfoListQuery,
   useGetCharactersQuery,
+  useGetCharacterRaidStatsQuery,
 } = api;
