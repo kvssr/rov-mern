@@ -52,7 +52,7 @@ const ApiKey = ({ setAccountAdded }) => {
         setApikey(JSON.parse(localStorage.getItem("apikey")));
       }
     }
-  }, data);
+  }, [data]);
 
   useEffect(() => {
     if (accountData) {
@@ -61,7 +61,7 @@ const ApiKey = ({ setAccountAdded }) => {
       addAccount(accountData);
       setAccountAdded(true);
     }
-  }, accountData);
+  }, [accountData]);
 
   console.log("characters", characters);
 

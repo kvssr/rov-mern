@@ -66,8 +66,10 @@ export const getCharacters = async (req, res) => {
         account: true,
         characterRaidInfo: true,
       },
+      orderBy: {
+        name: "asc",
+      },
     });
-    console.log("Characters found", characters);
     res.status(200).json(characters);
   } catch (err) {
     res.status(404).json({ message: err.message });
