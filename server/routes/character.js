@@ -3,6 +3,6 @@ import { getCharacterRaidStats } from "../controllers/character.js";
 
 const router = express.Router();
 
-router.get("/raidstats/:name", getCharacterRaidStats);
+router.get("/raidstats/:id/:stat", getCharacterRaidStats);
 
 export default router;

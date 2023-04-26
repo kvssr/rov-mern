@@ -1,305 +1,136 @@
 import React from "react";
 import { ResponsiveLine } from "@nivo/line";
 import { useTheme, CircularProgress } from "@mui/material";
+import { useGetPersRaidStatsQuery } from "state/api";
+import { linearGradientDef, Defs } from "@nivo/core";
+import { area, curveMonotoneX } from "d3-shape";
 
-const PersonalChart = (data2) => {
+const PersonalChart = ({ data, selectedRows, selectedStat }) => {
   const theme = useTheme();
 
-  console.log("data2", data2.data);
+  const profession = data.profession.id;
 
-  // let lines = []
-  // data2.data.forEach((row)=>{
-  //   let line = {
-  //     id: row.date
-  //   }
-  //   for (let stat in row){
+  const profHigh = [];
+  const profLow = [];
+  const raidIds = data.raids
+    .map((raid) => {
+      if (selectedRows.includes(raid.id)) return raid.id;
+    })
+    .filter((r) => r !== undefined);
 
-  //   }
-  // });
+  const { data: persRaidStats, isLoading } = useGetPersRaidStatsQuery({
+    raids: raidIds,
+    prof: data.profession.id,
+    stat: selectedStat ? selectedStat.id : 1,
+  });
 
-  const data = [
-    {
-      id: "japan",
-      color: "hsl(245, 70%, 50%)",
-      data: [
-        {
-          x: "plane",
-          y: 171,
-        },
-        {
-          x: "helicopter",
-          y: 85,
-        },
-        {
-          x: "boat",
-          y: 188,
-        },
-        {
-          x: "train",
-          y: 168,
-        },
-        {
-          x: "subway",
-          y: 169,
-        },
-        {
-          x: "bus",
-          y: 60,
-        },
-        {
-          x: "car",
-          y: 2,
-        },
-        {
-          x: "moto",
-          y: 80,
-        },
-        {
-          x: "bicycle",
-          y: 181,
-        },
-        {
-          x: "horse",
-          y: 248,
-        },
-        {
-          x: "skateboard",
-          y: 21,
-        },
-        {
-          x: "others",
-          y: 248,
-        },
-      ],
-    },
-    {
-      id: "france",
-      color: "hsl(341, 70%, 50%)",
-      data: [
-        {
-          x: "plane",
-          y: 166,
-        },
-        {
-          x: "helicopter",
-          y: 194,
-        },
-        {
-          x: "boat",
-          y: 13,
-        },
-        {
-          x: "train",
-          y: 155,
-        },
-        {
-          x: "subway",
-          y: 293,
-        },
-        {
-          x: "bus",
-          y: 163,
-        },
-        {
-          x: "car",
-          y: 31,
-        },
-        {
-          x: "moto",
-          y: 138,
-        },
-        {
-          x: "bicycle",
-          y: 130,
-        },
-        {
-          x: "horse",
-          y: 207,
-        },
-        {
-          x: "skateboard",
-          y: 29,
-        },
-        {
-          x: "others",
-          y: 239,
-        },
-      ],
-    },
-    {
-      id: "us",
-      color: "hsl(126, 70%, 50%)",
-      data: [
-        {
-          x: "plane",
-          y: 215,
-        },
-        {
-          x: "helicopter",
-          y: 75,
-        },
-        {
-          x: "boat",
-          y: 229,
-        },
-        {
-          x: "train",
-          y: 251,
-        },
-        {
-          x: "subway",
-          y: 126,
-        },
-        {
-          x: "bus",
-          y: 155,
-        },
-        {
-          x: "car",
-          y: 270,
-        },
-        {
-          x: "moto",
-          y: 269,
-        },
-        {
-          x: "bicycle",
-          y: 176,
-        },
-        {
-          x: "horse",
-          y: 210,
-        },
-        {
-          x: "skateboard",
-          y: 103,
-        },
-        {
-          x: "others",
-          y: 97,
-        },
-      ],
-    },
-    {
-      id: "germany",
-      color: "hsl(280, 70%, 50%)",
-      data: [
-        {
-          x: "plane",
-          y: 100,
-        },
-        {
-          x: "helicopter",
-          y: 291,
-        },
-        {
-          x: "boat",
-          y: 117,
-        },
-        {
-          x: "train",
-          y: 240,
-        },
-        {
-          x: "subway",
-          y: 290,
-        },
-        {
-          x: "bus",
-          y: 202,
-        },
-        {
-          x: "car",
-          y: 195,
-        },
-        {
-          x: "moto",
-          y: 12,
-        },
-        {
-          x: "bicycle",
-          y: 8,
-        },
-        {
-          x: "horse",
-          y: 55,
-        },
-        {
-          x: "skateboard",
-          y: 117,
-        },
-        {
-          x: "others",
-          y: 64,
-        },
-      ],
-    },
-    {
-      id: "norway",
-      color: "hsl(95, 70%, 50%)",
-      data: [
-        {
-          x: "plane",
-          y: 71,
-        },
-        {
-          x: "helicopter",
-          y: 297,
-        },
-        {
-          x: "boat",
-          y: 12,
-        },
-        {
-          x: "train",
-          y: 223,
-        },
-        {
-          x: "subway",
-          y: 242,
-        },
-        {
-          x: "bus",
-          y: 31,
-        },
-        {
-          x: "car",
-          y: 211,
-        },
-        {
-          x: "moto",
-          y: 85,
-        },
-        {
-          x: "bicycle",
-          y: 66,
-        },
-        {
-          x: "horse",
-          y: 29,
-        },
-        {
-          x: "skateboard",
-          y: 171,
-        },
-        {
-          x: "others",
-          y: 128,
-        },
-      ],
-    },
+  if (!persRaidStats || isLoading) return "Loading...";
+
+  let lines = [
+    // persRaidStats.maxAll,
+    persRaidStats.maxProf,
+    persRaidStats.minProf,
   ];
+
+  let line = {
+    id: data.character,
+    color: data.profession.color,
+    data: [],
+  };
+  data.raids.forEach((row) => {
+    if (raidIds.includes(row.id)) {
+      let newRow = {
+        x: row.date,
+        y: selectedStat ? row[selectedStat.short] : row.dmg,
+      };
+      if (lines[0].data.filter((r) => r.x === row.date).length > 0) {
+        newRow.yMax = lines[0].data.filter((r) => r.x === row.date)[0].y;
+        newRow.yMin = lines[1].data.filter((r) => r.x === row.date)[0].y;
+      }
+      line.data.push(newRow);
+    }
+  });
+  lines.unshift(line);
+
+  const styleById = {};
+  styleById["Highest prof"] = {
+    strokeDasharray: "12, 6",
+    strokeWidth: 1,
+  };
+  styleById["Lowest prof"] = {
+    strokeDasharray: "12, 6",
+    strokeWidth: 1,
+  };
+  styleById["default"] = {
+    strokeWidth: 4,
+  };
+
+  const DashedLine = ({ series, lineGenerator, xScale, yScale }) => {
+    return series.map(({ id, data, color }) => (
+      <path
+        key={id}
+        d={lineGenerator(
+          data.map((d) => ({
+            x: xScale(d.data.x),
+            y: yScale(d.data.y),
+          }))
+        )}
+        fill="none"
+        stroke={color}
+        style={styleById[id] || styleById.default}
+      />
+    ));
+  };
+
+  const AreaLayer = ({ series, xScale, yScale, innerHeight }) => {
+    const areaGenerator = area()
+      .x((d) => xScale(d.data.x))
+      .y0((d) => yScale(d.data.yMin))
+      .y1((d) => yScale(d.data.yMax));
+
+    return (
+      <>
+        <Defs
+          defs={[
+            {
+              id: "pattern",
+              type: "patternLines",
+              background: "transparent",
+              color: theme.palette.primary[200],
+              lineWidth: 1,
+              spacing: 7,
+              rotation: -45,
+            },
+          ]}
+        />
+        <path
+          d={areaGenerator(series[0].data)}
+          fill="url(#pattern)"
+          fillOpacity={0.5}
+          strokeWidth={2}
+        />
+      </>
+    );
+  };
 
   return (
     <ResponsiveLine
-      data={data}
+      data={lines}
       margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
-      xScale={{ type: "point" }}
+      xScale={{
+        type: "time",
+        format: "%Y-%m-%d",
+        useUTC: false,
+        precision: "day",
+      }}
+      enableGridX={true}
+      xFormat="time:%Y-%m-%d"
       yScale={{
         type: "linear",
-        min: "auto",
+        values: 5,
+        min: 0,
         max: "auto",
-        stacked: true,
+        stacked: false,
         reverse: false,
       }}
       theme={{
@@ -335,8 +166,18 @@ const PersonalChart = (data2) => {
           },
         },
       }}
+      layers={[
+        "grid",
+        "markers",
+        AreaLayer,
+        "areas",
+        DashedLine,
+        "slices",
+        "axes",
+        "points",
+        "legends",
+      ]}
       yFormat=" >-.2f"
-      curve="catmullRom"
       axisTop={null}
       axisRight={null}
       axisBottom={{
@@ -344,12 +185,14 @@ const PersonalChart = (data2) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: "transportation",
+        format: "%b %d",
+        legend: "time scale",
         legendOffset: 36,
         legendPosition: "middle",
       }}
       axisLeft={{
         orient: "left",
+        tickValues: 5,
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
@@ -357,15 +200,17 @@ const PersonalChart = (data2) => {
         legendOffset: -40,
         legendPosition: "middle",
       }}
+      gridYValues={5}
       pointColor={{ theme: "background" }}
+      pointSize={10}
       pointBorderWidth={2}
       pointBorderColor={{ from: "serieColor", modifiers: [] }}
       pointLabelYOffset={-12}
-      areaBlendMode="hard-light"
+      areaBlendMode="screen"
       useMesh={true}
       legends={[
         {
-          anchor: "bottom-right",
+          anchor: "top-right",
           direction: "column",
           justify: false,
           translateX: 100,

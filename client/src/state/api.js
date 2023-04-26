@@ -18,7 +18,7 @@ export const api = createApi({
       providesTags: ["StatTypes"],
     }),
     getCharacterRaidStats: build.query({
-      query: (name) => `character/raidstats/${name}`,
+      query: ({ id, stat }) => `character/raidstats/${id}/${stat}`,
       providesTags: ["Characters"],
     }),
     addAccount: build.mutation({
@@ -39,6 +39,13 @@ export const api = createApi({
     }),
     getRaidsInfoList: build.query({
       query: () => `raid/infolist`,
+      providesTags: ["Raid"],
+    }),
+    getPersRaidStats: build.query({
+      query: (body) => ({
+        url: `raid/personalstats`,
+        params: body,
+      }),
       providesTags: ["Raid"],
     }),
     checkRaid: build.query({
@@ -76,4 +83,5 @@ export const {
   useGetRaidsInfoListQuery,
   useGetCharactersQuery,
   useGetCharacterRaidStatsQuery,
+  useGetPersRaidStatsQuery,
 } = api;

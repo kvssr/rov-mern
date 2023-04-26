@@ -7,10 +7,7 @@ export const postLog = async (req, res) => {
   try {
     const start_date = req.body["overall_raid_stats"]["date"];
     const start_time = req.body["overall_raid_stats"]["start_time"];
-    console.log("start_time", start_time);
-    console.log("start_date", start_date);
     const raid = await Raid.findOne({
-      // overall_raid_stats: { start_date: start_date, start_time: start_time },
       "overall_raid_stats.date": start_date,
       "overall_raid_stats.start_time": start_time,
     });
@@ -26,7 +23,6 @@ export const postLog = async (req, res) => {
         const player = addCharacter(data).then((character) => {
           const account1 = addAccount(data.account).then((account) => {
             character.account = account;
-            // console.log("Player completed", character);
             if (
               character.raids.includes({
                 ...data,
@@ -49,8 +45,6 @@ export const postLog = async (req, res) => {
               account.characters.push(character);
             }
             account.save();
-            // console.log("Adding character", character);
-            // console.log("Adding account", account);
           });
         });
       });
@@ -72,7 +66,6 @@ export const addLog = async (req, res) => {
     const raid = await prisma.raid.findFirst({
       where: { start_date: full_time, start_time: full_time },
     });
-    // console.log("raid", raid[""]);
     if (raid) {
       console.log("Raid already exists");
       res.status(200).json({ message: "raid already exists" });
@@ -145,13 +138,11 @@ const getValueType = async (value) => {
     const value_type = await prisma.valueType.findFirst({
       where: { name: "Total" },
     });
-    // console.log("VALUE TYPE 1", value_type);
     return value_type;
   } else {
     const value_type = await prisma.valueType.findFirst({
       where: { name: "Average" },
     });
-    // console.log("VALUE TYPE 2", value_type);
     return value_type;
   }
 };
@@ -210,31 +201,21 @@ const addFightStats = async (fight_id, value_type_id, data) => {
 };
 
 const addCharacterData = async (raid_id, data) => {
-  // console.log("Adding character data");
-  // console.log("🚀 ~ file: log.js:211 ~ addCharacterData ~ data:", data.account);
   let account = await getAccountByName(data.account);
   if (!account) {
     account = await addAccount(data.account);
   }
-  // console.log("🚀 ~ file: log.js:213 ~ addCharacterData ~ account:", account);
 
   let profession = await getProfessionByName(data.profession);
   if (!profession) {
     profession = await addProfession(data.profession);
   }
-  // console.log(
-  //   "🚀 ~ file: log.js:219 ~ addCharacterData ~ profession:",
-  //   profession
-  // );
-  let character = await getCharacterByName(data.name);
+
+  let character = await getCharacterByNameProf(data.name, profession.id);
   if (!character) {
     console.log(`Adding ${data.name}, ${account.id}, ${profession.id}`);
     character = await addCharacter(data.name, account.id, profession.id);
   }
-  // console.log(
-  //   "🚀 ~ file: log.js:224 ~ addCharacterData ~ character:",
-  //   character
-  // );
 
   const character_raid_info = await addCharacterRaidInfo(
     raid_id,
@@ -288,7 +269,6 @@ const addCharacterData = async (raid_id, data) => {
         fight_number: i,
       },
     });
-    // console.log(`CFI ${row.time_active} ---- ${row.group}`);
     const character_fight_info = await addCharacterFightInfo(
       fight.id,
       character.id,
@@ -303,10 +283,6 @@ const addCharacterData = async (raid_id, data) => {
         where: { name_json: key },
       });
       if (!stat_type) continue;
-      // console.log(
-      //   "🚀 ~ file: log.js:314 ~ addCharacterData ~ stat_type:",
-      //   stat_type.name
-      // );
 
       const character_fight_stat = await addCharacterFightStat(
         fight.id,
@@ -317,15 +293,19 @@ const addCharacterData = async (raid_id, data) => {
       );
     }
   }
-  // console.log("Characters added successfully");
   return "Characters added successfully";
 };
 
-const getCharacterByName = async (name) => {
-  const character = await prisma.character.findFirst({
-    where: { name: name },
-  });
-  return character;
+const getCharacterByNameProf = async (name, prof) => {
+  try {
+    const character = await prisma.character.findFirst({
+      where: {
+        name: name,
+        professionId: prof,
+      },
+    });
+    return character;
+  } catch (error) {}
 };
 
 const addCharacter = async (name, account_id, profession_id) => {
@@ -422,12 +402,16 @@ const getAccountByName = async (name) => {
 };
 
 const addAccount = async (name) => {
-  const account = await prisma.account.create({
-    data: {
-      name: name,
-    },
-  });
-  return account;
+  try {
+    const account = await prisma.account.create({
+      data: {
+        name: name,
+      },
+    });
+    return account;
+  } catch (error) {
+    console.log("Account already exists", error);
+  }
 };
 
 const getProfessionByName = async (name) => {

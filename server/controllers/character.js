@@ -2,16 +2,27 @@ import { prisma } from "../index.js";
 
 export const getCharacterRaidStats = async (req, res) => {
   try {
-    const charName = req.params.name;
+    let charId = Number(req.params.id);
+    let statId = Number(req.params.stat);
+    if (charId === -1) {
+      charId = undefined;
+    }
+    if (statId === -1) {
+      statId = undefined;
+    }
+
     const character = await prisma.character.findFirst({
       where: {
-        name: charName,
+        id: charId,
       },
       include: {
         characterRaidStats: {
           where: {
             valueType: {
               name: "Average",
+            },
+            statType: {
+              id: statId,
             },
           },
           include: {

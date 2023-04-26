@@ -112,3 +112,99 @@ export const getRaidTypes = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 };
+
+export const getPersRaidStatsMinMax = async (req, res) => {
+  try {
+    const raidIds = req.query.raids;
+    const profId = Number(req.query.prof);
+    const statId = Number(req.query.stat);
+    console.log("req params", req.query);
+    const raid1 = Number(raidIds.split(",")[0]);
+    const persRaidsStats = {
+      minProf: {
+        id: "Lowest prof",
+        color: "red",
+        data: [],
+      },
+      maxProf: {
+        id: "Highest prof",
+        color: "green",
+        data: [],
+      },
+      maxAll: {
+        id: "Highest",
+        color: "grey",
+        data: [],
+      },
+    };
+    console.log("split", raidIds.split(","));
+    for (const raidId of raidIds.split(",")) {
+      const raidInfo = await prisma.raid.findFirst({
+        where: {
+          id: Number(raidId),
+        },
+      });
+      // const raidDate = raidInfo.start_date.split("T")[0];
+      const raidDate = raidInfo.start_date.toISOString().split("T")[0];
+      const raidStat = await getRaidStatMinMaxPerProf(
+        Number(raidId),
+        statId,
+        profId
+      );
+
+      const raidStatMax = await getRaidStatMinMaxPerProf(
+        Number(raidId),
+        statId,
+        undefined
+      );
+      persRaidsStats.minProf.data.push({
+        x: raidDate,
+        y: raidStat.slice(-1)[0].value,
+      });
+
+      persRaidsStats.maxProf.data.push({
+        x: raidDate,
+        y: raidStat[0].value,
+      });
+
+      persRaidsStats.maxAll.data.push({
+        x: raidDate,
+        y: raidStatMax[0].value,
+        prof: raidStatMax[0].characterId,
+      });
+    }
+    res.status(200).json(persRaidsStats);
+  } catch (err) {
+    console.log("🚀 ~ file: raid.js:178 ~ getPersRaidStatsMinMax ~ err:", err);
+
+    res.status(404).json({ message: err.message });
+  }
+};
+
+const getRaidStatMinMaxPerProf = async (
+  raidId,
+  statId,
+  profId,
+  min = false
+) => {
+  try {
+    const raidStat = await prisma.characterRaidStat.findMany({
+      where: {
+        raidId: raidId,
+        character: {
+          professionId: profId,
+        },
+        statTypeId: statId,
+        valueType: {
+          name: "Average",
+        },
+      },
+      orderBy: {
+        value: "desc",
+      },
+    });
+    return raidStat;
+  } catch (err) {
+    console.log("🚀 ~ file: raid.js:156 ~ err:", err);
+  }
+};
