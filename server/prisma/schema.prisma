@@ -43,7 +43,7 @@ model BuildType {
   updated_at         DateTime             @updatedAt
   name               String               @db.VarChar(100)
   name_short         String               @db.VarChar(10)
-  characterFightStat CharacterFightStat[]
+  characterFightInfo CharacterFightInfo[]
 }
 
 model StatType {
@@ -165,32 +165,32 @@ model FightStat {
 }
 
 model CharacterFightStat {
-  id          Int        @id @default(autoincrement())
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
-  character   Character  @relation(fields: [characterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id          Int       @id @default(autoincrement())
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   characterId Int
-  fight       Fight      @relation(fields: [fightId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  fight       Fight     @relation(fields: [fightId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   fightId     Int
-  statType    StatType   @relation(fields: [statTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  statType    StatType  @relation(fields: [statTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   statTypeId  Int
-  valueType   ValueType  @relation(fields: [valueTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  valueType   ValueType @relation(fields: [valueTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   valueTypeId Int
-  buildType   BuildType? @relation(fields: [buildTypeId], references: [id], onDelete: SetNull, onUpdate: Cascade)
-  buildTypeId Int?
   value       Float
 
   @@unique([characterId, fightId, statTypeId, valueTypeId])
 }
 
 model CharacterFightInfo {
-  id             Int       @id @default(autoincrement())
-  created_at     DateTime  @default(now())
-  updated_at     DateTime  @updatedAt
-  fight          Fight     @relation(fields: [fightId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id             Int        @id @default(autoincrement())
+  created_at     DateTime   @default(now())
+  updated_at     DateTime   @updatedAt
+  fight          Fight      @relation(fields: [fightId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   fightId        Int
-  character      Character @relation(fields: [characterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  character      Character  @relation(fields: [characterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   characterId    Int
+  buildType      BuildType? @relation(fields: [buildTypeId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  buildTypeId    Int?
   group          Int
   time_active    Int
   time_in_combat Int
