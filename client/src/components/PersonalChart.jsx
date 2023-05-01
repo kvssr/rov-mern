@@ -47,10 +47,14 @@ const PersonalChart = ({ data, selectedRows, selectedStat }) => {
         newRow.yMax = lines[0].data.filter((r) => r.x === row.date)[0].y;
         newRow.yMin = lines[1].data.filter((r) => r.x === row.date)[0].y;
       }
-      line.data.push(newRow);
+      if (newRow.y) line.data.push(newRow);
     }
   });
   lines.unshift(line);
+  console.log(
+    "🚀 ~ file: PersonalChart.jsx:54 ~ PersonalChart ~ lines:",
+    lines
+  );
 
   const styleById = {};
   styleById["Highest prof"] = {

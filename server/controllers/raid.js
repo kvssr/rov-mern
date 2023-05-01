@@ -157,25 +157,36 @@ export const getPersRaidStatsMinMax = async (req, res) => {
         statId,
         undefined
       );
-      persRaidsStats.minProf.data.push({
-        x: raidDate,
-        y: raidStat.slice(-1)[0].value,
-      });
 
-      persRaidsStats.maxProf.data.push({
-        x: raidDate,
-        y: raidStat[0].value,
-      });
+      if (raidStat.length > 0) {
+        // console.log(
+        //   "🚀 ~ file: raid.js:162 ~ getPersRaidStatsMinMax ~ raidStat:",
+        //   raidStat
+        // );
+        persRaidsStats.minProf.data.push({
+          x: raidDate,
+          y: raidStat.slice(-1)[0].value,
+        });
 
-      persRaidsStats.maxAll.data.push({
-        x: raidDate,
-        y: raidStatMax[0].value,
-        prof: raidStatMax[0].characterId,
-      });
+        persRaidsStats.maxProf.data.push({
+          x: raidDate,
+          y: raidStat[0].value,
+        });
+
+        persRaidsStats.maxAll.data.push({
+          x: raidDate,
+          y: raidStatMax[0].value,
+          prof: raidStatMax[0].characterId,
+        });
+      }
     }
+    console.log(
+      "🚀 ~ file: raid.js:184 ~ getPersRaidStatsMinMax ~ persRaidsStats:",
+      persRaidsStats
+    );
     res.status(200).json(persRaidsStats);
   } catch (err) {
-    console.log("🚀 ~ file: raid.js:178 ~ getPersRaidStatsMinMax ~ err:", err);
+    console.log("🚀 ~ file: raid.js:181 ~ getPersRaidStatsMinMax ~ err:", err);
 
     res.status(404).json({ message: err.message });
   }
