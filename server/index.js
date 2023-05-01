@@ -20,6 +20,7 @@ import {
   dataProfession,
   dataRaidType,
   dataValueType,
+  dataBuildType,
 } from "./data/index.js";
 
 /* CONFIGURATION */
@@ -58,6 +59,10 @@ const createManyValueT = await prisma.valueType.createMany({
 });
 const createManyProf = await prisma.profession.createMany({
   data: dataProfession,
+  skipDuplicates: true,
+});
+const createManyBuildT = await prisma.buildType.createMany({
+  data: dataBuildType,
   skipDuplicates: true,
 });
 

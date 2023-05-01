@@ -377,3 +377,18 @@ export const dataProfession = [
     color: "#52A76F",
   },
 ];
+
+export const dataBuildType = [
+  {
+    name: "Damage",
+    name_short: "Dmg",
+  },
+  {
+    name: "Support",
+    name_short: "Sup",
+  },
+  {
+    name: "Unknown",
+    name_short: "Ukn",
+  },
+];
