@@ -269,12 +269,36 @@ const addCharacterData = async (raid_id, data) => {
         fight_number: i,
       },
     });
+
+    //Determine buildType
+    let supBuild = row["med_kit"];
+    let dmgBuild = false;
+    let buildType = "Damage";
+    for (const stat of [
+      "big_boomer",
+      "explosive_temper",
+      "explosive_entrance",
+    ]) {
+      if (row[stat] === 1) dmgBuild = true;
+    }
+    if (supBuild & dmgBuild) buildType = "Unknown";
+    else if (supBuild) buildType = "Support";
+    const buildTypeId = await prisma.buildType.findFirst({
+      where: {
+        name: buildType,
+      },
+    });
+    console.log(
+      "🚀 ~ file: log.js:291 ~ addCharacterData ~ buildTypeId:",
+      buildTypeId
+    );
     const character_fight_info = await addCharacterFightInfo(
       fight.id,
       character.id,
       row.time_active,
       row.time_in_combat,
-      row.group
+      row.group,
+      buildTypeId.id
     );
     fight_number += 1;
     for (const key in row) {
@@ -361,7 +385,8 @@ const addCharacterFightInfo = async (
   character_id,
   time_active,
   time_in_combat,
-  group
+  group,
+  buildType
 ) => {
   const character_fight_info = await prisma.characterFightInfo.create({
     data: {
@@ -370,6 +395,7 @@ const addCharacterFightInfo = async (
       group: group,
       time_active: time_active,
       time_in_combat: time_in_combat,
+      buildTypeId: buildType,
     },
   });
   return character_fight_info;
