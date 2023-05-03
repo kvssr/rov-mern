@@ -57,9 +57,11 @@ export const postLog = async (req, res) => {
 };
 
 export const addLog = async (req, res) => {
+  console.log("BODY", req.body.json);
+  const data = req.body.json;
   try {
-    const start_date = req.body["overall_raid_stats"]["date"];
-    const start_time = req.body["overall_raid_stats"]["start_time"];
+    const start_date = data["overall_raid_stats"]["date"];
+    const start_time = data["overall_raid_stats"]["start_time"];
     const full_time = new Date(`${start_date} ${start_time}`);
     console.log("start_time", full_time);
     console.log("start_date", full_time);
@@ -70,19 +72,21 @@ export const addLog = async (req, res) => {
       console.log("Raid already exists");
       res.status(200).json({ message: "raid already exists" });
     } else {
-      const end_time = req.body["overall_raid_stats"]["end_time"];
+      const end_time = data["overall_raid_stats"]["end_time"];
       const full_end_time = new Date(`${start_date} ${end_time}`);
       const raid = await addRaid(
-        req.body["overall_raid_stats"],
+        data["overall_raid_stats"],
         full_time,
-        full_end_time
+        full_end_time,
+        req.body["raidName"],
+        req.body["raidType"]
       );
       const raid_stats = await addRaidStats(
         raid.id,
-        req.body["overall_squad_stats"]
+        data["overall_squad_stats"]
       );
-      const fights = await addFights(raid.id, req.body["fights"]);
-      req.body["players"].forEach(async (player) => {
+      const fights = await addFights(raid.id, data["fights"]);
+      data["players"].forEach(async (player) => {
         const character_data = addCharacterData(raid.id, player);
       });
       console.log("Successfully added log");
@@ -94,13 +98,13 @@ export const addLog = async (req, res) => {
   }
 };
 
-const addRaid = async (data, full_time, full_end_time) => {
+const addRaid = async (data, full_time, full_end_time, raidName, raidType) => {
   const raid = await prisma.raid.create({
     data: {
       start_date: full_time,
       start_time: full_time,
       end_time: full_end_time,
-      name: "test",
+      name: raidName,
       min_allies: data["min_allies"],
       max_allies: data["max_allies"],
       mean_allies: data["mean_allies"],
@@ -108,7 +112,7 @@ const addRaid = async (data, full_time, full_end_time) => {
       max_enemies: data["max_enemies"],
       mean_enemies: data["mean_enemies"],
       total_kills: data["total_kills"],
-      raidTypeId: 1,
+      raidTypeId: raidType,
     },
   });
   return raid;
@@ -213,7 +217,6 @@ const addCharacterData = async (raid_id, data) => {
 
   let character = await getCharacterByNameProf(data.name, profession.id);
   if (!character) {
-    console.log(`Adding ${data.name}, ${account.id}, ${profession.id}`);
     character = await addCharacter(data.name, account.id, profession.id);
   }
 
@@ -288,10 +291,6 @@ const addCharacterData = async (raid_id, data) => {
         name: buildType,
       },
     });
-    console.log(
-      "🚀 ~ file: log.js:291 ~ addCharacterData ~ buildTypeId:",
-      buildTypeId
-    );
     const character_fight_info = await addCharacterFightInfo(
       fight.id,
       character.id,
@@ -344,7 +343,6 @@ const addCharacter = async (name, account_id, profession_id) => {
 };
 
 const addCharacterRaidInfo = async (raid_id, character_id, data) => {
-  console.log(`adding ${raid_id}, ${character_id}`);
   const character_raid_info = await prisma.characterRaidInfo.create({
     data: {
       raidId: raid_id,

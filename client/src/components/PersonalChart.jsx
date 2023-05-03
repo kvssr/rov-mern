@@ -1,6 +1,6 @@
 import React from "react";
 import { ResponsiveLine } from "@nivo/line";
-import { useTheme, CircularProgress } from "@mui/material";
+import { useTheme } from "@mui/material";
 import { useGetPersRaidStatsQuery } from "state/api";
 import { linearGradientDef, Defs } from "@nivo/core";
 import { area, curveMonotoneX } from "d3-shape";
@@ -27,7 +27,7 @@ const PersonalChart = ({ data, selectedRows, selectedStat }) => {
   if (!persRaidStats || isLoading) return "Loading...";
 
   let lines = [
-    // persRaidStats.maxAll,
+    persRaidStats.maxAll,
     persRaidStats.maxProf,
     persRaidStats.minProf,
   ];
@@ -44,8 +44,8 @@ const PersonalChart = ({ data, selectedRows, selectedStat }) => {
         y: selectedStat ? row[selectedStat.short] : row.dmg,
       };
       if (lines[0].data.filter((r) => r.x === row.date).length > 0) {
-        newRow.yMax = lines[0].data.filter((r) => r.x === row.date)[0].y;
-        newRow.yMin = lines[1].data.filter((r) => r.x === row.date)[0].y;
+        newRow.yMax = lines[1].data.filter((r) => r.x === row.date)[0].y;
+        newRow.yMin = lines[2].data.filter((r) => r.x === row.date)[0].y;
       }
       if (newRow.y) line.data.push(newRow);
     }
@@ -62,6 +62,10 @@ const PersonalChart = ({ data, selectedRows, selectedStat }) => {
     strokeWidth: 1,
   };
   styleById["Lowest prof"] = {
+    strokeDasharray: "12, 6",
+    strokeWidth: 1,
+  };
+  styleById["Highest"] = {
     strokeDasharray: "12, 6",
     strokeWidth: 1,
   };
@@ -171,8 +175,8 @@ const PersonalChart = ({ data, selectedRows, selectedStat }) => {
         },
       }}
       layers={[
-        "grid",
         "markers",
+        "grid",
         AreaLayer,
         "areas",
         DashedLine,
@@ -211,7 +215,9 @@ const PersonalChart = ({ data, selectedRows, selectedStat }) => {
       pointBorderColor={{ from: "serieColor", modifiers: [] }}
       pointLabelYOffset={-12}
       areaBlendMode="screen"
+      isInteractive={true}
       useMesh={true}
+      enableCrosshair={true}
       legends={[
         {
           anchor: "top-right",
