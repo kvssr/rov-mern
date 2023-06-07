@@ -92,7 +92,14 @@ const Logs = () => {
     },
   ];
   return (
-    <Box m="1.5rem 2.5rem">
+    <Box
+      display="grid"
+      m="1.5rem 2.5rem"
+      gridTemplateColumns="repeat(12, 1fr)"
+      sx={{
+        "& > div": { gridColumn: "span 12" },
+      }}
+    >
       <Header
         title="LOGS"
         subtitle="logs of all the raids"

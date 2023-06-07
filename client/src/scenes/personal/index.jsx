@@ -16,8 +16,7 @@ const Personal = ({ id = null, stat = null }) => {
   const theme = useTheme();
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectedStat, setSelectedStat] = useState(stat);
-  const { data: characterList, isLoading: characterLoading } =
-    useGetCharactersQuery();
+  const { data: characterList } = useGetCharactersQuery();
   const { data: dataStatsList, isLoading: isLoadingStatList } =
     useGetStatTypesQuery();
   const [selectedCharacter, setSelectedCharacter] = useState(id);
@@ -138,7 +137,14 @@ const Personal = ({ id = null, stat = null }) => {
   });
 
   return (
-    <Box m="1.5rem 2.5rem">
+    <Box
+      display="grid"
+      m="1.5rem 2.5rem"
+      gridTemplateColumns="repeat(12, 1fr)"
+      sx={{
+        "& > div": { gridColumn: "span 12" },
+      }}
+    >
       <FlexBetween>
         <Header
           title="Personal"

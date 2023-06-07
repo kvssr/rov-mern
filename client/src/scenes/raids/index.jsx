@@ -9,9 +9,7 @@ import {
 } from "@mui/material";
 import Header from "components/Header";
 import RaidsChart from "components/RaidsChart";
-import { useTheme } from "@mui/material";
-import { useGetRaidsInfoListQuery, useGetRaidByIdQuery } from "state/api";
-import { ViewAgendaSharp } from "@mui/icons-material";
+import { useGetRaidsInfoListQuery } from "state/api";
 
 const statItems = [
   {
@@ -63,18 +61,8 @@ const statItems = [
 const Raids = () => {
   const [view, setView] = useState("dmg");
   const [max, setMax] = useState(15);
-  const theme = useTheme();
   const { data: raidInfoList, isLoading } = useGetRaidsInfoListQuery();
   const [selectedRaid, setSelectedRaid] = useState("");
-  // const { data: raidData } = useGetRaidByIdQuery({
-  //   id: selectedRaid
-  //     ? selectedRaid
-  //     : raidInfoList
-  //     ? raidInfoList[0]["id"]
-  //     : "-1",
-  //   stat: view,
-  // });
-  // console.log("🚀 ~ file: index.jsx:69 ~ Raids ~ raidData:", raidData);
 
   if (!raidInfoList || isLoading) {
     return "Is Loading...";
@@ -84,7 +72,14 @@ const Raids = () => {
     setSelectedRaid(id);
   };
   return (
-    <Box m="1.5rem 2.5rem">
+    <Box
+      display="grid"
+      m="1.5rem 2.5rem"
+      gridTemplateColumns="repeat(12, 1fr)"
+      sx={{
+        "& > div": { gridColumn: "span 12" },
+      }}
+    >
       <Header
         title="Overview"
         subtitle="Overview of Raid"
