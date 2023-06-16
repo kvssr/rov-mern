@@ -2,19 +2,16 @@ import React from "react";
 import { ResponsiveLine } from "@nivo/line";
 import { useTheme } from "@mui/material";
 import { useGetPersRaidStatsQuery } from "state/api";
-import { linearGradientDef, Defs } from "@nivo/core";
-import { area, curveMonotoneX } from "d3-shape";
+import { Defs } from "@nivo/core";
+import { area } from "d3-shape";
 
 const PersonalChart = ({ data, selectedRows, selectedStat }) => {
   const theme = useTheme();
 
-  const profession = data.profession.id;
-
-  const profHigh = [];
-  const profLow = [];
   const raidIds = data.raids
     .map((raid) => {
       if (selectedRows.includes(raid.id)) return raid.id;
+      return undefined;
     })
     .filter((r) => r !== undefined);
 
@@ -121,6 +118,37 @@ const PersonalChart = ({ data, selectedRows, selectedStat }) => {
     );
   };
 
+  const ToolTipCustom = ({ point }) => {
+    return (
+      <div
+        style={{
+          background: theme.palette.primary.main,
+          border: `1px solid ${point.borderColor}`,
+        }}
+      >
+        <div
+          style={{
+            background: point.borderColor,
+            padding: "0.2rem",
+            border: `1px solid {point.borderColor}`,
+            color: "black",
+            fontWeight: "bold",
+          }}
+        >
+          {point.serieId}
+        </div>
+        <div
+          style={{
+            padding: "0.2rem",
+          }}
+        >
+          <div>Value: {point.data.yFormatted}</div>
+          <div>Date: {point.data.xFormatted}</div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <ResponsiveLine
       data={lines}
@@ -175,14 +203,17 @@ const PersonalChart = ({ data, selectedRows, selectedStat }) => {
         },
       }}
       layers={[
-        "markers",
         "grid",
-        AreaLayer,
-        "areas",
-        DashedLine,
-        "slices",
+        "markers",
         "axes",
+        "areas",
+        AreaLayer,
+        DashedLine,
+        "crosshair",
+        // "lines",
+        "slices",
         "points",
+        "mesh",
         "legends",
       ]}
       yFormat=" >-.2f"
@@ -218,6 +249,9 @@ const PersonalChart = ({ data, selectedRows, selectedStat }) => {
       isInteractive={true}
       useMesh={true}
       enableCrosshair={true}
+      // enableSlices="x"
+      // tooltip={toolTipElement}
+      tooltip={ToolTipCustom}
       legends={[
         {
           anchor: "top-right",
