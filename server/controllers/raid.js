@@ -96,8 +96,11 @@ export const deleteRaid = async (req, res) => {
 
 export const getListRaidsInfo = async (req, res) => {
   try {
-    // const raids = await Raid.find(null, "_id overall_raid_stats");
-    const raids = await prisma.raid.findMany();
+    const raids = await prisma.raid.findMany({
+      orderBy: {
+        start_date: "desc",
+      },
+    });
     res.status(200).json(raids);
   } catch (err) {
     res.status(404).json({ message: err.message });
