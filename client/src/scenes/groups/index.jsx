@@ -1,7 +1,5 @@
-import React, { useState, useRef } from "react";
-// import FlexBetween from "components/FlexBetween";
-// import Header from "components/Header";
-import { Box } from "@mui/material";
+import React, { useState } from "react";
+import { Box, Typography, useTheme } from "@mui/material";
 import {
   useGetGroupsQuery,
   useGetCharactersByRaidQuery,
@@ -24,27 +22,33 @@ import {
 import "devextreme/dist/css/dx.dark.css";
 import { Button } from "devextreme-react/button";
 import ProfessionIcon from "assets/profession_icons/ProfessionIcon";
+import RaidSelector from "components/RaidSelector";
+import { useEffect } from "react";
+import Header from "components/Header";
 
 const Groups = () => {
-  const { data, isLoading } = useGetGroupsQuery(88);
+  const [selectedRaid, setSelectedRaid] = useState(-1);
+  const { data, isLoading } = useGetGroupsQuery(selectedRaid);
   const { data: statslist } = useGetStatTypesQuery();
-  const { data: characterList } = useGetCharactersByRaidQuery(88);
+  const { data: characterList, isLoading: characterLoading } =
+    useGetCharactersByRaidQuery(selectedRaid);
 
   const [selectedFight, setSelectedFight] = useState(0);
   const [expanded, setExpanded] = useState(true);
+  const theme = useTheme();
 
-  const visableColumns = ["Damage", "Boonrips", "Healing", "Stability"];
-  const dataGrid = useRef(null);
-  console.log("dataGrid", dataGrid);
-  // const visibleColumns = dataGrid ? dataGrid.getVisibleColumns() : undefined;
-  // console.log("visibleColumns", visibleColumns);
+  const visibleColumns = ["Damage", "Boonrips", "Healing", "Stability"];
 
-  if (!data || isLoading || !characterList || !statslist) {
+  useEffect(() => {
+    setSelectedFight([0]);
+  }, [selectedRaid]);
+
+  if (!data || isLoading || characterLoading || !statslist) {
     return "Is Loading...";
   }
 
   const handleSelectionChange = (e) => {
-    setSelectedFight(e.addedItems[0].id);
+    setSelectedFight([e.addedItems[0].id]);
   };
 
   console.log("data", data);
@@ -62,6 +66,7 @@ const Groups = () => {
   });
 
   const getCharacterName = (cellData) => {
+    if (!characterList[cellData.key]) return "";
     const prof = characterList[cellData.key].profession.name;
     return (
       <div>
@@ -73,12 +78,32 @@ const Groups = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
+      <Header
+        title="Groups"
+        subtitle="group composition per fight"
+      />
+      <Box
+        mb="1.5rem"
+        mt="1.5rem"
+      >
+        <RaidSelector
+          selectedRaid={selectedRaid}
+          setSelectedRaid={setSelectedRaid}
+        />
+      </Box>
       <Box>
+        <Typography
+          variant="h6"
+          color={theme.palette.secondary[300]}
+          sx={{ mb: "5px" }}
+        >
+          {"Fight #"}
+        </Typography>
         <ButtonGroup
           items={fontStyles}
           keyExpr="id"
-          defaultSelectedItemKeys={selectedFight}
           onSelectionChanged={handleSelectionChange}
+          selectedItemKeys={selectedFight}
         />
       </Box>
       <Box mt="2.5rem">
@@ -87,9 +112,7 @@ const Groups = () => {
           dataSource={data.length > 0 ? data[selectedFight].characters : []}
           keyExpr="id"
           hoverStateEnabled={true}
-          ref={dataGrid}
         >
-          {/* Configuration goes here */}
           <Column
             dataField={"id"}
             caption="Character"
@@ -101,7 +124,7 @@ const Groups = () => {
               <Column
                 dataField={stat.id.toString()}
                 caption={stat.name}
-                visible={visableColumns.includes(stat.name)}
+                visible={visibleColumns.includes(stat.name)}
                 format=",##0.##"
                 key={stat.id}
               ></Column>
@@ -117,14 +140,19 @@ const Groups = () => {
             expandMode="rowClick"
           />
           <Summary>
-            <GroupItem
-              column="1"
-              summaryType="sum"
-              showInGroupFooter={false}
-              alignByColumn={true}
-              displayFormat="{0}"
-              valueFormat=",##0.##"
-            />
+            {statslist.map((stat) => {
+              return (
+                <GroupItem
+                  column={stat.id.toString()}
+                  summaryType="sum"
+                  showInGroupFooter={false}
+                  alignByColumn={true}
+                  displayFormat="{0}"
+                  valueFormat=",##0.##"
+                  key={stat.id}
+                />
+              );
+            })}
           </Summary>
           <GroupPanel visible={true} />
           <ColumnChooser
