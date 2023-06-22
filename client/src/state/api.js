@@ -3,14 +3,30 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const api = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_BASE_URL }),
   reducerPath: "adminApi",
-  tagTypes: ["Account", "Raid", "Logs", "Exists", "Characters", "StatTypes"],
+  tagTypes: [
+    "Account",
+    "Raid",
+    "Logs",
+    "Exists",
+    "Characters",
+    "StatTypes",
+    "Groups",
+  ],
   endpoints: (build) => ({
     getAccount: build.query({
       query: (id) => `general/account/${id}`,
       providesTags: ["Account"],
     }),
+    getGroups: build.query({
+      query: (id) => `character/fights/${id}`,
+      providesTags: ["Groups"],
+    }),
     getCharacters: build.query({
       query: () => `general/character`,
+      providesTags: ["Characters"],
+    }),
+    getCharactersByRaid: build.query({
+      query: (id) => `character/raid/${id}`,
       providesTags: ["Characters"],
     }),
     getStatTypes: build.query({
@@ -73,6 +89,7 @@ export const api = createApi({
 
 export const {
   useGetAccountQuery,
+  useGetGroupsQuery,
   useGetStatTypesQuery,
   useAddAccountMutation,
   useGetRaidsQuery,
@@ -82,6 +99,7 @@ export const {
   useDeleteRaidLogsMutation,
   useGetRaidsInfoListQuery,
   useGetCharactersQuery,
+  useGetCharactersByRaidQuery,
   useGetCharacterRaidStatsQuery,
   useGetPersRaidStatsQuery,
 } = api;
