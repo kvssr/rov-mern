@@ -56,6 +56,8 @@ export const getCharacterFightStats = async (req, res) => {
       raidId
     );
 
+    if (raidId === -1) return [];
+
     const fightStats = await prisma.character.findMany({
       where: {
         characterRaidInfo: {
