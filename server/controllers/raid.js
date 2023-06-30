@@ -40,10 +40,6 @@ export const getRaidDetailsById = async (req, res) => {
         },
       },
     });
-
-    console.log("server getRaidById raid", raid_id);
-    // console.log("server getRaidById raid", raid);
-    console.log("server getRaidsdasdasdBasdasdayId raid");
     res.status(200).json(characters);
   } catch (err) {
     res.status(404).json({ message: err.message });
