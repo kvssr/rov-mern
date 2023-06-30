@@ -55,9 +55,10 @@ const RaidsChart = ({
     const playerName = row["name"];
     const total = row["characterRaidStats"][0]["value"];
     const prof = row["profession"]["name"];
+    const profShort = row["profession"]["name_short"];
     const avg = row["characterRaidStats"][1]["value"];
     raidBars.push({
-      name: playerName,
+      name: `${playerName} (${profShort})`,
       y: total,
       yColor: "#675123",
       prof: prof,
@@ -70,10 +71,11 @@ const RaidsChart = ({
     return b.y - a.y;
   });
 
+  if (max > raidBars.length) max = raidBars.length;
+  console.log("raidBars", raidBars);
   return (
     <ResponsiveBar
-      data={raidBars.slice(0, max).reverse()}
-      // data={raidBars}
+      data={raidBars.slice(0, max - 1).reverse()}
       theme={{
         axis: {
           domain: {
@@ -108,7 +110,6 @@ const RaidsChart = ({
         },
       }}
       keys={["y"]}
-      // tooltip={(data) => `Name: ${data.indexValue}`}
       tooltip={(data) => {
         return (
           <div style={{}}>
