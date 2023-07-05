@@ -56,7 +56,8 @@ export const getCharacterFightStats = async (req, res) => {
       raidId
     );
 
-    if (raidId === -1) return [];
+    if (raidId === -1) res.status(200).json([]);
+    console.log("Raid after -1", raidId);
 
     const fightStats = await prisma.character.findMany({
       where: {
@@ -125,10 +126,14 @@ export const getCharacterFightStats = async (req, res) => {
 export const getFightStats = async (req, res) => {
   try {
     const raidId = Number(req.params.id);
-    console.log(
-      "🚀 ~ file: character.js:54 ~ getCharacterFightStats ~ id:",
-      raidId
-    );
+    console.log("🚀 ~ file: character.js:54 ~ getFightStats ~ id:", raidId);
+
+    if (raidId === -1) {
+      res.status(200).json([]);
+      return [];
+    }
+    console.log("Raid after -1", raidId);
+
     const fightStats = await prisma.fight.findMany({
       where: {
         raidId: raidId,
