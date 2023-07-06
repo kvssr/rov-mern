@@ -11,6 +11,7 @@ import Characters from "scenes/characters";
 import Logs from "scenes/logs";
 import ApiKey from "scenes/apikey";
 import Personal from "scenes/personal";
+import Users from "scenes/users";
 import Groups from "scenes/groups";
 
 function App() {
@@ -74,6 +75,11 @@ function App() {
                   key="logs"
                   path="/logs"
                   element={<Logs />}
+                />,
+                <Route
+                  key="users"
+                  path="/users"
+                  element={<Users />}
                 />,
                 <Route
                   key="groups"
