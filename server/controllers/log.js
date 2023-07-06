@@ -1,6 +1,4 @@
 import Raid from "../models/Raid.js";
-import Character from "../models/Character.js";
-import Account from "../models/Account.js";
 import { prisma } from "../index.js";
 
 export const postLog = async (req, res) => {
@@ -57,7 +55,7 @@ export const postLog = async (req, res) => {
 };
 
 export const addLog = async (req, res) => {
-  console.log("BODY", req.body.json);
+  // console.log("BODY", req.body.json);
   const data = req.body.json;
   try {
     const start_date = data["overall_raid_stats"]["date"];
@@ -434,7 +432,11 @@ const addAccount = async (name) => {
     });
     return account;
   } catch (error) {
-    console.log("Account already exists", error);
+    if (error.constructor.name === "PrismaClientKnownRequestError") {
+      let account = await getAccountByName(name);
+      return account;
+    }
+    console.log("Error creating account", error);
   }
 };
 
