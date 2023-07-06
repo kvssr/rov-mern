@@ -72,12 +72,14 @@ model ValueType {
 }
 
 model Account {
-  id         Int         @id @default(autoincrement())
-  apiId      String?
-  created_at DateTime    @default(now())
-  updated_at DateTime    @updatedAt
-  name       String      @unique @db.VarChar(100)
-  characters Character[]
+  id            Int          @id @default(autoincrement())
+  apiId         String?
+  created_at    DateTime     @default(now())
+  updated_at    DateTime     @updatedAt
+  name          String       @unique @db.VarChar(100)
+  accountRole   AccountRole? @relation(fields: [accountRoleId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  accountRoleId Int?
+  characters    Character[]
 }
 
 model Raid {
@@ -232,4 +234,13 @@ model CharacterRaidInfo {
   swapped_builds            Boolean
 
   @@unique([raidId, characterId])
+}
+
+model AccountRole {
+  id         Int       @id @default(autoincrement())
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  name       String    @unique
+  power      Int
+  accounts   Account[]
 }

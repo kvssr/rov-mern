@@ -110,9 +110,9 @@ const Navbar = ({ account, isSidebarOpen, setIsSidebarOpen }) => {
                   {account.guild || "No Guild"}
                 </Typography>
               </Box>
-              <ArrowDropDownOutlined
+              {/* <ArrowDropDownOutlined
                 sx={{ color: theme.palette.secondary[300], fontSize: "25px" }}
-              />
+              /> */}
             </Button>
             <Menu
               anchorEl={anchorEl}

@@ -11,6 +11,7 @@ import Characters from "scenes/characters";
 import Logs from "scenes/logs";
 import ApiKey from "scenes/apikey";
 import Personal from "scenes/personal";
+import Users from "scenes/users";
 
 function App() {
   const mode = useSelector((state) => state.global.mode);
@@ -73,6 +74,11 @@ function App() {
                   key="logs"
                   path="/logs"
                   element={<Logs />}
+                />,
+                <Route
+                  key="users"
+                  path="/users"
+                  element={<Users />}
                 />,
               ]}{" "}
               <Route

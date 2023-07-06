@@ -6,7 +6,15 @@ export const api = createApi({
   tagTypes: ["Account", "Raid", "Logs", "Exists", "Characters", "StatTypes"],
   endpoints: (build) => ({
     getAccount: build.query({
-      query: (id) => `general/account/${id}`,
+      query: (id) => `general/account/get/${id}`,
+      providesTags: ["Account"],
+    }),
+    getUsers: build.query({
+      query: () => `general/users`,
+      providesTags: ["Account"],
+    }),
+    getAccountRoles: build.query({
+      query: () => `general/account/roles`,
       providesTags: ["Account"],
     }),
     getCharacters: build.query({
@@ -84,4 +92,6 @@ export const {
   useGetCharactersQuery,
   useGetCharacterRaidStatsQuery,
   useGetPersRaidStatsQuery,
+  useGetAccountRolesQuery,
+  useGetUsersQuery,
 } = api;
