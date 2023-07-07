@@ -392,3 +392,22 @@ export const dataBuildType = [
     name_short: "Ukn",
   },
 ];
+
+export const dataRole = [
+  {
+    name: "Guest",
+    power: 10,
+  },
+  {
+    name: "User",
+    power: 25,
+  },
+  {
+    name: "Admin",
+    power: 50,
+  },
+  {
+    name: "SuperAdmin",
+    power: 100,
+  },
+];
