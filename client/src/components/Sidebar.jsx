@@ -34,50 +34,62 @@ const navItems = [
   {
     text: "Dashboard",
     icon: <HomeOutlined />,
+    power: 0,
   },
   {
     text: "Player Section",
     icon: null,
+    power: 0,
   },
   {
     text: "API key",
     icon: <KeyOutlined />,
+    power: 0,
   },
   {
     text: "Personal",
     icon: <InsightsOutlined />,
+    power: 10,
   },
   {
     text: "Characters",
     icon: <Groups2Outlined />,
+    power: 50,
   },
   {
     text: "Raid",
     icon: null,
+    power: 0,
   },
   {
     text: "Details",
     icon: <BarChartOutlined />,
+    power: 10,
   },
   {
     text: "Groups",
     icon: <TableChartOutlined />,
+    power: 10,
   },
   {
     text: "Management",
     icon: null,
+    power: 50,
   },
   {
     text: "Users",
     icon: <Groups2Outlined />,
+    power: 50,
   },
   {
     text: "Logs",
     icon: <UploadFileOutlined />,
+    power: 50,
   },
   {
     text: "Views",
     icon: <CalendarMonth />,
+    power: 50,
   },
 ];
 
@@ -96,7 +108,7 @@ const Sidebar = ({
   useEffect(() => {
     setActive(pathname.substring(1));
   }, [pathname]);
-
+  console.log("Side bar account", account);
   return (
     <Box component="nav">
       {isSidebarOpen && (
@@ -139,7 +151,8 @@ const Sidebar = ({
               </FlexBetween>
             </Box>
             <List>
-              {navItems.map(({ text, icon }) => {
+              {navItems.map(({ text, icon, power }) => {
+                if (power > account.accountRole.power) return "";
                 if (!icon) {
                   return (
                     <Typography

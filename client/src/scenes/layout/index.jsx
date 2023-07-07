@@ -3,13 +3,10 @@ import { Box, useMediaQuery } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import Navbar from "components/Navbar";
 import Sidebar from "components/Sidebar";
-import { useGetAccountQuery } from "state/api";
 
-function Layout() {
+function Layout({ account }) {
   const isNonMobile = useMediaQuery("(min-width: 600px)");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const accountId = JSON.parse(localStorage.getItem("accountId"));
-  const { data } = useGetAccountQuery(accountId);
 
   return (
     <Box
@@ -18,7 +15,7 @@ function Layout() {
       height="100%"
     >
       <Sidebar
-        account={data || {}}
+        account={account || {}}
         isNonMobile={isNonMobile}
         drawerWidth="250px"
         isSidebarOpen={isSidebarOpen}
@@ -29,7 +26,7 @@ function Layout() {
         flexShrink={1}
       >
         <Navbar
-          account={data || {}}
+          account={account || {}}
           isSidebarOpen={isSidebarOpen}
           setIsSidebarOpen={setIsSidebarOpen}
         />

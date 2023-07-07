@@ -13,21 +13,26 @@ import ApiKey from "scenes/apikey";
 import Personal from "scenes/personal";
 import Users from "scenes/users";
 import Groups from "scenes/groups";
+import { useGetAccountQuery } from "state/api";
 
 function App() {
   const mode = useSelector((state) => state.global.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
-  const account = localStorage.getItem("apikey")
-    ? JSON.parse(localStorage.getItem("apikey"))
+  const accountLocal = localStorage.getItem("accountId")
+    ? JSON.parse(localStorage.getItem("accountId"))
     : undefined;
+  console.log("accountLocal", accountLocal);
+  const { data: account, isLoading } = useGetAccountQuery(accountLocal || -1);
+  console.log("account", account);
   const [accountAdded, setAccountAdded] = useState(false);
+  if (isLoading) return "isLoading...";
   return (
     <div className="app">
       <BrowserRouter>
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Routes>
-            <Route element={<Layout />}>
+            <Route element={<Layout account={account} />}>
               {" "}
               {!account && (
                 <Route
@@ -61,16 +66,20 @@ function App() {
                   path="/details"
                   element={<Raids />}
                 />,
-                <Route
-                  key="characters"
-                  path="/characters"
-                  element={<Characters />}
-                />,
+
                 <Route
                   key="personal"
                   path="/personal"
                   element={<Personal />}
                 />,
+
+                <Route
+                  key="groups"
+                  path="/groups"
+                  element={<Groups />}
+                />,
+              ]}{" "}
+              {account.accountRole.power >= 50 && [
                 <Route
                   key="logs"
                   path="/logs"
@@ -82,9 +91,9 @@ function App() {
                   element={<Users />}
                 />,
                 <Route
-                  key="groups"
-                  path="/groups"
-                  element={<Groups />}
+                  key="characters"
+                  path="/characters"
+                  element={<Characters />}
                 />,
               ]}{" "}
               <Route
