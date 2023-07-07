@@ -39,10 +39,6 @@ const DataGridCustomToolbar = (props) => {
   const [raidType, setRaidType] = useState(1);
   const [raidName, setRaidName] = useState("");
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
   const handleClose = () => {
     setOpen(false);
   };
@@ -132,8 +128,6 @@ const DataGridCustomToolbar = (props) => {
         <TextField
           label="Search..."
           sx={{ mb: "0.5rem", width: "15rem" }}
-          // onChange={(e) => setSearchInput(e.target.value)}
-          // value={searchInput}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -179,10 +173,6 @@ const DataGridCustomToolbar = (props) => {
                   label="RaidType"
                   value={raidType}
                   onChange={handleRaidTypeChange}
-                  // inputProps={{
-                  //   name: "raidtype",
-                  //   id: "raidtype",
-                  // }}
                 >
                   <MenuItem value={1}>Unknown</MenuItem>
                   <MenuItem value={2}>Morning</MenuItem>
