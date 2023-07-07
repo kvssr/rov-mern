@@ -98,7 +98,7 @@ const Navbar = ({ account, isSidebarOpen, setIsSidebarOpen }) => {
                   fontSize="0.85rem"
                   sx={{ color: theme.palette.secondary[100] }}
                 >
-                  {account.name}
+                  {account?.name}
                 </Typography>
                 <Typography
                   fontWeight="bold"

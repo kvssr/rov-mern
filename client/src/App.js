@@ -32,6 +32,7 @@ function App() {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Routes>
+            {" "}
             <Route element={<Layout account={account} />}>
               {" "}
               {!account && (
@@ -79,23 +80,24 @@ function App() {
                   element={<Groups />}
                 />,
               ]}{" "}
-              {account.accountRole.power >= 50 && [
-                <Route
-                  key="logs"
-                  path="/logs"
-                  element={<Logs />}
-                />,
-                <Route
-                  key="users"
-                  path="/users"
-                  element={<Users />}
-                />,
-                <Route
-                  key="characters"
-                  path="/characters"
-                  element={<Characters />}
-                />,
-              ]}{" "}
+              {account &&
+                account.accountRole.power >= 50 && [
+                  <Route
+                    key="logs"
+                    path="/logs"
+                    element={<Logs />}
+                  />,
+                  <Route
+                    key="users"
+                    path="/users"
+                    element={<Users />}
+                  />,
+                  <Route
+                    key="characters"
+                    path="/characters"
+                    element={<Characters />}
+                  />,
+                ]}{" "}
               <Route
                 path="/api key"
                 element={<ApiKey setAccountAdded={setAccountAdded} />}

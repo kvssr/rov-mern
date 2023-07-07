@@ -15,7 +15,7 @@ function Layout({ account }) {
       height="100%"
     >
       <Sidebar
-        account={account || {}}
+        account={account || ""}
         isNonMobile={isNonMobile}
         drawerWidth="250px"
         isSidebarOpen={isSidebarOpen}
@@ -26,7 +26,7 @@ function Layout({ account }) {
         flexShrink={1}
       >
         <Navbar
-          account={account || {}}
+          account={account || ""}
           isSidebarOpen={isSidebarOpen}
           setIsSidebarOpen={setIsSidebarOpen}
         />
