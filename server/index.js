@@ -11,6 +11,7 @@ import generalRoutes from "./routes/general.js";
 import managementRoutes from "./routes/management.js";
 import raidRoutes from "./routes/raid.js";
 import logRoutes from "./routes/log.js";
+import accountRoutes from "./routes/account.js";
 import { PrismaClient } from "@prisma/client";
 
 // data imports
@@ -21,6 +22,7 @@ import {
   dataRaidType,
   dataValueType,
   dataBuildType,
+  dataRole,
 } from "./data/index.js";
 
 /* CONFIGURATION */
@@ -41,6 +43,7 @@ app.use("/general", generalRoutes);
 app.use("/management", managementRoutes);
 app.use("/raid", raidRoutes);
 app.use("/log", logRoutes);
+app.use("/account", accountRoutes);
 
 /* PRISMA */
 export const prisma = new PrismaClient();
@@ -63,6 +66,10 @@ const createManyProf = await prisma.profession.createMany({
 });
 const createManyBuildT = await prisma.buildType.createMany({
   data: dataBuildType,
+  skipDuplicates: true,
+});
+const createManyAccountRole = await prisma.accountRole.createMany({
+  data: dataRole,
   skipDuplicates: true,
 });
 

@@ -1,13 +1,31 @@
-import { Box, useTheme } from "@mui/material";
+import { Alert, Box, Snackbar, useTheme } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import React from "react";
-import { useGetAccountRolesQuery, useGetUsersQuery } from "state/api";
+import { useState } from "react";
+import {
+  useGetAccountRolesQuery,
+  useGetUsersQuery,
+  useUpdateAccountRoleMutation,
+} from "state/api";
 
 const DataGridUsers = () => {
   const theme = useTheme();
+  const [updateRole] = useUpdateAccountRoleMutation();
   const { data, isLoading } = useGetUsersQuery();
   const { data: dataRoles } = useGetAccountRolesQuery();
-  if (isLoading || !data) return "Loading...";
+  const [snackbar, setSnackbar] = useState(null);
+
+  const handleCloseSnackbar = () => setSnackbar(null);
+
+  const processRowUpdate = async (newRow) => {
+    const id = newRow.id;
+    const role = newRow.accountRoleId;
+    const response = await updateRole({ id, role });
+    setSnackbar({ children: "User successfully saved", severity: "success" });
+    return response.data;
+  };
+
+  if (isLoading || !data || !dataRoles) return "Loading...";
 
   const roleOptions = dataRoles.map((role) => {
     return { value: role.id, label: role.name };
@@ -16,6 +34,10 @@ const DataGridUsers = () => {
     "🚀 ~ file: DataGridUsers.jsx:17 ~ roleOptions ~ roleOptions:",
     roleOptions
   );
+
+  const handleProcessRowUpdateError = (error) => {
+    setSnackbar({ children: error.message, severity: "error" });
+  };
 
   console.log("🚀 ~ file: index.jsx:13 ~ Users ~ data:", data);
   const columns = [
@@ -34,10 +56,14 @@ const DataGridUsers = () => {
       headerName: "Role",
       type: "singleSelect",
       valueOptions: roleOptions,
+      onselectionchange: (e) => {
+        console.log("change,", e);
+      },
       valueGetter: (row) => {
         if (!row.value) return "";
         return row.value;
       },
+
       flex: 0.5,
       editable: true,
     },
@@ -76,6 +102,8 @@ const DataGridUsers = () => {
       }}
     >
       <DataGrid
+        processRowUpdate={processRowUpdate}
+        onProcessRowUpdateError={handleProcessRowUpdateError}
         loading={isLoading || !data}
         rows={data}
         columns={columns}
@@ -95,6 +123,19 @@ const DataGridUsers = () => {
           },
         }}
       ></DataGrid>
+      {!!snackbar && (
+        <Snackbar
+          open
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          onClose={handleCloseSnackbar}
+          autoHideDuration={6000}
+        >
+          <Alert
+            {...snackbar}
+            onClose={handleCloseSnackbar}
+          />
+        </Snackbar>
+      )}
     </Box>
   );
 };

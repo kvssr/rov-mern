@@ -92,6 +92,14 @@ export const api = createApi({
       }),
       invalidatesTags: ["Raid"],
     }),
+    updateAccountRole: build.mutation({
+      query: (body) => ({
+        url: `account/role/update`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Account"],
+    }),
   }),
 });
 
@@ -112,4 +120,5 @@ export const {
   useGetPersRaidStatsQuery,
   useGetAccountRolesQuery,
   useGetUsersQuery,
+  useUpdateAccountRoleMutation,
 } = api;

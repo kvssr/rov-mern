@@ -9,6 +9,9 @@ export const getAccount = async (req, res) => {
       where: {
         apiId: id,
       },
+      include: {
+        accountRole: true,
+      },
     });
     res.status(200).json(account);
   } catch (err) {
