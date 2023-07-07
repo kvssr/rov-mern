@@ -4,8 +4,6 @@ import {
   DarkModeOutlined,
   Menu as MenuIcon,
   Search,
-  SettingsApplicationsOutlined,
-  ArrowDropDownOutlined,
   SettingsOutlined,
 } from "@mui/icons-material";
 import FlexBetween from "components/FlexBetween";
@@ -107,7 +105,7 @@ const Navbar = ({ account, isSidebarOpen, setIsSidebarOpen }) => {
                   fontSize="0.75rem"
                   sx={{ color: theme.palette.secondary[200] }}
                 >
-                  {account.guild || "No Guild"}
+                  {account.accountRole?.name || "Guest"}
                 </Typography>
               </Box>
               {/* <ArrowDropDownOutlined

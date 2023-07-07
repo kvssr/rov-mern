@@ -17,21 +17,12 @@ import {
   ChevronLeft,
   ChevronRightOutlined,
   HomeOutlined,
-  ShoppingCartOutlined,
   Groups2Outlined,
-  ReceiptLongOutlined,
-  PublicOutlined,
-  PointOfSaleOutlined,
-  TodayOutlined,
   CalendarMonth,
-  AdminPanelSettingsOutlined,
-  TrendingUpOutlined,
-  PieChartOutline,
   KeyOutlined,
   InsightsOutlined,
   BarChartOutlined,
   TableChartOutlined,
-  ShowChartOutlined,
   UploadFileOutlined,
 } from "@mui/icons-material";
 import { useEffect, useState } from "react";
@@ -239,7 +230,7 @@ const Sidebar = ({
                   fontSize="0.7rem"
                   sx={{ color: theme.palette.secondary[200] }}
                 >
-                  {account.guild || "No Guild"}
+                  {account.accountRole?.name || "Guest"}
                 </Typography>
               </Box>
               <SettingsOutlined
