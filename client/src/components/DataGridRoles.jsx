@@ -1,5 +1,5 @@
 import { Box, useTheme } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { useGetAccountRolesQuery } from "state/api";
 

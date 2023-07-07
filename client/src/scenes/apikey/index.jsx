@@ -10,33 +10,44 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
+  Link,
+  Snackbar,
+  Alert,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import { PersonOutlineOutlined } from "@mui/icons-material";
 import Header from "components/Header";
-import { DataGrid } from "@mui/x-data-grid";
 import { useGetCharactersQuery, useGetAccountQuery } from "state/gwapi";
-import { useGetRaidsQuery, useAddAccountMutation } from "state/api";
+import { useAddAccountMutation } from "state/api";
 
 const ApiKey = ({ setAccountAdded }) => {
-  // const apikeylocal = JSON.parse(localStorage.getItem("apikey"));
-  // console.log("local key", apikeylocal);
-
   const isNonMobile = useMediaQuery("(min-width: 600px)");
   const theme = useTheme();
 
+  const [snackbar, setSnackbar] = useState(null);
+  const [open, setOpen] = useState(false);
   const [apikey, setApikey] = useState();
+  const [skip, setSkip] = useState(true);
+  const [characters, setCharacters] = useState();
+  const [addAccount] = useAddAccountMutation();
   const [textkey, setTextkey] = useState(
     apikey || JSON.parse(localStorage.getItem("apikey")) || ""
   );
-  const [skip, setSkip] = useState(true);
-  const [characters, setCharacters] = useState();
+
+  const handleCloseSnackbar = () => setSnackbar(null);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const { data, isLoading } = useGetCharactersQuery(apikey, { skip: skip });
   const { data: accountData, isLoading: accountLoading } = useGetAccountQuery(
     apikey,
     { skip: skip }
   );
-  const [addAccount] = useAddAccountMutation();
 
   useEffect(() => {
     if (data) {
@@ -69,15 +80,28 @@ const ApiKey = ({ setAccountAdded }) => {
     localStorage.setItem("apikey", JSON.stringify(textkey));
     setApikey(textkey);
     setSkip(false);
+    setSnackbar({
+      children: "API Key successfully saved",
+      severity: "success",
+    });
   };
 
-  const columns = [
-    {
-      field: "name",
-      headerName: "Name",
-      flex: 1,
-    },
-  ];
+  const handleDeleteClick = () => {
+    setOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    console.log("handleDeleteClick");
+    localStorage.removeItem("accountId");
+    localStorage.removeItem("apikey");
+    localStorage.removeItem("characters");
+    setAccountAdded(false);
+    setSnackbar({
+      children: "API Key successfully deleted",
+      severity: "success",
+    });
+    setOpen(false);
+  };
 
   return (
     <Box m="1.5rem 2.5rem">
@@ -86,13 +110,18 @@ const ApiKey = ({ setAccountAdded }) => {
         subtitle="Here you can add your API key"
       />
       <Box m="1.5rem 2.5rem">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-        mollit anim id est laborum.
+        You can create an API Key at{" "}
+        <Link
+          href="https://account.arena.net/applications"
+          color={theme.palette.secondary[200]}
+          target="_blank"
+          rel="noreferrer"
+        >
+          https://account.arena.net/applications
+        </Link>
+        .
+        <br />
+        Make sure you select the characters permission.
       </Box>
       <Box>
         <TextField
@@ -113,6 +142,19 @@ const ApiKey = ({ setAccountAdded }) => {
           }}
         >
           Submit
+        </Button>
+        <Button
+          variant="outlined"
+          sx={{
+            m: "0.5rem 0rem",
+            color: theme.palette.secondary[100],
+            backgroundColor: theme.palette.secondary[600],
+          }}
+          onClick={(e) => {
+            handleDeleteClick();
+          }}
+        >
+          Delete
         </Button>
       </Box>
       <Box
@@ -174,6 +216,32 @@ const ApiKey = ({ setAccountAdded }) => {
             })}
         </List>
       </Box>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+      >
+        <DialogTitle>Deleting API Key</DialogTitle>
+        <DialogContent>
+          Are you sure you want to delete your API Key?
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>No</Button>
+          <Button onClick={handleDeleteConfirm}>Yes</Button>
+        </DialogActions>
+      </Dialog>
+      {!!snackbar && (
+        <Snackbar
+          open
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          onClose={handleCloseSnackbar}
+          autoHideDuration={6000}
+        >
+          <Alert
+            {...snackbar}
+            onClose={handleCloseSnackbar}
+          />
+        </Snackbar>
+      )}
     </Box>
   );
 };
