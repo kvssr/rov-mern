@@ -13,7 +13,7 @@ import ApiKey from "scenes/apikey";
 import Personal from "scenes/personal";
 import Users from "scenes/users";
 import Groups from "scenes/groups";
-import { useGetAccountQuery } from "state/api";
+import { useGetAccountByApiIdQuery } from "state/api";
 
 function App() {
   const mode = useSelector((state) => state.global.mode);
@@ -22,7 +22,9 @@ function App() {
     ? JSON.parse(localStorage.getItem("accountId"))
     : undefined;
   console.log("accountLocal", accountLocal);
-  const { data: account, isLoading } = useGetAccountQuery(accountLocal || -1);
+  const { data: account, isLoading } = useGetAccountByApiIdQuery(
+    accountLocal || -1
+  );
   console.log("account", account);
   const [accountAdded, setAccountAdded] = useState(false);
   if (isLoading) return "isLoading...";

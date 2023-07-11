@@ -5,12 +5,12 @@ import { useState } from "react";
 import {
   useGetAccountRolesQuery,
   useGetUsersQuery,
-  useUpdateAccountRoleMutation,
+  useUpdateAccountMutation,
 } from "state/api";
 
 const DataGridUsers = () => {
   const theme = useTheme();
-  const [updateRole] = useUpdateAccountRoleMutation();
+  const [updateRole] = useUpdateAccountMutation();
   const { data, isLoading } = useGetUsersQuery();
   const { data: dataRoles } = useGetAccountRolesQuery();
   const [snackbar, setSnackbar] = useState(null);
@@ -19,8 +19,8 @@ const DataGridUsers = () => {
 
   const processRowUpdate = async (newRow) => {
     const id = newRow.id;
-    const role = newRow.accountRoleId;
-    const response = await updateRole({ id, role });
+    const accountRoleId = newRow.accountRoleId;
+    const response = await updateRole({ id, accountRoleId });
     setSnackbar({ children: "User successfully saved", severity: "success" });
     return response.data;
   };

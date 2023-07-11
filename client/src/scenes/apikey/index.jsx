@@ -21,7 +21,7 @@ import {
 import { PersonOutlineOutlined } from "@mui/icons-material";
 import Header from "components/Header";
 import { useGetCharactersQuery, useGetAccountQuery } from "state/gwapi";
-import { useAddAccountMutation } from "state/api";
+import { useCreateAccountMutation } from "state/api";
 
 const ApiKey = ({ setAccountAdded }) => {
   const isNonMobile = useMediaQuery("(min-width: 600px)");
@@ -32,7 +32,7 @@ const ApiKey = ({ setAccountAdded }) => {
   const [apikey, setApikey] = useState();
   const [skip, setSkip] = useState(true);
   const [characters, setCharacters] = useState();
-  const [addAccount] = useAddAccountMutation();
+  const [addAccount] = useCreateAccountMutation();
   const [textkey, setTextkey] = useState(
     apikey || JSON.parse(localStorage.getItem("apikey")) || ""
   );
@@ -43,11 +43,8 @@ const ApiKey = ({ setAccountAdded }) => {
     setOpen(false);
   };
 
-  const { data, isLoading } = useGetCharactersQuery(apikey, { skip: skip });
-  const { data: accountData, isLoading: accountLoading } = useGetAccountQuery(
-    apikey,
-    { skip: skip }
-  );
+  const { data } = useGetCharactersQuery(apikey, { skip: skip });
+  const { data: accountData } = useGetAccountQuery(apikey, { skip: skip });
 
   useEffect(() => {
     if (data) {
@@ -63,13 +60,14 @@ const ApiKey = ({ setAccountAdded }) => {
         setApikey(JSON.parse(localStorage.getItem("apikey")));
       }
     }
-  }, [data]);
+  }, [data, characters]);
 
   useEffect(() => {
     if (accountData) {
       console.log("Effect account", accountData);
       localStorage.setItem("accountId", JSON.stringify(accountData["id"]));
-      addAccount(accountData);
+      let queryData = { name: accountData["name"], apiId: accountData["id"] };
+      addAccount(queryData);
       setAccountAdded(true);
     }
   }, [accountData]);
