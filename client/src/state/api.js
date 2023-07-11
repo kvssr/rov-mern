@@ -13,8 +13,12 @@ export const api = createApi({
     "Groups",
   ],
   endpoints: (build) => ({
-    getAccount: build.query({
-      query: (id) => `general/account/get/${id}`,
+    getAccountByApiId: build.query({
+      query: (id) => `account/get/api/${id}`,
+      providesTags: ["Account"],
+    }),
+    getAccountByName: build.query({
+      query: (name) => `account/get/name/${name}`,
       providesTags: ["Account"],
     }),
     getUsers: build.query({
@@ -45,9 +49,9 @@ export const api = createApi({
       query: ({ id, stat }) => `character/raidstats/${id}/${stat}`,
       providesTags: ["Characters"],
     }),
-    addAccount: build.mutation({
+    createAccount: build.mutation({
       query: (body) => ({
-        url: `general/account/add`,
+        url: `account/create`,
         method: "POST",
         body,
       }),
@@ -92,9 +96,9 @@ export const api = createApi({
       }),
       invalidatesTags: ["Raid"],
     }),
-    updateAccountRole: build.mutation({
+    updateAccount: build.mutation({
       query: (body) => ({
-        url: `account/role/update`,
+        url: `account/update`,
         method: "POST",
         body,
       }),
@@ -104,10 +108,11 @@ export const api = createApi({
 });
 
 export const {
-  useGetAccountQuery,
+  useGetAccountByApiIdQuery,
+  useGetAccountByNameQuery,
   useGetGroupsQuery,
   useGetStatTypesQuery,
-  useAddAccountMutation,
+  useCreateAccountMutation,
   useGetRaidsQuery,
   useGetRaidByIdQuery,
   useAddRaidLogsMutation,
@@ -120,5 +125,5 @@ export const {
   useGetPersRaidStatsQuery,
   useGetAccountRolesQuery,
   useGetUsersQuery,
-  useUpdateAccountRoleMutation,
+  useUpdateAccountMutation,
 } = api;
