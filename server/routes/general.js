@@ -1,7 +1,5 @@
 import express from "express";
 import {
-  getAccount,
-  addAccount,
   getCharacters,
   getStatTypes,
   getAccountRoles,
@@ -10,10 +8,8 @@ import {
 
 const router = express.Router();
 
-router.get("/account/get/:id", getAccount);
 router.get("/stattypes", getStatTypes);
 router.get("/character", getCharacters);
-router.post("/account/add", addAccount);
 router.get("/account/roles", getAccountRoles);
 router.get("/users", getUsers);
 

@@ -1,10 +1,9 @@
-import { Prisma } from "@prisma/client";
 import { prisma } from "../index.js";
 
 export const getAccountByApiId = async (req, res) => {
   try {
     const { id } = req.params;
-    const account = await prisma.account.findUnique({
+    const account = await prisma.account.findFirst({
       where: {
         apiId: id,
       },
