@@ -153,7 +153,6 @@ const Sidebar = ({
             <List>
               {navItems.map(({ text, icon, power }) => {
                 if (account.length < 2) return "";
-                console.log("Side bar !account", account);
                 if (power > account.accountRole.power) return "";
                 if (!icon) {
                   return (
