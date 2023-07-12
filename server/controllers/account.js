@@ -65,10 +65,9 @@ export const createAccount = async (req, res) => {
 
 export const updateAccount = async (req, res) => {
   try {
-    const accountId = req.body["id"];
     let account = await prisma.account.upsert({
       where: {
-        id: accountId,
+        name: req.body["name"],
       },
       update: req.body,
       create: req.body,

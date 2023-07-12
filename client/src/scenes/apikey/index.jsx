@@ -21,7 +21,7 @@ import {
 import { PersonOutlineOutlined } from "@mui/icons-material";
 import Header from "components/Header";
 import { useGetCharactersQuery, useGetAccountQuery } from "state/gwapi";
-import { useCreateAccountMutation } from "state/api";
+import { useUpdateAccountMutation } from "state/api";
 
 const ApiKey = ({ setAccountAdded }) => {
   const isNonMobile = useMediaQuery("(min-width: 600px)");
@@ -32,7 +32,7 @@ const ApiKey = ({ setAccountAdded }) => {
   const [apikey, setApikey] = useState();
   const [skip, setSkip] = useState(true);
   const [characters, setCharacters] = useState();
-  const [addAccount] = useCreateAccountMutation();
+  const [addAccount] = useUpdateAccountMutation();
   const [textkey, setTextkey] = useState(
     apikey || JSON.parse(localStorage.getItem("apikey")) || ""
   );

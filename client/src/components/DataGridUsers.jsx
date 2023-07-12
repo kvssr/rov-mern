@@ -18,9 +18,10 @@ const DataGridUsers = () => {
   const handleCloseSnackbar = () => setSnackbar(null);
 
   const processRowUpdate = async (newRow) => {
-    const id = newRow.id;
+    // const id = newRow.id;
+    const name = newRow.name;
     const accountRoleId = newRow.accountRoleId;
-    const response = await updateRole({ id, accountRoleId });
+    const response = await updateRole({ name, accountRoleId });
     setSnackbar({ children: "User successfully saved", severity: "success" });
     return response.data;
   };
