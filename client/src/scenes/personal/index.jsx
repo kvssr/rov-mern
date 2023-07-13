@@ -11,6 +11,7 @@ import {
 } from "state/api";
 import LinearProgress from "@mui/material/LinearProgress";
 import FlexBetween from "components/FlexBetween";
+import PersonalExtreme from "components/PersonalExtreme";
 
 const Personal = ({ id = null, stat = null }) => {
   const theme = useTheme();
@@ -184,8 +185,8 @@ const Personal = ({ id = null, stat = null }) => {
         />
       </FlexBetween>
       <Box height="80vh">
-        <Box height="40vh">
-          <PersonalChart
+        <Box>
+          <PersonalExtreme
             data={dataRowsValues}
             selectedRows={selectedRows}
             selectedStat={selectedStat}

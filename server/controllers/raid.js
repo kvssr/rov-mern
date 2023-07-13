@@ -112,6 +112,85 @@ export const getRaidTypes = async (req, res) => {
   }
 };
 
+// export const getPersRaidStatsMinMax = async (req, res) => {
+//   try {
+//     const raidIds = req.query.raids;
+//     const profId = Number(req.query.prof);
+//     const statId = Number(req.query.stat);
+//     console.log("req params", req.query);
+//     const raid1 = Number(raidIds.split(",")[0]);
+//     const persRaidsStats = {
+//       minProf: {
+//         id: "Lowest prof",
+//         color: "red",
+//         data: [],
+//       },
+//       maxProf: {
+//         id: "Highest prof",
+//         color: "green",
+//         data: [],
+//       },
+//       maxAll: {
+//         id: "Highest",
+//         color: "grey",
+//         data: [],
+//       },
+//     };
+//     console.log("split", raidIds.split(","));
+//     for (const raidId of raidIds.split(",")) {
+//       const raidInfo = await prisma.raid.findFirst({
+//         where: {
+//           id: Number(raidId),
+//         },
+//       });
+//       // const raidDate = raidInfo.start_date.split("T")[0];
+//       const raidDate = raidInfo.start_date.toISOString().split("T")[0];
+//       const raidStat = await getRaidStatMinMaxPerProf(
+//         Number(raidId),
+//         statId,
+//         profId
+//       );
+
+//       const raidStatMax = await getRaidStatMinMaxPerProf(
+//         Number(raidId),
+//         statId,
+//         undefined
+//       );
+
+//       if (raidStat.length > 0) {
+//         // console.log(
+//         //   "🚀 ~ file: raid.js:162 ~ getPersRaidStatsMinMax ~ raidStat:",
+//         //   raidStat
+//         // );
+//         persRaidsStats.minProf.data.push({
+//           x: raidDate,
+//           y: raidStat.slice(-1)[0].value,
+//         });
+
+//         persRaidsStats.maxProf.data.push({
+//           x: raidDate,
+//           y: raidStat[0].value,
+//         });
+
+//         persRaidsStats.maxAll.data.push({
+//           x: raidDate,
+//           y: raidStatMax[0].value,
+//           prof: raidStatMax[0].characterId,
+//         });
+//       }
+//     }
+//     console.log(
+//       "🚀 ~ file: raid.js:184 ~ getPersRaidStatsMinMax ~ persRaidsStats:",
+//       persRaidsStats
+//     );
+//     res.status(200).json(persRaidsStats);
+//   } catch (err) {
+//     console.log("🚀 ~ file: raid.js:181 ~ getPersRaidStatsMinMax ~ err:", err);
+
+//     res.status(404).json({ message: err.message });
+//   }
+// };
+
 export const getPersRaidStatsMinMax = async (req, res) => {
   try {
     const raidIds = req.query.raids;
@@ -120,21 +199,7 @@ export const getPersRaidStatsMinMax = async (req, res) => {
     console.log("req params", req.query);
     const raid1 = Number(raidIds.split(",")[0]);
     const persRaidsStats = {
-      minProf: {
-        id: "Lowest prof",
-        color: "red",
-        data: [],
-      },
-      maxProf: {
-        id: "Highest prof",
-        color: "green",
-        data: [],
-      },
-      maxAll: {
-        id: "Highest",
-        color: "grey",
-        data: [],
-      },
+      data: [],
     };
     console.log("split", raidIds.split(","));
     for (const raidId of raidIds.split(",")) {
@@ -144,7 +209,8 @@ export const getPersRaidStatsMinMax = async (req, res) => {
         },
       });
       // const raidDate = raidInfo.start_date.split("T")[0];
-      const raidDate = raidInfo.start_date.toISOString().split("T")[0];
+      // const raidDate = raidInfo.start_date.toISOString().split("T")[0];
+      const raidDate = raidInfo.start_date;
       const raidStat = await getRaidStatMinMaxPerProf(
         Number(raidId),
         statId,
@@ -158,24 +224,27 @@ export const getPersRaidStatsMinMax = async (req, res) => {
       );
 
       if (raidStat.length > 0) {
-        // console.log(
-        //   "🚀 ~ file: raid.js:162 ~ getPersRaidStatsMinMax ~ raidStat:",
-        //   raidStat
-        // );
-        persRaidsStats.minProf.data.push({
-          x: raidDate,
-          y: raidStat.slice(-1)[0].value,
+        persRaidsStats.data.push({
+          name: "MinProf",
+          raidDate: raidDate,
+          value: raidStat.slice(-1)[0].value,
         });
-
-        persRaidsStats.maxProf.data.push({
-          x: raidDate,
-          y: raidStat[0].value,
+        persRaidsStats.data.push({
+          name: "MaxProf",
+          raidDate: raidDate,
+          value: raidStat[0].value,
         });
-
-        persRaidsStats.maxAll.data.push({
-          x: raidDate,
-          y: raidStatMax[0].value,
-          prof: raidStatMax[0].characterId,
+        persRaidsStats.data.push({
+          name: "MinMaxArea",
+          raidDate: raidDate,
+          valueMin: raidStat.slice(-1)[0].value,
+          valueMax: raidStat[0].value,
+        });
+        persRaidsStats.data.push({
+          name: "MaxAll",
+          raidDate: raidDate,
+          value: raidStatMax[0].value,
+          charId: raidStatMax[0].characterId,
         });
       }
     }
