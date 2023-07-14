@@ -225,6 +225,12 @@ export const getPersRaidStatsMinMax = async (req, res) => {
 
       if (raidStat.length > 0) {
         persRaidsStats.data.push({
+          name: "MinMaxArea",
+          raidDate: raidDate,
+          valueMin: raidStat.slice(-1)[0].value,
+          valueMax: raidStat[0].value,
+        });
+        persRaidsStats.data.push({
           name: "MinProf",
           raidDate: raidDate,
           value: raidStat.slice(-1)[0].value,
@@ -233,12 +239,6 @@ export const getPersRaidStatsMinMax = async (req, res) => {
           name: "MaxProf",
           raidDate: raidDate,
           value: raidStat[0].value,
-        });
-        persRaidsStats.data.push({
-          name: "MinMaxArea",
-          raidDate: raidDate,
-          valueMin: raidStat.slice(-1)[0].value,
-          valueMax: raidStat[0].value,
         });
         persRaidsStats.data.push({
           name: "MaxAll",
