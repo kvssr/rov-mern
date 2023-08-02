@@ -140,7 +140,7 @@ const Sidebar = ({
                     variant="h4"
                     fontWeight="bold"
                   >
-                    STATSOL
+                    ODIN
                   </Typography>
                 </Box>
                 {!isNonMobile && (
@@ -216,7 +216,7 @@ const Sidebar = ({
             // position="absolute"
             bottom="2rem"
           >
-            <Divider />
+            {/* <Divider />
             <FlexBetween
               textTransform="none"
               gap="1rem"
@@ -250,7 +250,7 @@ const Sidebar = ({
               <SettingsOutlined
                 sx={{ color: theme.palette.secondary[300], fontSize: "25px" }}
               />
-            </FlexBetween>
+            </FlexBetween> */}
           </Box>
         </Drawer>
       )}
