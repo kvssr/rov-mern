@@ -9,65 +9,75 @@ import {
 } from "@mui/material";
 import Header from "components/Header";
 import RaidsChart from "components/RaidsChart";
-import { useGetRaidsInfoListQuery } from "state/api";
+import { useGetRaidsInfoListQuery, useGetStatTypesQuery } from "state/api";
 import RaidSelector from "components/RaidSelector";
+import { useSelector } from "react-redux";
 
-const statItems = [
-  {
-    text: "Damage",
-    value: "dmg",
-  },
-  {
-    text: "Boonrips",
-    value: "rips",
-  },
-  {
-    text: "Cleanses",
-    value: "cleanses",
-  },
-  {
-    text: "Heals",
-    value: "heal",
-  },
-  {
-    text: "Distance to tag",
-    value: "dist",
-  },
-  {
-    text: "Stability",
-    value: "stab",
-  },
-  {
-    text: "Protection",
-    value: "prot",
-  },
-  {
-    text: "Aegis",
-    value: "aegis",
-  },
-  {
-    text: "Regeneration",
-    value: "regen",
-  },
-  {
-    text: "Might",
-    value: "might",
-  },
-  {
-    text: "Fury",
-    value: "fury",
-  },
-];
+// const statItems = [
+//   {
+//     text: "Damage",
+//     value: "dmg",
+//   },
+//   {
+//     text: "Boonrips",
+//     value: "rips",
+//   },
+//   {
+//     text: "Cleanses",
+//     value: "cleanses",
+//   },
+//   {
+//     text: "Heals",
+//     value: "heal",
+//   },
+//   {
+//     text: "Distance to tag",
+//     value: "dist",
+//   },
+//   {
+//     text: "Stability",
+//     value: "stab",
+//   },
+//   {
+//     text: "Protection",
+//     value: "prot",
+//   },
+//   {
+//     text: "Aegis",
+//     value: "aegis",
+//   },
+//   {
+//     text: "Regeneration",
+//     value: "regen",
+//   },
+//   {
+//     text: "Might",
+//     value: "might",
+//   },
+//   {
+//     text: "Fury",
+//     value: "fury",
+//   },
+// ];
 
 const Raids = () => {
   const [selectedRaid, setSelectedRaid] = useState(-1);
   const [view, setView] = useState("dmg");
   const [max, setMax] = useState(15);
   const { data: raidInfoList, isLoading } = useGetRaidsInfoListQuery();
+  const { data: statTypes } = useGetStatTypesQuery();
+  const statBlacklist = useSelector((state) => state.global.statBlacklist);
 
-  if (!raidInfoList || isLoading) {
+  if (!raidInfoList || isLoading || !statTypes) {
     return "Is Loading...";
   }
+
+  const statTypesFiltered = statTypes.filter(
+    (item) => statBlacklist.includes(item.name) === false
+  );
+  const statItems = statTypesFiltered.map((item) => {
+    return { text: item.name, value: item.name_json };
+  });
 
   return (
     <Box

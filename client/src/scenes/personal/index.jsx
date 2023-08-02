@@ -12,12 +12,14 @@ import {
 import LinearProgress from "@mui/material/LinearProgress";
 import FlexBetween from "components/FlexBetween";
 import PersonalExtreme from "components/PersonalExtreme";
+import { useSelector } from "react-redux";
 
 const Personal = ({ id = null, stat = null }) => {
   const theme = useTheme();
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectedStat, setSelectedStat] = useState(stat);
   const { data: characterList } = useGetCharactersQuery();
+  const statBlacklist = useSelector((state) => state.global.statBlacklist);
   const { data: dataStatsList, isLoading: isLoadingStatList } =
     useGetStatTypesQuery();
   const [selectedCharacter, setSelectedCharacter] = useState(id);
@@ -53,7 +55,11 @@ const Personal = ({ id = null, stat = null }) => {
     };
   });
 
-  const dropDownOptionsStat = dataStatsList.map((stat) => {
+  const statTypesFiltered = dataStatsList.filter(
+    (item) => statBlacklist.includes(item.name) === false
+  );
+
+  const dropDownOptionsStat = statTypesFiltered.map((stat) => {
     return {
       label: stat.name,
       id: stat.id,

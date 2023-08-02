@@ -25,6 +25,7 @@ import ProfessionIcon from "assets/profession_icons/ProfessionIcon";
 import RaidSelector from "components/RaidSelector";
 import { useEffect } from "react";
 import Header from "components/Header";
+import { useSelector } from "react-redux";
 
 const Groups = () => {
   const [selectedRaid, setSelectedRaid] = useState(-1);
@@ -36,6 +37,7 @@ const Groups = () => {
   const [selectedFight, setSelectedFight] = useState(0);
   const [expanded, setExpanded] = useState(true);
   const theme = useTheme();
+  const statBlacklist = useSelector((state) => state.global.statBlacklist);
 
   const visibleColumns = ["Damage", "Boonrips", "Healing", "Stability"];
 
@@ -50,6 +52,10 @@ const Groups = () => {
   const handleSelectionChange = (e) => {
     setSelectedFight([e.addedItems[0].id]);
   };
+
+  const statslistFiltered = statslist.filter(
+    (item) => statBlacklist.includes(item.name) === false
+  );
 
   console.log("data", data);
   console.log("selected fight", selectedFight);
@@ -119,7 +125,7 @@ const Groups = () => {
             cellRender={getCharacterName}
             allowHiding={false}
           ></Column>
-          {statslist.map((stat) => {
+          {statslistFiltered.map((stat) => {
             return (
               <Column
                 dataField={stat.id.toString()}
@@ -140,7 +146,7 @@ const Groups = () => {
             expandMode="rowClick"
           />
           <Summary>
-            {statslist.map((stat) => {
+            {statslistFiltered.map((stat) => {
               return (
                 <GroupItem
                   column={stat.id.toString()}

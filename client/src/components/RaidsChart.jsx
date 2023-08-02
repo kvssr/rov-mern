@@ -21,6 +21,7 @@ const RaidsChart = ({
   if (!data) return <CircularProgress color="secondary" />;
 
   const raidBars = [];
+  const DescStatList = ["dist", "deaths", "dmg_taken"];
 
   data.map((row) => {
     const playerName = row["name"];
@@ -38,9 +39,15 @@ const RaidsChart = ({
     return raidBars;
   });
 
-  raidBars.sort((a, b) => {
-    return b.y - a.y;
-  });
+  if (DescStatList.includes(view)) {
+    raidBars.sort((a, b) => {
+      return a.y - b.y;
+    });
+  } else {
+    raidBars.sort((a, b) => {
+      return b.y - a.y;
+    });
+  }
 
   if (max > raidBars.length) max = raidBars.length;
   console.log("raidBars", raidBars);
