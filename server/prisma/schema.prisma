@@ -80,6 +80,7 @@ model Account {
   accountRole   AccountRole? @relation(fields: [accountRoleId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   accountRoleId Int?
   characters    Character[]
+  guilds        Guild[]
 }
 
 model Raid {
@@ -243,4 +244,14 @@ model AccountRole {
   name       String    @unique
   power      Int
   accounts   Account[]
+}
+
+model Guild {
+  id         Int       @id @default(autoincrement())
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  name       String    @unique
+  tag        String
+  apiId      String    @unique
+  members    Account[]
 }

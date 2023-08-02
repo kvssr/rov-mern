@@ -20,11 +20,11 @@ function App() {
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
   const accountLocal = localStorage.getItem("accountId")
     ? JSON.parse(localStorage.getItem("accountId"))
-    : undefined;
+    : false;
   console.log("accountLocal", accountLocal);
-  const { data: account, isLoading } = useGetAccountByApiIdQuery(
-    accountLocal || -1
-  );
+  let { data: account, isLoading } = useGetAccountByApiIdQuery(accountLocal, {
+    skip: !accountLocal,
+  });
   console.log("account", account);
   const [accountAdded, setAccountAdded] = useState(false);
   if (isLoading) return "isLoading...";

@@ -12,10 +12,10 @@ import managementRoutes from "./routes/management.js";
 import raidRoutes from "./routes/raid.js";
 import logRoutes from "./routes/log.js";
 import accountRoutes from "./routes/account.js";
+import guildRoutes from "./routes/guild.js";
 import { PrismaClient } from "@prisma/client";
 
 // data imports
-import Account from "./models/Account.js";
 import {
   dataStatType,
   dataProfession,
@@ -44,6 +44,7 @@ app.use("/management", managementRoutes);
 app.use("/raid", raidRoutes);
 app.use("/log", logRoutes);
 app.use("/account", accountRoutes);
+app.use("/guild", guildRoutes);
 
 /* PRISMA */
 export const prisma = new PrismaClient();
@@ -73,17 +74,5 @@ const createManyAccountRole = await prisma.accountRole.createMany({
   skipDuplicates: true,
 });
 
-/* MONGOOSE SETUP */
 const PORT = process.env.PORT || 9000;
 const server = app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
-// mongoose
-//   .connect(process.env.MONGO_URL, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//   })
-//   .then(() => {
-//     app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
-
-//     /* ONLY ADD ONCE */
-//   })
-//   .catch((error) => console.log(`${error} did not connect`));
