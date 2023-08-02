@@ -1,8 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  statBlacklist: [
+    "Big Boomer",
+    "Explosive Temper",
+    "Explosive Entrance",
+    "Med Kit",
+  ],
   mode: "dark",
-  accountId: "641438eff2e06ed9fdbba341",
+  guildApiId: "48B067A2-21A7-4858-8007-4ECA99798EBF",
 };
 
 export const globalSlice = createSlice({

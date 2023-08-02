@@ -21,18 +21,21 @@ import {
 import { PersonOutlineOutlined } from "@mui/icons-material";
 import Header from "components/Header";
 import { useGetCharactersQuery, useGetAccountQuery } from "state/gwapi";
-import { useUpdateAccountMutation } from "state/api";
+import { useUpdateKeyOrCreateAccountMutation } from "state/api";
+import { useSelector } from "react-redux";
 
 const ApiKey = ({ setAccountAdded }) => {
   const isNonMobile = useMediaQuery("(min-width: 600px)");
   const theme = useTheme();
+  const guildApiId = useSelector((state) => state.global.guildApiId);
 
   const [snackbar, setSnackbar] = useState(null);
   const [open, setOpen] = useState(false);
-  const [apikey, setApikey] = useState();
+  const [apikey, setApikey] = useState(
+    JSON.parse(localStorage.getItem("apikey")) || ""
+  );
   const [skip, setSkip] = useState(true);
-  const [characters, setCharacters] = useState();
-  const [addAccount] = useUpdateAccountMutation();
+  const [UpdateOrCreate] = useUpdateKeyOrCreateAccountMutation();
   const [textkey, setTextkey] = useState(
     apikey || JSON.parse(localStorage.getItem("apikey")) || ""
   );
@@ -45,34 +48,37 @@ const ApiKey = ({ setAccountAdded }) => {
 
   const { data } = useGetCharactersQuery(apikey, { skip: skip });
   const { data: accountData } = useGetAccountQuery(apikey, { skip: skip });
+  const [characters, setCharacters] = useState(
+    data || JSON.parse(localStorage.getItem("characters")) || []
+  );
 
   useEffect(() => {
     if (data) {
-      console.log("Effect data", data);
       setCharacters(data);
       localStorage.setItem("characters", JSON.stringify(data));
-    } else if (!characters) {
-      console.log("Effect data no characters", characters);
-      if (localStorage.getItem("characters")) {
-        setCharacters(JSON.parse(localStorage.getItem("characters")));
-      }
-      if (localStorage.getItem("apikey")) {
-        setApikey(JSON.parse(localStorage.getItem("apikey")));
-      }
     }
+    setAccountAdded(false);
   }, [data, characters]);
 
   useEffect(() => {
     if (accountData) {
       console.log("Effect account", accountData);
       localStorage.setItem("accountId", JSON.stringify(accountData["id"]));
-      let queryData = { name: accountData["name"], apiId: accountData["id"] };
-      addAccount(queryData);
+      localStorage.setItem("accountName", JSON.stringify(accountData["name"]));
+      let inGuild = false;
+
+      if (accountData["guilds"].includes(guildApiId)) {
+        localStorage.setItem("guild", JSON.stringify(guildApiId));
+        inGuild = true;
+      }
+      UpdateOrCreate({
+        accountName: accountData["name"],
+        apiId: accountData["id"],
+        inGuild: inGuild,
+      });
       setAccountAdded(true);
     }
   }, [accountData]);
-
-  console.log("characters", characters);
 
   const handleSubmitClick = () => {
     localStorage.setItem("apikey", JSON.stringify(textkey));
@@ -93,6 +99,9 @@ const ApiKey = ({ setAccountAdded }) => {
     localStorage.removeItem("accountId");
     localStorage.removeItem("apikey");
     localStorage.removeItem("characters");
+    setApikey(null);
+    setTextkey(null);
+    setCharacters(null);
     setAccountAdded(false);
     setSnackbar({
       children: "API Key successfully deleted",

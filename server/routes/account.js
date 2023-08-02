@@ -6,6 +6,7 @@ import {
   deleteAccount,
   getAccountById,
   getAccountByName,
+  UpdateKeyOrCreateAccount,
 } from "../controllers/account.js";
 
 const router = express.Router();
@@ -16,5 +17,6 @@ router.get("/get/name/:name", getAccountByName);
 router.get("/get/:id", getAccountById);
 router.post("/delete", deleteAccount);
 router.post("/create", createAccount);
+router.post("/update/api", UpdateKeyOrCreateAccount);
 
 export default router;
