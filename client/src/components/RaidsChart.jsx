@@ -1,7 +1,7 @@
 import React from "react";
 import { ResponsiveBar } from "@nivo/bar";
 import { useTheme, CircularProgress } from "@mui/material";
-import { useGetRaidByIdQuery } from "state/api";
+import { useGetProfessionsQuery, useGetRaidByIdQuery } from "state/api";
 
 const RaidsChart = ({
   isDashboard = false,
@@ -10,44 +10,15 @@ const RaidsChart = ({
   players,
   max = 15,
 }) => {
-  const profColors = {
-    Guardian: "#72C1D9",
-    Dragonhunter: "#72C1D9",
-    Firebrand: "#72C1D9",
-    Revenant: "#D16E5A",
-    Herald: "#D16E5A",
-    Renegade: "#D16E5A",
-    Warrior: "#FFD166",
-    Berserker: "#FFD166",
-    Spellbreaker: "#FFD166",
-    Engineer: "#D09C59",
-    Scrapper: "#D09C59",
-    Holosmith: "#D09C59",
-    Ranger: "#8CDC82",
-    Druid: "#8CDC82",
-    Soulbeast: "#8CDC82",
-    Thief: "#C08F95",
-    Daredevil: "#C08F95",
-    Deadeye: "#C08F95",
-    Elementalist: "#F68A87",
-    Tempest: "#F68A87",
-    Weaver: "#F68A87",
-    Mesmer: "#B679D5",
-    Chronomancer: "#B679D5",
-    Mirage: "#B679D5",
-    Necromancer: "#52A76F",
-    Reaper: "#52A76F",
-    Scourge: "#52A76F",
+  const { data: profs } = useGetProfessionsQuery();
+  console.log("🚀 ~ file: RaidsChart.jsx:43 ~ profs:", profs);
+  const getColor = (bar) => {
+    return profs.filter((prof) => prof.name === bar.data.prof)[0].color;
   };
-  const getColor = (bar) => profColors[bar.data.prof];
   const { data } = useGetRaidByIdQuery({ id: raid_id, stat: view });
   const theme = useTheme();
 
   if (!data) return <CircularProgress color="secondary" />;
-
-  // const { top_total_players, players } = data[0];
-
-  // const toppers = top_total_players[view];
 
   const raidBars = [];
 

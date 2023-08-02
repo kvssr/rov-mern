@@ -55,3 +55,12 @@ export const getUsers = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 };
+
+export const getProfessions = async (req, res) => {
+  try {
+    const professions = await prisma.profession.findMany({});
+    res.status(200).json(professions);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
