@@ -1,7 +1,6 @@
 import React from "react";
 import {
   Box,
-  Divider,
   Drawer,
   IconButton,
   List,
@@ -13,7 +12,6 @@ import {
   useTheme,
 } from "@mui/material";
 import {
-  SettingsOutlined,
   ChevronLeft,
   ChevronRightOutlined,
   HomeOutlined,
@@ -28,7 +26,7 @@ import {
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import FlexBetween from "./FlexBetween";
-import profileImage from "assets/profile_anon.jpg";
+import LogoImage from "assets/logo.png";
 
 const navItems = [
   {
@@ -134,14 +132,18 @@ const Sidebar = ({
                 <Box
                   display="flex"
                   alignItems="center"
-                  gap="0.5rem"
+                  width="100%"
                 >
-                  <Typography
-                    variant="h4"
-                    fontWeight="bold"
-                  >
-                    ODIN
-                  </Typography>
+                  <img
+                    src={LogoImage}
+                    alt="logo"
+                    width={100}
+                    maxWidth="150px"
+                    style={{
+                      "margin-left": "auto",
+                      "margin-right": "auto",
+                    }}
+                  ></img>
                 </Box>
                 {!isNonMobile && (
                   <IconButton onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
@@ -215,43 +217,7 @@ const Sidebar = ({
           <Box
             // position="absolute"
             bottom="2rem"
-          >
-            {/* <Divider />
-            <FlexBetween
-              textTransform="none"
-              gap="1rem"
-              m="1.5rem 1rem 0 1.5rem"
-            >
-              <Box
-                component="img"
-                alt="profile"
-                src={profileImage}
-                height="40px"
-                width="40px"
-                borderRadius="50%"
-                sx={{ objectFit: "cover" }}
-              />
-              <Box textAlign="left">
-                <Typography
-                  fontWeight="bold"
-                  fontSize="0.8rem"
-                  sx={{ color: theme.palette.secondary[100] }}
-                >
-                  {account?.name}
-                </Typography>
-                <Typography
-                  fontWeight="bold"
-                  fontSize="0.7rem"
-                  sx={{ color: theme.palette.secondary[200] }}
-                >
-                  {account.accountRole?.name || "Guest"}
-                </Typography>
-              </Box>
-              <SettingsOutlined
-                sx={{ color: theme.palette.secondary[300], fontSize: "25px" }}
-              />
-            </FlexBetween> */}
-          </Box>
+          ></Box>
         </Drawer>
       )}
     </Box>
