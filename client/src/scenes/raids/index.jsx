@@ -13,56 +13,11 @@ import { useGetRaidsInfoListQuery, useGetStatTypesQuery } from "state/api";
 import RaidSelector from "components/RaidSelector";
 import { useSelector } from "react-redux";
 
-// const statItems = [
-//   {
-//     text: "Damage",
-//     value: "dmg",
-//   },
-//   {
-//     text: "Boonrips",
-//     value: "rips",
-//   },
-//   {
-//     text: "Cleanses",
-//     value: "cleanses",
-//   },
-//   {
-//     text: "Heals",
-//     value: "heal",
-//   },
-//   {
-//     text: "Distance to tag",
-//     value: "dist",
-//   },
-//   {
-//     text: "Stability",
-//     value: "stab",
-//   },
-//   {
-//     text: "Protection",
-//     value: "prot",
-//   },
-//   {
-//     text: "Aegis",
-//     value: "aegis",
-//   },
-//   {
-//     text: "Regeneration",
-//     value: "regen",
-//   },
-//   {
-//     text: "Might",
-//     value: "might",
-//   },
-//   {
-//     text: "Fury",
-//     value: "fury",
-//   },
-// ];
-
 const Raids = () => {
   const [selectedRaid, setSelectedRaid] = useState(-1);
   const [view, setView] = useState("dmg");
+  const [order, setOrder] = useState("Desc");
+  const [orderBy, setOrderBy] = useState("Total");
   const [max, setMax] = useState(15);
   const { data: raidInfoList, isLoading } = useGetRaidsInfoListQuery();
   const { data: statTypes } = useGetStatTypesQuery();
@@ -117,6 +72,48 @@ const Raids = () => {
               })}
             </Select>
           </FormControl>
+          <FormControl sx={{ ml: "1rem" }}>
+            <InputLabel>Order By</InputLabel>
+            <Select
+              value={orderBy}
+              label="OrderBy"
+              onChange={(e) => setOrderBy(e.target.value)}
+            >
+              <MenuItem
+                value="Total"
+                key="Total"
+              >
+                Total
+              </MenuItem>
+              <MenuItem
+                value="Avg"
+                key="Avg"
+              >
+                Average
+              </MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl sx={{ ml: "1rem" }}>
+            <InputLabel>Order</InputLabel>
+            <Select
+              value={order}
+              label="Order"
+              onChange={(e) => setOrder(e.target.value)}
+            >
+              <MenuItem
+                value="Asc"
+                key="Asc"
+              >
+                Ascending
+              </MenuItem>
+              <MenuItem
+                value="Desc"
+                key="Desc"
+              >
+                Descending
+              </MenuItem>
+            </Select>
+          </FormControl>
           <FormControl sx={{ ml: "1rem", width: "100px" }}>
             <Slider
               id="silder-max"
@@ -140,6 +137,8 @@ const Raids = () => {
           view={view}
           raid_id={selectedRaid ? selectedRaid : raidInfoList[0]["id"]}
           max={max}
+          order={order}
+          orderBy={orderBy}
         />
       </Box>
     </Box>

@@ -9,9 +9,10 @@ const RaidsChart = ({
   view,
   players,
   max = 15,
+  order = "Desc",
+  orderBy = "Total",
 }) => {
   const { data: profs } = useGetProfessionsQuery();
-  console.log("🚀 ~ file: RaidsChart.jsx:43 ~ profs:", profs);
   const getColor = (bar) => {
     return profs.filter((prof) => prof.name === bar.data.prof)[0].color;
   };
@@ -20,34 +21,11 @@ const RaidsChart = ({
 
   if (!data) return <CircularProgress color="secondary" />;
 
-  const raidBars = [];
-  const DescStatList = ["dist", "deaths", "dmg_taken"];
+  let raidBars = FormatData(data, orderBy);
 
-  data.map((row) => {
-    const playerName = row["name"];
-    const total = row["characterRaidStats"][0]["value"];
-    const prof = row["profession"]["name"];
-    const profShort = row["profession"]["name_short"];
-    const avg = row["characterRaidStats"][1]["value"];
-    raidBars.push({
-      name: `${playerName} (${profShort})`,
-      y: total,
-      yColor: "#675123",
-      prof: prof,
-      avg: avg,
-    });
-    return raidBars;
-  });
-
-  if (DescStatList.includes(view)) {
-    raidBars.sort((a, b) => {
-      return a.y - b.y;
-    });
-  } else {
-    raidBars.sort((a, b) => {
-      return b.y - a.y;
-    });
-  }
+  console.log("order", order);
+  console.log("orderBy", orderBy);
+  raidBars = OrderBars(raidBars, view, order, isDashboard);
 
   if (max > raidBars.length) max = raidBars.length;
   console.log("raidBars", raidBars);
@@ -110,7 +88,7 @@ const RaidsChart = ({
               <b>Prof</b>: {data.data.prof}
               <br />
               <b>Total</b>:{" "}
-              {data.value.toLocaleString(undefined, {
+              {data.data.total.toLocaleString(undefined, {
                 minimumFractionDigits: 0,
               })}
               <br />
@@ -139,7 +117,7 @@ const RaidsChart = ({
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 20,
-        legend: "total",
+        legend: orderBy,
         legendPosition: "middle",
         legendOffset: 32,
       }}
@@ -157,8 +135,9 @@ const RaidsChart = ({
         from: "color",
         modifiers: [["darker", 1.8]],
       }}
-      label={(bar) =>
-        `${bar.value.toLocaleString(undefined, {
+      label={(bar) => {
+        if (bar.data.total === undefined) return "";
+        return `${bar.data.total.toLocaleString(undefined, {
           minimumFractionDigits: 0,
           maximumFractionDigits: 0,
         })} (${
@@ -167,13 +146,49 @@ const RaidsChart = ({
                 minimumFractionDigits: 0,
               })
             : ""
-        })`
-      }
+        })`;
+      }}
       enableGridY={false}
       enableGridX={true}
       role="application"
     />
   );
+};
+
+const FormatData = (data, orderBy) => {
+  let raidBars = [];
+  data.map((row) => {
+    const playerName = row["name"];
+    const total = row["characterRaidStats"][0]["value"];
+    const prof = row["profession"]["name"];
+    const profShort = row["profession"]["name_short"];
+    const avg = row["characterRaidStats"][1]["value"];
+    raidBars.push({
+      name: `${playerName} (${profShort})`,
+      y: orderBy === "Total" ? total : avg,
+      yColor: "#675123",
+      prof: prof,
+      avg: avg,
+      total: total,
+    });
+    return raidBars;
+  });
+  return raidBars;
+};
+
+const OrderBars = (chart, view, order, isDashboard) => {
+  const DescStatList = ["dist", "deaths", "dmg_taken"];
+
+  if ((DescStatList.includes(view) && isDashboard) || order === "Asc") {
+    chart.sort((a, b) => {
+      return a.y - b.y;
+    });
+  } else {
+    chart.sort((a, b) => {
+      return b.y - a.y;
+    });
+  }
+  return chart;
 };
 
 export default RaidsChart;
