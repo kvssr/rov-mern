@@ -3,6 +3,7 @@ import { Box, useMediaQuery } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import Navbar from "components/Navbar";
 import Sidebar from "components/Sidebar";
+// import BgImage from "assets/bg_carbon.jpg";
 
 function Layout({ account }) {
   const isNonMobile = useMediaQuery("(min-width: 600px)");
@@ -13,6 +14,15 @@ function Layout({ account }) {
       display={isNonMobile ? "flex" : "block"}
       width="100%"
       height="100%"
+      sx={
+        {
+          // backgroundImage: `url(${BgImage})`,
+          // backgroundPositionY: "590px",
+          // backgroundPositionX: "center",
+          // backgroundColor: "#00000085",
+          // backgroundBlendMode: "overlay",
+        }
+      }
     >
       <Sidebar
         account={account || ""}
@@ -30,7 +40,11 @@ function Layout({ account }) {
           isSidebarOpen={isSidebarOpen}
           setIsSidebarOpen={setIsSidebarOpen}
         />
-        <Outlet />
+        <Outlet
+          sx={{
+            backgroundColor: "yellow",
+          }}
+        />
       </Box>
     </Box>
   );
