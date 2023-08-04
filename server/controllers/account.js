@@ -42,7 +42,7 @@ export const UpdateKeyOrCreateAccount = async (req, res) => {
         name: accountName,
       },
     });
-    if (account) {
+    if (account && account.accountRoleId) {
       account = await prisma.account.update({
         where: {
           name: accountName,
@@ -97,13 +97,16 @@ const createAccountWithRole = async (name, apiId, inGuild) => {
   if (inGuild) {
     role = await prisma.accountRole.findFirst({ where: { name: "User" } });
   }
+  let data = {
+    name: name,
+    apiId: apiId,
+    accountRoleId: role.id,
+  };
   try {
-    const account = await prisma.account.create({
-      data: {
-        name: name,
-        apiId: apiId,
-        accountRoleId: role.id,
-      },
+    const account = await prisma.account.upsert({
+      where: { name: name },
+      create: data,
+      update: data,
     });
     return account;
   } catch (e) {
