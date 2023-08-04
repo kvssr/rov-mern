@@ -13,6 +13,7 @@ export const api = createApi({
     "Groups",
     "Guild",
     "Profession",
+    "VisitLog",
   ],
   // Account
   endpoints: (build) => ({
@@ -56,6 +57,15 @@ export const api = createApi({
     getProfessions: build.query({
       query: () => `general/professions`,
       providesTags: ["Profession"],
+    }),
+    //VisitLog
+    createVisitLog: build.mutation({
+      query: (body) => ({
+        url: `visitlog/create`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["VisitLog"],
     }),
     //User
     getUsers: build.query({
@@ -155,4 +165,5 @@ export const {
   useUpdateAccountMutation,
   useGetGuildByApiIdQuery,
   useGetProfessionsQuery,
+  useCreateVisitLogMutation,
 } = api;

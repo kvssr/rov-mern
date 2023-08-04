@@ -81,6 +81,7 @@ model Account {
   accountRoleId Int?
   characters    Character[]
   guilds        Guild[]
+  visitLog      VisitLog[]
 }
 
 model Raid {
@@ -254,4 +255,12 @@ model Guild {
   tag        String
   apiId      String    @unique
   members    Account[]
+}
+
+model VisitLog {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  accountId  Int
+  account    Account  @relation(fields: [accountId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
