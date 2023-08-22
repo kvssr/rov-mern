@@ -5,7 +5,6 @@ import {
   useGetCharactersByRaidQuery,
   useGetStatTypesQuery,
 } from "state/api";
-import { ButtonGroup } from "devextreme-react/button-group";
 import {
   DataGrid,
   Column,
@@ -18,6 +17,7 @@ import {
   SearchPanel,
   Summary,
   GroupItem,
+  ColumnFixing,
 } from "devextreme-react/data-grid";
 import "devextreme/dist/css/dx.dark.css";
 import { Button } from "devextreme-react/button";
@@ -26,6 +26,7 @@ import RaidSelector from "components/RaidSelector";
 import { useEffect } from "react";
 import Header from "components/Header";
 import { useSelector } from "react-redux";
+import Pagination from "components/Pagination";
 
 const Groups = () => {
   const [selectedRaid, setSelectedRaid] = useState(-1);
@@ -34,7 +35,7 @@ const Groups = () => {
   const { data: characterList, isLoading: characterLoading } =
     useGetCharactersByRaidQuery(selectedRaid);
 
-  const [selectedFight, setSelectedFight] = useState(0);
+  const [selectedFight, setSelectedFight] = useState(1);
   const [expanded, setExpanded] = useState(true);
   const theme = useTheme();
   const statBlacklist = useSelector((state) => state.global.statBlacklist);
@@ -42,7 +43,7 @@ const Groups = () => {
   const visibleColumns = ["Damage", "Boonrips", "Healing", "Stability"];
 
   useEffect(() => {
-    setSelectedFight([0]);
+    setSelectedFight(1);
   }, [selectedRaid]);
 
   if (!data || isLoading || characterLoading || !statslist) {
@@ -50,17 +51,20 @@ const Groups = () => {
   }
 
   const handleSelectionChange = (e) => {
-    setSelectedFight([e.addedItems[0].id]);
+    console.log("change e", e);
+    const id = e.addedItems[0].id;
+    if (id === "back") {
+      setSelectedFight(selectedFight - 1);
+    } else if (id === "next") {
+      setSelectedFight(selectedFight + 1);
+    } else {
+      setSelectedFight(e.addedItems[0].id);
+    }
   };
 
   const statslistFiltered = statslist.filter(
     (item) => statBlacklist.includes(item.name) === false
   );
-
-  console.log("data", data);
-  console.log("selected fight", selectedFight);
-  console.log("characters", characterList);
-  console.log("statsList", statslist);
 
   const fontStyles = [];
 
@@ -105,25 +109,26 @@ const Groups = () => {
         >
           {"Fight #"}
         </Typography>
-        <ButtonGroup
-          items={fontStyles}
-          keyExpr="id"
-          onSelectionChanged={handleSelectionChange}
-          selectedItemKeys={selectedFight}
+        <Pagination
+          currentPage={selectedFight}
+          pages={data.length}
+          onPageChange={handleSelectionChange}
         />
       </Box>
       <Box mt="2.5rem">
         <DataGrid
           id="dataGrid"
-          dataSource={data.length > 0 ? data[selectedFight].characters : []}
+          dataSource={data.length > 0 ? data[selectedFight - 1].characters : []}
           keyExpr="id"
           hoverStateEnabled={true}
+          columnAutoWidth={true}
         >
           <Column
             dataField={"id"}
             caption="Character"
             cellRender={getCharacterName}
             allowHiding={false}
+            fixed={true}
           ></Column>
           {statslistFiltered.map((stat) => {
             return (
@@ -141,6 +146,7 @@ const Groups = () => {
             groupIndex={0}
           ></Column>
           <Paging enabled={false} />
+          <ColumnFixing enabled={true} />
           <Grouping
             autoExpandAll={expanded}
             expandMode="rowClick"
