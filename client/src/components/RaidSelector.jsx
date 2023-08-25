@@ -24,9 +24,8 @@ const RaidSelector = ({ selectedRaid, setSelectedRaid }) => {
         onChange={(e) => handleRaidSelect(e.target.value)}
       >
         {raidInfoList.map((raid) => {
-          const start_date = raid["start_date"].split("T")[0];
-          const start_time = raid["start_time"].split("T")[1].split(".")[0];
-          //   const end_time = raid["end_time"].split("T")[1].split(".")[0];
+          const start_date = new Date(raid["start_date"]).toLocaleDateString();
+          const start_time = new Date(raid["start_time"]).toLocaleTimeString();
           const name = raid["name"];
           const text = `${start_date} | ${start_time} | ${name}`;
           return (
