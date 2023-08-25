@@ -110,6 +110,7 @@ const addRaid = async (data, full_time, full_end_time, raidName, raidType) => {
       max_enemies: data["max_enemies"],
       mean_enemies: data["mean_enemies"],
       total_kills: data["total_kills"],
+      total_deaths: data["overall_squad_stats"]["deaths"],
       raidTypeId: raidType,
     },
   });

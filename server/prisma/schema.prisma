@@ -98,6 +98,7 @@ model Raid {
   max_enemies       Int
   mean_enemies      Float
   total_kills       Int
+  total_deaths      Int                 @default(0)
   raidType          RaidType?           @relation(fields: [raidTypeId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   raidStats         RaidStat[]
   fights            Fight[]
