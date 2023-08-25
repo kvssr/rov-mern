@@ -164,6 +164,7 @@ const addFights = async (raid_id, data) => {
         enemies: row["enemies"],
         duration: row["duration"],
         kills: row["kills"],
+        deaths: row["total_stats"]["deaths"],
         skipped: row["skipped"],
       },
     });

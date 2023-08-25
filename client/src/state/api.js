@@ -13,6 +13,7 @@ export const api = createApi({
     "Groups",
     "Guild",
     "Profession",
+    "Fight",
   ],
   // Account
   endpoints: (build) => ({
@@ -56,6 +57,11 @@ export const api = createApi({
     getProfessions: build.query({
       query: () => `general/professions`,
       providesTags: ["Profession"],
+    }),
+    //Fight
+    getFightsByRaid: build.query({
+      query: (id) => `fight/all/${id}`,
+      providesTags: ["Fight"],
     }),
     //User
     getUsers: build.query({
@@ -155,4 +161,5 @@ export const {
   useUpdateAccountMutation,
   useGetGuildByApiIdQuery,
   useGetProfessionsQuery,
+  useGetFightsByRaidQuery,
 } = api;

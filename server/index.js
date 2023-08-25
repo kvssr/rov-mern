@@ -13,6 +13,7 @@ import raidRoutes from "./routes/raid.js";
 import logRoutes from "./routes/log.js";
 import accountRoutes from "./routes/account.js";
 import guildRoutes from "./routes/guild.js";
+import fightRoutes from "./routes/fight.js";
 import { PrismaClient } from "@prisma/client";
 
 // data imports
@@ -45,6 +46,7 @@ app.use("/raid", raidRoutes);
 app.use("/log", logRoutes);
 app.use("/account", accountRoutes);
 app.use("/guild", guildRoutes);
+app.use("/fight", fightRoutes);
 
 /* PRISMA */
 export const prisma = new PrismaClient();

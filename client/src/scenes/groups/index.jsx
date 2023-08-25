@@ -4,6 +4,8 @@ import {
   useGetGroupsQuery,
   useGetCharactersByRaidQuery,
   useGetStatTypesQuery,
+  useGetFightsByRaidQuery,
+  useGetProfessionsQuery,
 } from "state/api";
 import {
   DataGrid,
@@ -18,20 +20,36 @@ import {
   Summary,
   GroupItem,
   ColumnFixing,
+  TotalItem,
 } from "devextreme-react/data-grid";
 import "devextreme/dist/css/dx.dark.css";
 import { Button } from "devextreme-react/button";
-import ProfessionIcon from "assets/profession_icons/ProfessionIcon";
+import ProfessionIcon, {
+  ProfessionIconLink,
+} from "assets/profession_icons/ProfessionIcon";
 import RaidSelector from "components/RaidSelector";
 import { useEffect } from "react";
 import Header from "components/Header";
 import { useSelector } from "react-redux";
 import Pagination from "components/Pagination";
+import { PieChart, ResponsiveBox } from "devextreme-react";
+import {
+  Annotation,
+  Border,
+  CommonAnnotationSettings,
+  Image,
+  Legend,
+  Series,
+} from "devextreme-react/pie-chart";
+import { Col, Location, Row } from "devextreme-react/responsive-box";
+import { Font, Label } from "devextreme-react/chart";
 
 const Groups = () => {
   const [selectedRaid, setSelectedRaid] = useState(-1);
   const { data, isLoading } = useGetGroupsQuery(selectedRaid);
   const { data: statslist } = useGetStatTypesQuery();
+  const { data: professions } = useGetProfessionsQuery();
+  const { data: fightsInfo } = useGetFightsByRaidQuery(selectedRaid);
   const { data: characterList, isLoading: characterLoading } =
     useGetCharactersByRaidQuery(selectedRaid);
 
@@ -40,15 +58,32 @@ const Groups = () => {
   const theme = useTheme();
   const statBlacklist = useSelector((state) => state.global.statBlacklist);
 
-  const visibleColumns = ["Damage", "Boonrips", "Healing", "Stability"];
+  const visibleColumns = [
+    "Damage",
+    "Boonrips",
+    "Healing",
+    "Cleanses",
+    "Stability",
+    "Deaths",
+  ];
 
   useEffect(() => {
     setSelectedFight(1);
   }, [selectedRaid]);
 
-  if (!data || isLoading || characterLoading || !statslist) {
+  if (!data || isLoading || characterLoading || !statslist || !fightsInfo) {
     return "Is Loading...";
   }
+
+  const selectedFightInfo = fightsInfo[selectedFight - 1];
+  let fightGridData = [{ Type: "Total" }, { Type: "Average" }];
+  if (selectedFightInfo) {
+    selectedFightInfo.fightStats.forEach((stat) => {
+      fightGridData[stat.valueTypeId - 1][stat.statTypeId] = stat.value;
+    });
+  }
+
+  console.log("fightGridData", fightGridData);
 
   const handleSelectionChange = (e) => {
     console.log("change e", e);
@@ -66,14 +101,28 @@ const Groups = () => {
     (item) => statBlacklist.includes(item.name) === false
   );
 
-  const fontStyles = [];
-
-  data.forEach((fight) => {
-    fontStyles.push({
-      id: fight.fight_number,
-      text: fight.fight_number + 1,
+  const profList = [];
+  const profDist = [];
+  if (data.length > 0 && characterList) {
+    data[selectedFight - 1].characters.forEach((row) => {
+      const character = characterList[row.id];
+      if (profList.includes(character.profession.name)) {
+        let dist = profDist.find(
+          (dist) => dist.prof === character.profession.name
+        );
+        dist.value += 1;
+      } else {
+        profList.push(character.profession.name);
+        profDist.push({
+          prof: character.profession.name,
+          value: 1,
+        });
+      }
     });
-  });
+  }
+
+  console.log("profDist: ", profList);
+  console.log("profDist: ", profDist);
 
   const getCharacterName = (cellData) => {
     if (!characterList[cellData.key]) return "";
@@ -81,113 +130,244 @@ const Groups = () => {
     return (
       <div>
         {ProfessionIcon(prof, 15)}
+
         {characterList[cellData.key].name}
       </div>
     );
   };
 
+  const customizePoint = (point) => {
+    const profName = point.argument;
+    const prof = professions.find((p) => p.name === profName);
+    return { color: prof.color };
+  };
+
   return (
     <Box m="1.5rem 2.5rem">
-      <Header
-        title="Groups"
-        subtitle="group composition per fight"
-      />
-      <Box
-        mb="1.5rem"
-        mt="1.5rem"
-      >
-        <RaidSelector
-          selectedRaid={selectedRaid}
-          setSelectedRaid={setSelectedRaid}
-        />
-      </Box>
-      <Box>
-        <Typography
-          variant="h6"
-          color={theme.palette.secondary[300]}
-          sx={{ mb: "5px" }}
-        >
-          {"Fight #"}
-        </Typography>
-        <Pagination
-          currentPage={selectedFight}
-          pages={data.length}
-          onPageChange={handleSelectionChange}
-        />
-      </Box>
-      <Box mt="2.5rem">
-        <DataGrid
-          id="dataGrid"
-          dataSource={data.length > 0 ? data[selectedFight - 1].characters : []}
-          keyExpr="id"
-          hoverStateEnabled={true}
-          columnAutoWidth={true}
-        >
-          <Column
-            dataField={"id"}
-            caption="Character"
-            cellRender={getCharacterName}
-            allowHiding={false}
-            fixed={true}
-          ></Column>
-          {statslistFiltered.map((stat) => {
-            return (
-              <Column
-                dataField={stat.id.toString()}
-                caption={stat.name}
-                visible={visibleColumns.includes(stat.name)}
-                format=",##0.##"
-                key={stat.id}
-              ></Column>
-            );
-          })}
-          <Column
-            dataField="group"
-            groupIndex={0}
-          ></Column>
-          <Paging enabled={false} />
-          <ColumnFixing enabled={true} />
-          <Grouping
-            autoExpandAll={expanded}
-            expandMode="rowClick"
+      <ResponsiveBox singleColumnScreen="xs sm">
+        <Row ratio={1} />
+        <Row ratio={5} />
+        <Col ratio={2} />
+        <Col ratio={1} />
+
+        <Item>
+          <Location
+            row={0}
+            col={0}
           />
-          <Summary>
+          <Box>
+            <Header
+              title="Groups"
+              subtitle="group composition per fight"
+            />
+            <Box
+              mb="1.5rem"
+              mt="1.5rem"
+            >
+              <RaidSelector
+                selectedRaid={selectedRaid}
+                setSelectedRaid={setSelectedRaid}
+              />
+            </Box>
+            <Typography
+              variant="h6"
+              color={theme.palette.secondary[300]}
+              sx={{ mb: "5px" }}
+            >
+              {"Fight #"}
+            </Typography>
+            <Pagination
+              currentPage={selectedFight}
+              pages={data.length}
+              onPageChange={handleSelectionChange}
+            />
+            <Box mt="1.5rem">
+              <DataGrid
+                id="dg-fightInfo"
+                dataSource={fightsInfo.length > 0 ? [selectedFightInfo] : []}
+                keyExpr="id"
+                hoverStateEnabled={true}
+                columnAutoWidth={true}
+              >
+                <Column
+                  dataField={"start_time"}
+                  caption="Start Time"
+                  customizeText={(text) => {
+                    return new Date(text.value).toLocaleTimeString();
+                  }}
+                ></Column>
+                <Column
+                  dataField={"end_time"}
+                  caption="End Time"
+                  customizeText={(text) => {
+                    return new Date(text.value).toLocaleTimeString();
+                  }}
+                ></Column>
+                <Column
+                  dataField={"allies"}
+                  caption="Allies"
+                ></Column>
+                <Column
+                  dataField={"enemies"}
+                  caption="Enemies"
+                ></Column>
+                <Column
+                  dataField={"kills"}
+                  caption="Kills"
+                ></Column>
+                <Column
+                  dataField={"deaths"}
+                  caption="Deaths"
+                ></Column>
+              </DataGrid>
+            </Box>
+          </Box>
+        </Item>
+        <Item>
+          <Location
+            row={0}
+            col={1}
+          />
+          <PieChart
+            id="pie"
+            dataSource={profDist}
+            customizePoint={customizePoint}
+          >
+            <CommonAnnotationSettings
+              type="image"
+              color="transparent"
+              paddingLeftRight={0}
+              paddingTopBottom={-25}
+            >
+              <Image
+                height={20}
+                width={20}
+              />
+            </CommonAnnotationSettings>
+            {profDist.map((item) => (
+              <Annotation
+                key={item.prof}
+                argument={item.prof}
+                data={item.value}
+              >
+                <Image url={ProfessionIconLink(item.prof)} />
+                <Border visible={false} />
+              </Annotation>
+            ))}
+            <Series
+              argumentField="prof"
+              valueField="value"
+            >
+              <Label
+                visible
+                position="inside"
+                radialOffset={30}
+                backgroundColor="transparent"
+              >
+                <Font
+                  size={16}
+                  weight={600}
+                />
+              </Label>
+            </Series>
+            <Legend verticalAlignment="Middle"></Legend>
+          </PieChart>
+        </Item>
+        <Item>
+          <Location
+            row={1}
+            col={0}
+            colspan={2}
+          />
+          <DataGrid
+            id="dataGrid"
+            dataSource={
+              data.length > 0 ? data[selectedFight - 1].characters : []
+            }
+            keyExpr="id"
+            hoverStateEnabled={true}
+            columnAutoWidth={true}
+          >
+            <Column
+              dataField={"id"}
+              caption="Character"
+              cellRender={getCharacterName}
+              allowHiding={false}
+              fixed={true}
+            ></Column>
             {statslistFiltered.map((stat) => {
               return (
-                <GroupItem
-                  column={stat.id.toString()}
-                  summaryType="sum"
-                  showInGroupFooter={false}
-                  alignByColumn={true}
-                  displayFormat="{0}"
-                  valueFormat=",##0.##"
+                <Column
+                  dataField={stat.id.toString()}
+                  caption={stat.name}
+                  visible={visibleColumns.includes(stat.name)}
+                  format=",##0.##"
                   key={stat.id}
-                />
+                ></Column>
               );
             })}
-          </Summary>
-          <GroupPanel visible={true} />
-          <ColumnChooser
-            enabled={true}
-            mode="select"
-            allowSearch={true}
-            height={340}
-          />
-          <SearchPanel visible={true} />
-          <Toolbar>
-            <Item name="groupPanel" />
-            <Item location="after">
-              <Button
-                text={expanded ? "Collapse All" : "Expand All"}
-                width={110}
-                onClick={() => setExpanded((prevExpanded) => !prevExpanded)}
-              />
-            </Item>
-            <Item name="columnChooserButton" />
-            <Item name="searchPanel" />
-          </Toolbar>
-        </DataGrid>
-      </Box>
+            <Column
+              dataField="group"
+              groupIndex={0}
+            ></Column>
+            <Paging enabled={false} />
+            <ColumnFixing enabled={true} />
+            <Grouping
+              autoExpandAll={expanded}
+              expandMode="rowClick"
+            />
+            <Summary>
+              {statslistFiltered.map((stat) => {
+                return [
+                  <GroupItem
+                    column={stat.id.toString()}
+                    summaryType="sum"
+                    showInGroupFooter={false}
+                    alignByColumn={true}
+                    displayFormat="{0}"
+                    valueFormat=",##0.##"
+                    key={stat.id}
+                  />,
+                  <TotalItem
+                    column={stat.id.toString()}
+                    summaryType="avg"
+                    valueFormat=",##0.##"
+                    alignment="right"
+                    displayFormat="Avg {0}"
+                  />,
+                  <TotalItem
+                    column={stat.id.toString()}
+                    summaryType="sum"
+                    valueFormat=",##0.00"
+                    alignment="right"
+                    displayFormat="Total {0}"
+                  />,
+                ];
+              })}
+            </Summary>
+            <GroupPanel visible={true} />
+            <ColumnChooser
+              enabled={true}
+              mode="select"
+              allowSearch={true}
+              height={340}
+            />
+            <SearchPanel visible={true} />
+            <Toolbar>
+              <Item name="groupPanel" />
+              <Item location="after">
+                <Button
+                  text={expanded ? "Collapse All" : "Expand All"}
+                  width={110}
+                  onClick={() => setExpanded((prevExpanded) => !prevExpanded)}
+                />
+              </Item>
+              <Item name="columnChooserButton" />
+              <Item name="searchPanel" />
+            </Toolbar>
+          </DataGrid>
+        </Item>
+      </ResponsiveBox>
     </Box>
   );
 };

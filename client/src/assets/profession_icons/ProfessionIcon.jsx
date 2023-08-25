@@ -70,4 +70,8 @@ const ProfessionIcon = (prof, size = 50) => {
   );
 };
 
+export const ProfessionIconLink = (prof) => {
+  return iconList[prof];
+};
+
 export default ProfessionIcon;
