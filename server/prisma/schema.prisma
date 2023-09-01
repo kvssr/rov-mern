@@ -259,8 +259,10 @@ model Guild {
 
 model VisitLog {
   id         Int      @id @default(autoincrement())
-  created_at DateTime @default(now())
+  created_at DateTime @default(now()) @db.Date
   updated_at DateTime @updatedAt
   accountId  Int
   account    Account  @relation(fields: [accountId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@unique([created_at, accountId])
 }

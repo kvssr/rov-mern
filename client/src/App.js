@@ -13,6 +13,7 @@ import ApiKey from "scenes/apikey";
 import Personal from "scenes/personal";
 import Users from "scenes/users";
 import Groups from "scenes/groups";
+import Visitlog from "scenes/visitlog";
 import {
   useGetAccountByApiIdQuery,
   useCreateVisitLogMutation,
@@ -34,7 +35,7 @@ function App() {
   const [accountAdded, setAccountAdded] = useState(false);
   if (isLoading) return "isLoading...";
   if (account && !logAdded) {
-    createVisitLog(account.id);
+    createVisitLog({ accountId: account.id });
     setLogAdded(true);
   }
   return (
@@ -107,6 +108,11 @@ function App() {
                     key="characters"
                     path="/characters"
                     element={<Characters />}
+                  />,
+                  <Route
+                    key="visitlog"
+                    path="/visitlog"
+                    element={<Visitlog />}
                   />,
                 ]}{" "}
               <Route

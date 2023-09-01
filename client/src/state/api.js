@@ -59,6 +59,10 @@ export const api = createApi({
       providesTags: ["Profession"],
     }),
     //VisitLog
+    getVisitLogCountDay: build.query({
+      query: () => `visitlog/all/count/day`,
+      providesTags: ["Profession"],
+    }),
     createVisitLog: build.mutation({
       query: (body) => ({
         url: `visitlog/create`,
@@ -166,4 +170,5 @@ export const {
   useGetGuildByApiIdQuery,
   useGetProfessionsQuery,
   useCreateVisitLogMutation,
+  useGetVisitLogCountDayQuery,
 } = api;
