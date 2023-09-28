@@ -1,4 +1,5 @@
 import { prisma } from "../index.js";
+import { getAccountById } from "./account.js";
 
 export const createLog = async (req, res) => {
   const { accountId } = req.body;
@@ -43,9 +44,16 @@ const getLastLogByAccountId = async (accountId) => {
 };
 
 export const getAllLogsCountDay = async (req, res) => {
+  const { startDate } = req.params;
+  console.log("startDate All", startDate);
   try {
     const logs = await prisma.visitLog.groupBy({
       by: ["created_at"],
+      where: {
+        created_at: {
+          gte: new Date(Number(startDate)),
+        },
+      },
       _count: true,
       orderBy: {
         created_at: "asc",
@@ -53,6 +61,45 @@ export const getAllLogsCountDay = async (req, res) => {
     });
     res.status(200).json(logs);
   } catch (err) {
+    res.status(404).json({ message: err });
+  }
+};
+
+export const getLogsUserCount = async (req, res) => {
+  const { startDate } = req.params;
+  console.log("startDate User", startDate);
+  try {
+    let logs = await prisma.visitLog.groupBy({
+      by: ["accountId"],
+      where: {
+        created_at: {
+          gte: new Date(Number(startDate)),
+        },
+      },
+      _count: true,
+      orderBy: {
+        _count: {
+          accountId: "desc",
+        },
+      },
+    });
+
+    let logsB = [];
+    Promise.all(
+      logs.map(async (log) => {
+        const account = await getAccountById(log.accountId);
+        logsB.push({
+          accountId: log.accountId,
+          _count: log._count,
+          account: account,
+        });
+      })
+    ).then(() => {
+      res.status(200).json(logsB);
+    });
+  } catch (err) {
+    console.log("🚀 ~ file: visitlog.js:71 ~ getLogsUserCount ~ err:", err);
+
     res.status(404).json({ message: err });
   }
 };

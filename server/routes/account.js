@@ -4,7 +4,7 @@ import {
   createAccount,
   getAccountByApiId,
   deleteAccount,
-  getAccountById,
+  handleAccountById,
   getAccountByName,
   UpdateKeyOrCreateAccount,
 } from "../controllers/account.js";
@@ -14,7 +14,7 @@ const router = express.Router();
 router.post("/update", updateAccount);
 router.get("/get/api/:id", getAccountByApiId);
 router.get("/get/name/:name", getAccountByName);
-router.get("/get/:id", getAccountById);
+router.get("/get/:id", handleAccountById);
 router.post("/delete", deleteAccount);
 router.post("/create", createAccount);
 router.post("/update/api", UpdateKeyOrCreateAccount);

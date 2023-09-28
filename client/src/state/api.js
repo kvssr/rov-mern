@@ -60,8 +60,12 @@ export const api = createApi({
     }),
     //VisitLog
     getVisitLogCountDay: build.query({
-      query: () => `visitlog/all/count/day`,
-      providesTags: ["Profession"],
+      query: (startDate) => `visitlog/all/count/day/${startDate}`,
+      providesTags: ["VisitLog"],
+    }),
+    getVisitLogUserCount: build.query({
+      query: (startDate) => `visitlog/all/count/user/${startDate}`,
+      providesTags: ["VisitLog"],
     }),
     createVisitLog: build.mutation({
       query: (body) => ({
@@ -171,4 +175,5 @@ export const {
   useGetProfessionsQuery,
   useCreateVisitLogMutation,
   useGetVisitLogCountDayQuery,
+  useGetVisitLogUserCountQuery,
 } = api;

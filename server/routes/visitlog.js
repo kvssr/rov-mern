@@ -1,9 +1,14 @@
 import express from "express";
-import { createLog, getAllLogsCountDay } from "../controllers/visitlog.js";
+import {
+  createLog,
+  getAllLogsCountDay,
+  getLogsUserCount,
+} from "../controllers/visitlog.js";
 
 const router = express.Router();
 
 router.post("/create", createLog);
-router.get("/all/count/day", getAllLogsCountDay);
+router.get("/all/count/day/:startDate", getAllLogsCountDay);
+router.get("/all/count/user/:startDate", getLogsUserCount);
 
 export default router;
