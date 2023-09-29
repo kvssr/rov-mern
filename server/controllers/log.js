@@ -74,6 +74,7 @@ export const addLog = async (req, res) => {
       const full_end_time = new Date(`${start_date} ${end_time}`);
       const raid = await addRaid(
         data["overall_raid_stats"],
+        data["overall_squad_stats"],
         full_time,
         full_end_time,
         req.body["raidName"],
@@ -96,7 +97,14 @@ export const addLog = async (req, res) => {
   }
 };
 
-const addRaid = async (data, full_time, full_end_time, raidName, raidType) => {
+const addRaid = async (
+  data,
+  squad_data,
+  full_time,
+  full_end_time,
+  raidName,
+  raidType
+) => {
   const raid = await prisma.raid.create({
     data: {
       start_date: full_time,
@@ -110,7 +118,7 @@ const addRaid = async (data, full_time, full_end_time, raidName, raidType) => {
       max_enemies: data["max_enemies"],
       mean_enemies: data["mean_enemies"],
       total_kills: data["total_kills"],
-      total_deaths: data["overall_squad_stats"]["deaths"],
+      total_deaths: squad_data["deaths"],
       raidTypeId: raidType,
     },
   });
@@ -238,7 +246,8 @@ const addCharacterData = async (raid_id, data) => {
       character.id,
       stat_type.id,
       value_type.id,
-      data.total_stats[key]
+      data.total_stats[key],
+      data.consistency_stats[key]
     );
   }
 
@@ -364,7 +373,8 @@ const addCharacterRaidStat = async (
   character_id,
   stat_type_id,
   value_type_id,
-  value
+  value,
+  consistency
 ) => {
   const character_raid_stat = await prisma.characterRaidStat.create({
     data: {
@@ -373,6 +383,7 @@ const addCharacterRaidStat = async (
       statTypeId: stat_type_id,
       valueTypeId: value_type_id,
       value: value,
+      times_top: consistency,
     },
   });
   return character_raid_stat;
