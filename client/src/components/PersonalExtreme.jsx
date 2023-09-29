@@ -11,7 +11,6 @@ import Chart, {
   ValueAxis,
   Title,
   Subtitle,
-  ZoomAndPan,
   Crosshair,
 } from "devextreme-react/chart";
 
@@ -67,6 +66,7 @@ const PersonalExtreme = ({ data, selectedRows, selectedStat }) => {
   });
 
   let lines = [...persRaidStats.data, ...persLine];
+  console.log("lines", lines);
 
   const legendClickHandler = (e) => {
     const series = e.target;
@@ -86,10 +86,6 @@ const PersonalExtreme = ({ data, selectedRows, selectedStat }) => {
       <Title text={`History graph of ${data.character}`}>
         <Subtitle text={`${selectedStat ? selectedStat.label : "Damage"}`} />
       </Title>
-      {/* <ZoomAndPan
-        argumentAxis="both"
-        valueAxis="none"
-      /> */}
       <Crosshair
         enabled={true}
         color={theme.palette.secondary[400]}
