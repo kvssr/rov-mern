@@ -29,6 +29,11 @@ export const getRaidDetailsById = async (req, res) => {
         name: true,
         profession: true,
         account: true,
+        characterRaidInfo: {
+          where: {
+            raidId: raid_id,
+          },
+        },
         characterRaidStats: {
           where: {
             raidId: raid_id,
@@ -42,6 +47,7 @@ export const getRaidDetailsById = async (req, res) => {
     });
     res.status(200).json(characters);
   } catch (err) {
+    console.error(err);
     res.status(404).json({ message: err.message });
   }
 };
