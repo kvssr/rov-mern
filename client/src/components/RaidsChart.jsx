@@ -7,7 +7,6 @@ const RaidsChart = ({
   isDashboard = false,
   raid_id,
   view,
-  players,
   max = 15,
   order = "Desc",
   orderBy = "Total",
@@ -20,11 +19,10 @@ const RaidsChart = ({
   const theme = useTheme();
 
   if (!data) return <CircularProgress color="secondary" />;
+  console.log("🚀 ~ file: RaidsChart.jsx:22 ~ data:", data);
 
   let raidBars = FormatData(data, orderBy);
 
-  console.log("order", order);
-  console.log("orderBy", orderBy);
   raidBars = OrderBars(raidBars, view, order, isDashboard);
 
   if (max > raidBars.length) max = raidBars.length;

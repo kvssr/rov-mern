@@ -8,7 +8,7 @@ import {
   Slider,
 } from "@mui/material";
 import Header from "components/Header";
-import RaidsChart from "components/RaidsChart";
+import RaidsChart from "components/RaidsChartExtreme";
 import { useGetRaidsInfoListQuery, useGetStatTypesQuery } from "state/api";
 import RaidSelector from "components/RaidSelector";
 import { useSelector } from "react-redux";
