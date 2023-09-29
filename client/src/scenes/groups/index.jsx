@@ -46,12 +46,17 @@ import { Font, Label } from "devextreme-react/chart";
 
 const Groups = () => {
   const [selectedRaid, setSelectedRaid] = useState(-1);
+  console.log("🚀 ~ file: index.jsx:49 ~ Groups ~ selectedRaid:", selectedRaid);
   const { data, isLoading } = useGetGroupsQuery(selectedRaid);
   const { data: statslist } = useGetStatTypesQuery();
   const { data: professions } = useGetProfessionsQuery();
   const { data: fightsInfo } = useGetFightsByRaidQuery(selectedRaid);
   const { data: characterList, isLoading: characterLoading } =
     useGetCharactersByRaidQuery(selectedRaid);
+  console.log(
+    "🚀 ~ file: index.jsx:55 ~ Groups ~ characterList:",
+    characterList
+  );
 
   const [selectedFight, setSelectedFight] = useState(1);
   const [expanded, setExpanded] = useState(true);
@@ -74,7 +79,7 @@ const Groups = () => {
   if (!data || isLoading || characterLoading || !statslist || !fightsInfo) {
     return "Is Loading...";
   }
-
+  console.log("data groups", data);
   const selectedFightInfo = fightsInfo[selectedFight - 1];
   let fightGridData = [{ Type: "Total" }, { Type: "Average" }];
   if (selectedFightInfo) {
@@ -106,17 +111,19 @@ const Groups = () => {
   if (data.length > 0 && characterList) {
     data[selectedFight - 1].characters.forEach((row) => {
       const character = characterList[row.id];
-      if (profList.includes(character.profession.name)) {
-        let dist = profDist.find(
-          (dist) => dist.prof === character.profession.name
-        );
-        dist.value += 1;
-      } else {
-        profList.push(character.profession.name);
-        profDist.push({
-          prof: character.profession.name,
-          value: 1,
-        });
+      if (character) {
+        if (profList.includes(character.profession.name)) {
+          let dist = profDist.find(
+            (dist) => dist.prof === character.profession.name
+          );
+          dist.value += 1;
+        } else {
+          profList.push(character.profession.name);
+          profDist.push({
+            prof: character.profession.name,
+            value: 1,
+          });
+        }
       }
     });
   }
