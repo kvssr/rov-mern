@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "Fight" ADD COLUMN     "deaths" INTEGER NOT NULL DEFAULT 0;
