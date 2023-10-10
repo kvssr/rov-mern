@@ -85,7 +85,7 @@ const navItems = [
     power: 50,
   },
   {
-    text: "Views",
+    text: "Visitlog",
     icon: <CalendarMonth />,
     power: 50,
   },

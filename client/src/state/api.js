@@ -14,6 +14,7 @@ export const api = createApi({
     "Guild",
     "Profession",
     "Fight",
+    "VisitLog",
   ],
   // Account
   endpoints: (build) => ({
@@ -62,6 +63,23 @@ export const api = createApi({
     getFightsByRaid: build.query({
       query: (id) => `fight/all/${id}`,
       providesTags: ["Fight"],
+    }),
+    //VisitLog
+    getVisitLogCountDay: build.query({
+      query: (startDate) => `visitlog/all/count/day/${startDate}`,
+      providesTags: ["VisitLog"],
+    }),
+    getVisitLogUserCount: build.query({
+      query: (startDate) => `visitlog/all/count/user/${startDate}`,
+      providesTags: ["VisitLog"],
+    }),
+    createVisitLog: build.mutation({
+      query: (body) => ({
+        url: `visitlog/create`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["VisitLog"],
     }),
     //User
     getUsers: build.query({
@@ -162,4 +180,7 @@ export const {
   useGetGuildByApiIdQuery,
   useGetProfessionsQuery,
   useGetFightsByRaidQuery,
+  useCreateVisitLogMutation,
+  useGetVisitLogCountDayQuery,
+  useGetVisitLogUserCountQuery,
 } = api;

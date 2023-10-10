@@ -13,11 +13,16 @@ import ApiKey from "scenes/apikey";
 import Personal from "scenes/personal";
 import Users from "scenes/users";
 import Groups from "scenes/groups";
-import { useGetAccountByApiIdQuery } from "state/api";
+import Visitlog from "scenes/visitlog";
+import {
+  useGetAccountByApiIdQuery,
+  useCreateVisitLogMutation,
+} from "state/api";
 
 function App() {
   const mode = useSelector((state) => state.global.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
+  const [logAdded, setLogAdded] = useState(false);
   const accountLocal = localStorage.getItem("accountId")
     ? JSON.parse(localStorage.getItem("accountId"))
     : false;
@@ -25,9 +30,14 @@ function App() {
   let { data: account, isLoading } = useGetAccountByApiIdQuery(accountLocal, {
     skip: !accountLocal,
   });
+  const [createVisitLog] = useCreateVisitLogMutation();
   console.log("account", account);
   const [accountAdded, setAccountAdded] = useState(false);
   if (isLoading) return "isLoading...";
+  if (account && !logAdded) {
+    createVisitLog({ accountId: account.id });
+    setLogAdded(true);
+  }
   return (
     <div className="app">
       <BrowserRouter>
@@ -98,6 +108,11 @@ function App() {
                     key="characters"
                     path="/characters"
                     element={<Characters />}
+                  />,
+                  <Route
+                    key="visitlog"
+                    path="/visitlog"
+                    element={<Visitlog />}
                   />,
                 ]}{" "}
               <Route

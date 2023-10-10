@@ -14,6 +14,7 @@ import logRoutes from "./routes/log.js";
 import accountRoutes from "./routes/account.js";
 import guildRoutes from "./routes/guild.js";
 import fightRoutes from "./routes/fight.js";
+import visitlogRoutes from "./routes/visitlog.js";
 import { PrismaClient } from "@prisma/client";
 
 // data imports
@@ -47,6 +48,7 @@ app.use("/log", logRoutes);
 app.use("/account", accountRoutes);
 app.use("/guild", guildRoutes);
 app.use("/fight", fightRoutes);
+app.use("/visitlog", visitlogRoutes);
 
 /* PRISMA */
 export const prisma = new PrismaClient();

@@ -17,20 +17,34 @@ export const getAccountByApiId = async (req, res) => {
   }
 };
 
-export const getAccountById = async (req, res) => {
+export const handleAccountById = async (req, res) => {
   try {
     const { id } = req.params;
+    getAccountById(id);
+    res.status(200).json(account);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
+
+export const getAccountById = async (id, includeRole = false) => {
+  try {
     const account = await prisma.account.findUnique({
       where: {
         id: Number(id),
       },
       include: {
-        accountRole: true,
+        accountRole: includeRole,
       },
     });
-    res.status(200).json(account);
+
+    console.log(
+      "🚀 ~ file: account.js:42 ~ getAccountById ~ account:",
+      account
+    );
+    return account;
   } catch (err) {
-    res.status(404).json({ message: err.message });
+    return err;
   }
 };
 
