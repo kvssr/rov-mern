@@ -18,7 +18,7 @@ const RaidsChart = ({
   const { data } = useGetRaidByIdQuery({ id: raid_id, stat: view });
   const theme = useTheme();
 
-  if (!data || data.length < 1 || !profs)
+  if (raid_id < 0 || !data || data.length < 1 || !profs)
     return <CircularProgress color="secondary" />;
   console.log("🚀 ~ file: RaidsChart.jsx:22 ~ data:", data);
 

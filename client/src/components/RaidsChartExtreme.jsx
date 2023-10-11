@@ -36,7 +36,7 @@ const RaidsChart = ({
   const theme = useTheme();
 
   console.log("🚀 ~ file: RaidsChart.jsx:22 ~ data:", data);
-  if (!data || data.length < 1 || !profs)
+  if (raid_id < 0 || !data || data.length < 1 || !profs)
     return <CircularProgress color="secondary" />;
 
   let raidBars = FormatData(data, orderBy);
