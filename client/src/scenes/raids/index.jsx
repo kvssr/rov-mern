@@ -15,7 +15,7 @@ import { useSelector } from "react-redux";
 
 const Raids = () => {
   const [selectedRaid, setSelectedRaid] = useState(-1);
-  const [view, setView] = useState("dmg");
+  const [view, setView] = useState("dmg_total");
   const [order, setOrder] = useState("Desc");
   const [orderBy, setOrderBy] = useState("Total");
   const [max, setMax] = useState(15);

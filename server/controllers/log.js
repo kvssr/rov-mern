@@ -126,20 +126,33 @@ const addRaid = async (
 };
 
 const addRaidStats = async (raid_id, data) => {
-  for (const key in data) {
+  const value_type_total = await prisma.valueType.findFirst({
+    where: { name: "Total" },
+  });
+  const value_type_average = await prisma.valueType.findFirst({
+    where: { name: "Average" },
+  });
+  for (const key in data["total"]) {
     console.log("row", key);
     const stat_type = await prisma.statType.findFirst({
       where: { name_json: key },
     });
-    const valueType = await getValueType(data[key]).then(async (value) => {
-      const raid_stats = await prisma.raidStat.create({
-        data: {
-          raidId: raid_id,
-          statTypeId: stat_type.id,
-          valueTypeId: value.id,
-          value: data[key],
-        },
-      });
+    if (!stat_type) continue;
+    const raid_stats_total = await prisma.raidStat.create({
+      data: {
+        raidId: raid_id,
+        statTypeId: stat_type.id,
+        valueTypeId: value_type_total.id,
+        value: data["total"][key],
+      },
+    });
+    const raid_stats_average = await prisma.raidStat.create({
+      data: {
+        raidId: raid_id,
+        statTypeId: stat_type.id,
+        valueTypeId: value_type_average.id,
+        value: data["avg"][key],
+      },
     });
   }
 };
@@ -201,6 +214,7 @@ const addFightStats = async (fight_id, value_type_id, data) => {
     const stat_type = await prisma.statType.findFirst({
       where: { name_json: key },
     });
+    if (!stat_type) continue;
     const fight_stats = await prisma.fightStat.create({
       data: {
         fightId: fight_id,
@@ -241,6 +255,7 @@ const addCharacterData = async (raid_id, data) => {
     const stat_type = await prisma.statType.findFirst({
       where: { name_json: key },
     });
+    if (!stat_type) continue;
     const character_raid_stat = addCharacterRaidStat(
       raid_id,
       character.id,
@@ -259,6 +274,7 @@ const addCharacterData = async (raid_id, data) => {
     const stat_type = await prisma.statType.findFirst({
       where: { name_json: key },
     });
+    if (!stat_type) continue;
     const character_raid_stat = addCharacterRaidStat(
       raid_id,
       character.id,
@@ -271,7 +287,7 @@ const addCharacterData = async (raid_id, data) => {
   //Adding Fight stats
   let fight_number = 1;
   for (const [i, row] of data.stats_per_fight.entries()) {
-    if (row.time_active === -1) {
+    if (row.present_in_fight === false) {
       fight_number += 1;
       continue;
     }
@@ -303,8 +319,8 @@ const addCharacterData = async (raid_id, data) => {
     const character_fight_info = await addCharacterFightInfo(
       fight.id,
       character.id,
-      row.time_active,
-      row.time_in_combat,
+      row["duration_present"].active,
+      row["duration_present"].in_combat,
       row.group,
       buildTypeId.id
     );
@@ -357,10 +373,10 @@ const addCharacterRaidInfo = async (raid_id, character_id, data) => {
       raidId: raid_id,
       characterId: character_id,
       attendance_percentage: data.attendance_percentage,
-      duration_active: data.duration_active,
-      duration_fights_present: data.duration_fights_present,
-      duration_in_combat: data.duration_in_combat,
-      normalization_time_allies: data.normalization_time_allies,
+      duration_active: data["duration_present"].active,
+      duration_fights_present: data["duration_present"].total,
+      duration_in_combat: data["duration_present"].in_combat,
+      normalization_time_allies: data["normalization_time_allies"].total,
       num_fights_present: data.num_fights_present,
       swapped_builds: data.swapped_build,
     },

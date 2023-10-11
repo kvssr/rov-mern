@@ -18,11 +18,11 @@ const Dashboard = () => {
   const statItems = [
     {
       text: "Damage",
-      value: "dmg",
+      value: "dmg_total",
     },
     {
       text: "Boonrips",
-      value: "rips",
+      value: "strips",
     },
     {
       text: "Cleanses",
@@ -30,7 +30,7 @@ const Dashboard = () => {
     },
     {
       text: "Heals",
-      value: "heal",
+      value: "heal_total",
     },
     {
       text: "Distance to tag",
@@ -40,18 +40,18 @@ const Dashboard = () => {
       text: "Stability",
       value: "stab",
     },
-    {
-      text: "Protection",
-      value: "prot",
-    },
-    {
-      text: "Aegis",
-      value: "aegis",
-    },
-    {
-      text: "Regeneration",
-      value: "regen",
-    },
+    // {
+    //   text: "Protection",
+    //   value: "prot",
+    // },
+    // {
+    //   text: "Aegis",
+    //   value: "aegis",
+    // },
+    // {
+    //   text: "Regeneration",
+    //   value: "regen",
+    // },
     {
       text: "Might",
       value: "might",
@@ -60,25 +60,25 @@ const Dashboard = () => {
       text: "Fury",
       value: "fury",
     },
-    {
-      text: "Quickness",
-      value: "quick",
-    },
-    {
-      text: "Alacrity",
-      value: "alac",
-    },
-    {
-      text: "Superspeed",
-      value: "speed",
-    },
+    // {
+    //   text: "Quickness",
+    //   value: "quick",
+    // },
+    // {
+    //   text: "Alacrity",
+    //   value: "alac",
+    // },
+    // {
+    //   text: "Superspeed",
+    //   value: "speed",
+    // },
     {
       text: "Barrier",
       value: "barrier",
     },
     {
       text: "Damage taken",
-      value: "dmg_taken",
+      value: "dmg_taken_total",
     },
     {
       text: "Deaths",

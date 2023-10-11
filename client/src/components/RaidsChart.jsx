@@ -18,7 +18,8 @@ const RaidsChart = ({
   const { data } = useGetRaidByIdQuery({ id: raid_id, stat: view });
   const theme = useTheme();
 
-  if (!data) return <CircularProgress color="secondary" />;
+  if (!data || data.length < 1 || !profs)
+    return <CircularProgress color="secondary" />;
   console.log("🚀 ~ file: RaidsChart.jsx:22 ~ data:", data);
 
   let raidBars = FormatData(data, orderBy);
@@ -155,7 +156,11 @@ const RaidsChart = ({
 
 const FormatData = (data, orderBy) => {
   let raidBars = [];
+  if (data[0]["characterRaidStats"].length < 1) {
+    return raidBars;
+  }
   data.map((row) => {
+    console.log("raid row:", row);
     const playerName = row["name"];
     const total = row["characterRaidStats"][0]["value"];
     const prof = row["profession"]["name"];
@@ -175,7 +180,7 @@ const FormatData = (data, orderBy) => {
 };
 
 const OrderBars = (chart, view, order, isDashboard) => {
-  const DescStatList = ["dist", "deaths", "dmg_taken"];
+  const DescStatList = ["dist", "deaths", "dmg_taken_total"];
 
   if ((DescStatList.includes(view) && isDashboard) || order === "Asc") {
     chart.sort((a, b) => {

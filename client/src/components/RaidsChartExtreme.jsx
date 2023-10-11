@@ -27,14 +27,17 @@ const RaidsChart = ({
   orderBy = "Total",
 }) => {
   const { data: profs } = useGetProfessionsQuery();
+
   const getColor = (profName) => {
     return profs.filter((prof) => prof.name === profName)[0].color;
   };
+
   const { data } = useGetRaidByIdQuery({ id: raid_id, stat: view });
   const theme = useTheme();
 
   console.log("🚀 ~ file: RaidsChart.jsx:22 ~ data:", data);
-  if (!data) return <CircularProgress color="secondary" />;
+  if (!data || data.length < 1 || !profs)
+    return <CircularProgress color="secondary" />;
 
   let raidBars = FormatData(data, orderBy);
 
@@ -138,6 +141,10 @@ const customizeLabel = (arg) => {
 
 const FormatData = (data, orderBy) => {
   let raidBars = [];
+  console.log("Formatting", data);
+  if (!data || data[0]["characterRaidStats"].length < 1) {
+    return raidBars;
+  }
   data.map((row) => {
     const playerName = row["name"];
     const total = row["characterRaidStats"][0]["value"];

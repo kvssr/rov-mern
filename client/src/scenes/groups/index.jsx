@@ -64,8 +64,8 @@ const Groups = () => {
   const statBlacklist = useSelector((state) => state.global.statBlacklist);
 
   const visibleColumns = [
-    "Damage",
-    "Boonrips",
+    "Damage Total",
+    "Strips",
     "Healing",
     "Cleanses",
     "Stability",
@@ -81,6 +81,7 @@ const Groups = () => {
   }
   console.log("data groups", data);
   const selectedFightInfo = fightsInfo[selectedFight - 1];
+  console.log("SelectedFightInfo", selectedFightInfo);
   let fightGridData = [{ Type: "Total" }, { Type: "Average" }];
   if (selectedFightInfo) {
     selectedFightInfo.fightStats.forEach((stat) => {

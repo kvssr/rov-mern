@@ -1,11 +1,6 @@
 export const dataStatType = [
   {
-    name: "Damage",
-    name_short: "Dmg",
-    name_json: "dmg",
-  },
-  {
-    name: "Total Damage",
+    name: "Damage Total",
     name_short: "Dmg T",
     name_json: "dmg_total",
   },
@@ -20,19 +15,34 @@ export const dataStatType = [
     name_json: "dmg_other",
   },
   {
-    name: "Boonrips",
-    name_short: "Rips",
-    name_json: "rips",
+    name: "Spike Damage",
+    name_short: "Dmg S",
+    name_json: "spike_dmg",
+  },
+  {
+    name: "Kills",
+    name_short: "Kills",
+    name_json: "kills",
+  },
+  {
+    name: "Downed Players",
+    name_short: "Downs",
+    name_json: "downs",
+  },
+  {
+    name: "Downed Contribution",
+    name_short: "Down C",
+    name_json: "down_contrib",
+  },
+  {
+    name: "Strips",
+    name_short: "Strips",
+    name_json: "strips",
   },
   {
     name: "Cleanses",
     name_short: "Clns",
     name_json: "cleanses",
-  },
-  {
-    name: "Healing",
-    name_short: "Heal",
-    name_json: "heal",
   },
   {
     name: "Healing Total",
@@ -68,6 +78,11 @@ export const dataStatType = [
     name: "Aegis",
     name_short: "Aegis",
     name_json: "aegis",
+  },
+  {
+    name: "Resistance",
+    name_short: "Resist",
+    name_json: "resist",
   },
   {
     name: "Regeneration",
@@ -113,11 +128,6 @@ export const dataStatType = [
     name: "Barrier",
     name_short: "Barrier",
     name_json: "barrier",
-  },
-  {
-    name: "Damage Taken",
-    name_short: "Dmg Tkn",
-    name_json: "dmg_taken",
   },
   {
     name: "Damage Taken Total",
@@ -186,10 +196,12 @@ export const dataRaidType = [
 
 export const dataValueType = [
   {
+    id: 1,
     name: "Total",
     name_short: "Total",
   },
   {
+    id: 2,
     name: "Average",
     name_short: "Avg",
   },
