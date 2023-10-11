@@ -26,6 +26,7 @@ import {
   dataBuildType,
   dataRole,
 } from "./data/index.js";
+import historyApiFallback from "connect-history-api-fallback";
 
 /* CONFIGURATION */
 dotenv.config();
@@ -49,6 +50,8 @@ app.use("/account", accountRoutes);
 app.use("/guild", guildRoutes);
 app.use("/fight", fightRoutes);
 app.use("/visitlog", visitlogRoutes);
+
+app.use(historyApiFallback());
 
 /* PRISMA */
 export const prisma = new PrismaClient();
