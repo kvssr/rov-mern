@@ -68,10 +68,18 @@ const createManyValueT = await prisma.valueType.createMany({
   data: dataValueType,
   skipDuplicates: true,
 });
-const createManyProf = await prisma.profession.createMany({
-  data: dataProfession,
-  skipDuplicates: true,
-});
+// const createManyProf = await prisma.profession.createMany({
+//   data: dataProfession,
+//   skipDuplicates: true,
+// });
+for (const data of dataProfession) {
+  const updateProf = await prisma.profession.update({
+    where: {
+      name: data.name,
+    },
+    data: data,
+  });
+}
 const createManyBuildT = await prisma.buildType.createMany({
   data: dataBuildType,
   skipDuplicates: true,

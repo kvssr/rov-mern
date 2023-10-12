@@ -133,13 +133,18 @@ const Raids = () => {
             />
           </FormControl>
         </Box>
-        <RaidsChart
-          view={view}
-          raid_id={selectedRaid ? selectedRaid : raidInfoList[0]["id"]}
-          max={max}
-          order={order}
-          orderBy={orderBy}
-        />
+        <Box
+          height="70vh"
+          m="2.5rem 1.5rem"
+        >
+          <RaidsChart
+            view={view}
+            raid_id={selectedRaid ? selectedRaid : raidInfoList[0]["id"]}
+            max={max}
+            order={order}
+            orderBy={orderBy}
+          />
+        </Box>
       </Box>
     </Box>
   );

@@ -30,7 +30,7 @@ const RaidsChart = ({
   console.log("raidBars", raidBars);
   return (
     <ResponsiveBar
-      data={raidBars.slice(0, max - 1).reverse()}
+      data={raidBars.slice(0, max).reverse()}
       theme={{
         axis: {
           domain: {
