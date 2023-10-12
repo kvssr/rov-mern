@@ -10,8 +10,6 @@ import Chart, {
   ArgumentAxis,
   Label,
   ValueAxis,
-  Title,
-  Subtitle,
   Crosshair,
   AdaptiveLayout,
   CommonAnnotationSettings,
@@ -44,28 +42,45 @@ const RaidsChart = ({
   raidBars = OrderBars(raidBars, view, order, isDashboard);
 
   const customizeSeries = (seriesName) => {
-    return { color: getColor(seriesName), barPadding: 0.1, barWidth: 100 };
+    return { color: getColor(seriesName), barWidth: 100 };
   };
 
   if (max > raidBars.length) max = raidBars.length;
-  raidBars = raidBars.slice(0, max - 1);
+  raidBars = raidBars.slice(0, max);
+  let topValue = order === "Asc" ? raidBars[max - 1].y : raidBars[0].y;
   console.log("raidBars", raidBars);
+
+  const customizeLabel = (arg) => {
+    let pos = arg.data.y < topValue / 5 ? "outside" : "inside";
+    pos = isDashboard ? "outside" : pos;
+    const colour = pos === "outside" ? "#EEE" : "Black";
+    return {
+      visible: true,
+      alignment: "left",
+      backgroundColor: "#transparent",
+      position: pos,
+      font: {
+        color: colour,
+      },
+      customizeText(e) {
+        return `${arg.data.total.toLocaleString()} (${arg.data.avg.toLocaleString()})`;
+      },
+    };
+  };
+
   return (
     <Chart
       id="chart"
       dataSource={raidBars}
       palette="Violet"
       rotated={true}
-      height="75vh"
+      height="100%"
       customizeLabel={customizeLabel}
     >
       <AdaptiveLayout
         height={200}
-        width={400}
+        width={300}
       />
-      <Title text={`Details graph`}>
-        <Subtitle text={`${view}`} />
-      </Title>
       <Crosshair
         enabled={true}
         color={theme.palette.secondary[400]}
@@ -82,16 +97,12 @@ const RaidsChart = ({
         type="bar"
         ignoreEmptyPoints={true}
       />
-
       <SeriesTemplate
         nameField="prof"
         customizeSeries={customizeSeries}
       />
-      <ArgumentAxis
-        title="Character"
-        inverted={true}
-      ></ArgumentAxis>
-      <ValueAxis title={view}>
+      <ArgumentAxis inverted={true}></ArgumentAxis>
+      <ValueAxis>
         <Label
           visible={true}
           alignment="center"
@@ -109,34 +120,23 @@ const RaidsChart = ({
         offsetY={0}
         border={false}
       ></CommonAnnotationSettings>
-      {raidBars.map((data) => [
-        <Annotation
-          argument={data.name}
-          text={`${data.timesTop}/${data.timesPresent}`}
-        ></Annotation>,
-      ])}
+      {raidBars.map((data) => {
+        if (data.y > (topValue / 15) * (1.5 * isDashboard)) {
+          return (
+            <Annotation
+              argument={data.name}
+              text={`${data.timesTop}/${data.timesPresent}`}
+            ></Annotation>
+          );
+        }
+        return null;
+      })}
       <Legend
         verticalAlignment="bottom"
         horizontalAlignment="right"
       />
     </Chart>
   );
-};
-
-const customizeLabel = (arg) => {
-  console.log("label argument:", arg);
-  return {
-    visible: true,
-    alignment: "left",
-    backgroundColor: "#transparent",
-    position: "inside",
-    font: {
-      color: "black",
-    },
-    customizeText(e) {
-      return `${arg.data.total.toLocaleString()} (${arg.data.avg.toLocaleString()})`;
-    },
-  };
 };
 
 const FormatData = (data, orderBy) => {
@@ -153,9 +153,10 @@ const FormatData = (data, orderBy) => {
     const avg = row["characterRaidStats"][1]["value"];
     const times_top = row["characterRaidStats"][0]["times_top"];
     const times_present = row["characterRaidInfo"][0]["num_fights_present"];
+    const yValue = orderBy === "Total" ? total : avg;
     raidBars.push({
       name: `${playerName} (${profShort})`,
-      y: orderBy === "Total" ? total : avg,
+      y: yValue,
       yColor: "#675123",
       prof: prof,
       avg: avg,
@@ -169,7 +170,7 @@ const FormatData = (data, orderBy) => {
 };
 
 const OrderBars = (chart, view, order, isDashboard) => {
-  const DescStatList = ["dist", "deaths", "dmg_taken"];
+  const DescStatList = ["dist", "deaths", "dmg_taken_total"];
 
   if ((DescStatList.includes(view) && isDashboard) || order === "Asc") {
     chart.sort((a, b) => {

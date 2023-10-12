@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import FlexBetween from "components/FlexBetween";
 import Header from "components/Header";
 import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
-import RaidsChart from "components/RaidsChart";
+import RaidsChart from "components/RaidsChartExtreme";
 import { useGetRaidsInfoListQuery } from "state/api";
 import RaidSelector from "components/RaidSelector";
 
@@ -21,7 +21,7 @@ const Dashboard = () => {
       value: "dmg_total",
     },
     {
-      text: "Boonrips",
+      text: "Strips",
       value: "strips",
     },
     {
@@ -52,14 +52,14 @@ const Dashboard = () => {
     //   text: "Regeneration",
     //   value: "regen",
     // },
-    {
-      text: "Might",
-      value: "might",
-    },
-    {
-      text: "Fury",
-      value: "fury",
-    },
+    // {
+    //   text: "Might",
+    //   value: "might",
+    // },
+    // {
+    //   text: "Fury",
+    //   value: "fury",
+    // },
     // {
     //   text: "Quickness",
     //   value: "quick",
@@ -72,18 +72,18 @@ const Dashboard = () => {
     //   text: "Superspeed",
     //   value: "speed",
     // },
-    {
-      text: "Barrier",
-      value: "barrier",
-    },
-    {
-      text: "Damage taken",
-      value: "dmg_taken_total",
-    },
-    {
-      text: "Deaths",
-      value: "deaths",
-    },
+    // {
+    //   text: "Barrier",
+    //   value: "barrier",
+    // },
+    // {
+    //   text: "Damage taken",
+    //   value: "dmg_taken_total",
+    // },
+    // {
+    //   text: "Deaths",
+    //   value: "deaths",
+    // },
   ];
 
   return (
@@ -107,7 +107,7 @@ const Dashboard = () => {
         mt="20px"
         display="grid"
         gridTemplateColumns="repeat(12, 1fr)"
-        gridAutoRows="270px"
+        gridAutoRows="350px"
         gap="20px"
         sx={{
           "& > div": { gridColumn: isNonMediumScreens ? undefined : "span 12" },
@@ -119,7 +119,7 @@ const Dashboard = () => {
               gridColumn="span 6"
               backgroundColor={theme.palette.background.alt}
               borderRadius="0.55rem"
-              pb="1rem"
+              p="1.5rem"
               key={text}
             >
               <Typography
@@ -135,7 +135,7 @@ const Dashboard = () => {
                 isDashboard={true}
                 view={value}
                 raid_id={selectedRaid ? selectedRaid : raidInfoList[0]["id"]}
-                max={10}
+                max={5}
               ></RaidsChart>
             </Box>
           );
