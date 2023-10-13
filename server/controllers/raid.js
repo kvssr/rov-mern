@@ -22,6 +22,12 @@ export const getRaidDetailsById = async (req, res) => {
         characterRaidStats: {
           some: {
             raidId: raid_id,
+            statType: {
+              name_json: stat_type,
+            },
+            value: {
+              gt: 0,
+            },
           },
         },
       },
