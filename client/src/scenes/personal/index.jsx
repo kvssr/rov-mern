@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import Header from "components/Header";
-import PersonalChart from "components/PersonalChart";
 import { useTheme, Autocomplete, TextField } from "@mui/material";
 import {
   useGetCharacterRaidStatsQuery,
@@ -128,10 +127,10 @@ const Personal = ({ id = null, stat = null }) => {
     });
     if (
       ![
-        "dmg",
-        "rips",
+        "dmg_total",
+        "strips",
         "cleanses",
-        "heal",
+        "heal_total",
         "stab",
         "barrier",
         "fury",
