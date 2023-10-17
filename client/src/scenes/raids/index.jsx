@@ -33,7 +33,7 @@ const Raids = () => {
   const statItems = statTypesFiltered.map((item) => {
     return { text: item.name, value: item.name_json };
   });
-
+  console.log("Details Page stat", view);
   return (
     <Box
       display="grid"

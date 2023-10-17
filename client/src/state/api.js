@@ -113,6 +113,10 @@ export const api = createApi({
       query: () => `raid/details`,
       providesTags: ["Raid"],
     }),
+    getRaidInfoById: build.query({
+      query: (id) => `raid/details/${id}`,
+      providesTags: ["Raid"],
+    }),
     getRaidById: build.query({
       query: (details) => `raid/details/${details.id}/${details.stat}`,
       providesTags: ["Raid"],
@@ -183,4 +187,5 @@ export const {
   useCreateVisitLogMutation,
   useGetVisitLogCountDayQuery,
   useGetVisitLogUserCountQuery,
+  useGetRaidInfoByIdQuery,
 } = api;
