@@ -117,8 +117,8 @@ const addRaid = async (
       min_enemies: data["min_enemies"],
       max_enemies: data["max_enemies"],
       mean_enemies: data["mean_enemies"],
-      total_kills: data["total_kills"],
-      total_deaths: squad_data["deaths"],
+      total_kills: squad_data["total"]["kills"],
+      total_deaths: squad_data["total"]["deaths"],
       raidTypeId: raidType,
     },
   });
