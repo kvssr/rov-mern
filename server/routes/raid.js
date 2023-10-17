@@ -7,11 +7,13 @@ import {
   getRaidDetailsById,
   getRaidTypes,
   getPersRaidStatsMinMax,
+  getRaidById,
 } from "../controllers/raid.js";
 
 const router = express.Router();
 
 router.get("/details", getRaid);
+router.get("/details/:id", getRaidById);
 router.get("/details/:id/:stat", getRaidDetailsById);
 router.get("/exists/:date/:time", checkRaidByDateAndTime);
 router.post("/delete/:id", deleteRaid);

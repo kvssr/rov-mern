@@ -5,6 +5,7 @@ import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
 import RaidsChart from "components/RaidsChartExtreme";
 import { useGetRaidsInfoListQuery } from "state/api";
 import RaidSelector from "components/RaidSelector";
+import RaidTable from "./raidTable";
 
 const Dashboard = () => {
   const theme = useTheme();
@@ -100,6 +101,9 @@ const Dashboard = () => {
             selectedRaid={selectedRaid}
             setSelectedRaid={setSelectedRaid}
           />
+        </Box>
+        <Box sx={{ mt: "1rem" }}>
+          <RaidTable id={selectedRaid}></RaidTable>
         </Box>
       </FlexBetween>
 

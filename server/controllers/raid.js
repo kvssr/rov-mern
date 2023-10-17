@@ -60,10 +60,14 @@ export const getRaidDetailsById = async (req, res) => {
 
 export const getRaidById = async (req, res) => {
   try {
-    const raid_id = req.params.id;
+    const raid_id = Number(req.params.id);
     console.log("server getRaidById raid_id", raid_id);
-    if (raid_id === "-1") return res.status(200).json("");
-    const raid = await Raid.findById(raid_id);
+    if (raid_id === -1) return res.status(200).json("");
+    const raid = await prisma.raid.findFirst({
+      where: {
+        id: raid_id,
+      },
+    });
     console.log("server getRaidById raid", raid_id);
     res.status(200).json(raid);
   } catch (err) {

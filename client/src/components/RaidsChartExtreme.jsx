@@ -30,12 +30,13 @@ const RaidsChart = ({
     return profs.filter((prof) => prof.name === profName)[0].color;
   };
 
-  const { data } = useGetRaidByIdQuery({ id: raid_id, stat: view });
+  const { data, isLoading } = useGetRaidByIdQuery({ id: raid_id, stat: view });
   const theme = useTheme();
 
-  console.log("🚀 ~ file: RaidsChart.jsx:22 ~ data:", data);
-  if (raid_id < 0 || !data || data.length < 1 || !profs)
+  if (isLoading || raid_id < 0 || !data || data.length < 1 || !profs)
     return <CircularProgress color="secondary" />;
+  console.log("🚀 ~ file: RaidsChart.jsx:22 ~ data:", data);
+  console.log(`Loading chart Extreme, ${view}, ${max}, ${order}, ${isLoading}`);
 
   let raidBars = FormatData(data, orderBy);
 
