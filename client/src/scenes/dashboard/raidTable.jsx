@@ -20,6 +20,7 @@ const RaidTable = ({ id }) => {
           <TableRow>
             <TableCell align="right">Kills</TableCell>
             <TableCell align="right">Deaths</TableCell>
+            <TableCell align="right">K/D</TableCell>
             <TableCell align="right">Allies (avg)</TableCell>
             <TableCell align="right">Enemies (avg)</TableCell>
           </TableRow>
@@ -31,6 +32,9 @@ const RaidTable = ({ id }) => {
           >
             <TableCell align="right">{data.total_kills}</TableCell>
             <TableCell align="right">{data.total_deaths}</TableCell>
+            <TableCell align="right">
+              {(data.total_kills / data.total_deaths).toFixed(1)}
+            </TableCell>
             <TableCell align="right">{data.mean_allies}</TableCell>
             <TableCell align="right">{data.mean_enemies}</TableCell>
           </TableRow>
