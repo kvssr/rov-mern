@@ -38,7 +38,7 @@ const RaidsChart = ({
   console.log("🚀 ~ file: RaidsChart.jsx:22 ~ data:", data);
   console.log(`Loading chart Extreme, ${view}, ${max}, ${order}, ${isLoading}`);
 
-  let raidBars = FormatData(data, orderBy);
+  let raidBars = FormatData(data, orderBy, view, isDashboard);
 
   raidBars = OrderBars(raidBars, view, order, isDashboard);
 
@@ -140,7 +140,7 @@ const RaidsChart = ({
   );
 };
 
-const FormatData = (data, orderBy) => {
+const FormatData = (data, orderBy, view, isDashboard) => {
   let raidBars = [];
   console.log("Formatting", data);
   if (!data || data[0]["characterRaidStats"].length < 1) {
@@ -154,17 +154,23 @@ const FormatData = (data, orderBy) => {
     const avg = row["characterRaidStats"][1]["value"];
     const times_top = row["characterRaidStats"][0]["times_top"];
     const times_present = row["characterRaidInfo"][0]["num_fights_present"];
-    const yValue = orderBy === "Total" ? total : avg;
-    raidBars.push({
-      name: `${playerName} (${profShort})`,
-      y: yValue,
-      yColor: "#675123",
-      prof: prof,
-      avg: avg,
-      total: total,
-      timesTop: times_top,
-      timesPresent: times_present,
-    });
+    const atten_pers = row["characterRaidInfo"][0]["attendance_percentage"];
+    let yValue = orderBy === "Total" ? total : avg;
+    yValue = view === "dist" && isDashboard ? avg : yValue;
+    if (view === "dist" && isDashboard && atten_pers < 80) {
+    } else {
+      raidBars.push({
+        name: `${playerName} (${profShort})`,
+        y: yValue,
+        yColor: "#675123",
+        prof: prof,
+        avg: avg,
+        total: total,
+        timesTop: times_top,
+        timesPresent: times_present,
+        attenPers: atten_pers,
+      });
+    }
     return raidBars;
   });
   return raidBars;
