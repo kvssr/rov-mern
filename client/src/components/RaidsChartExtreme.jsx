@@ -35,8 +35,8 @@ const RaidsChart = ({
 
   if (isLoading || raid_id < 0 || !data || data.length < 1 || !profs)
     return <CircularProgress color="secondary" />;
-  console.log("🚀 ~ file: RaidsChart.jsx:22 ~ data:", data);
-  console.log(`Loading chart Extreme, ${view}, ${max}, ${order}, ${isLoading}`);
+  // console.log("🚀 ~ file: RaidsChart.jsx:22 ~ data:", data);
+  // console.log(`Loading chart Extreme, ${view}, ${max}, ${order}, ${isLoading}`);
 
   let raidBars = FormatData(data, orderBy, view, isDashboard);
 
@@ -49,7 +49,7 @@ const RaidsChart = ({
   if (max > raidBars.length) max = raidBars.length;
   raidBars = raidBars.slice(0, max);
   let topValue = order === "Asc" ? raidBars[max - 1].y : raidBars[0].y;
-  console.log("raidBars", raidBars);
+  // console.log("raidBars", raidBars);
 
   const customizeLabel = (arg) => {
     let pos = arg.data.y < topValue / 5 ? "outside" : "inside";
