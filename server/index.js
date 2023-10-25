@@ -1,6 +1,5 @@
 import express from "express";
 import bodyParser from "body-parser";
-import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import helmet from "helmet";
@@ -26,7 +25,6 @@ import {
   dataBuildType,
   dataRole,
 } from "./data/index.js";
-import historyApiFallback from "connect-history-api-fallback";
 
 /* CONFIGURATION */
 dotenv.config();
@@ -50,8 +48,6 @@ app.use("/account", accountRoutes);
 app.use("/guild", guildRoutes);
 app.use("/fight", fightRoutes);
 app.use("/visitlog", visitlogRoutes);
-
-app.use(historyApiFallback());
 
 /* PRISMA */
 export const prisma = new PrismaClient();

@@ -3,10 +3,10 @@ import React from "react";
 import { useGetRaidsInfoListQuery } from "state/api";
 
 const RaidSelector = ({ selectedRaid, setSelectedRaid }) => {
-  const { data: raidInfoList, isLoading } = useGetRaidsInfoListQuery();
+  const { data: raidInfoList, isFetching } = useGetRaidsInfoListQuery();
 
   console.log("raidInfoList", raidInfoList);
-  if (!raidInfoList || isLoading) {
+  if (!raidInfoList || isFetching) {
     return "Is Loading...";
   }
   if (selectedRaid === -1) setSelectedRaid(raidInfoList[0]["id"]);

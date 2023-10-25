@@ -9,8 +9,8 @@ const Logs = () => {
   const theme = useTheme();
   const [selectedRows, setSelectedRows] = useState([]);
   const [rowAdded, setRowAdded] = useState("");
-  const { data, isLoading } = useGetRaidsQuery();
-  if (isLoading || !data) {
+  const { data, isFetching } = useGetRaidsQuery();
+  if (isFetching || !data) {
     console.log("Loading");
     return "Loading...";
   }
@@ -137,7 +137,7 @@ const Logs = () => {
         }}
       >
         <DataGrid
-          loading={isLoading || !data}
+          loading={isFetching || !data}
           rows={data}
           columns={columns}
           checkboxSelection

@@ -1,4 +1,4 @@
-import { CssBaseline, ThemeProvider } from "@mui/material";
+import { CircularProgress, CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
@@ -33,7 +33,9 @@ function App() {
   const [createVisitLog] = useCreateVisitLogMutation();
   console.log("account", account);
   const [accountAdded, setAccountAdded] = useState(false);
-  if (isLoading) return "isLoading...";
+  if (isLoading) {
+    return ["Server is starting...", <CircularProgress color="secondary" />];
+  }
   if (account && !logAdded) {
     createVisitLog({ accountId: account.id });
     setLogAdded(true);

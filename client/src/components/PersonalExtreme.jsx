@@ -24,13 +24,13 @@ const PersonalExtreme = ({ data, selectedRows, selectedStat }) => {
     })
     .filter((r) => r !== undefined);
 
-  const { data: persRaidStats, isLoading } = useGetPersRaidStatsQuery({
+  const { data: persRaidStats, isFetching } = useGetPersRaidStatsQuery({
     raids: raidIds,
     prof: data.profession.id,
     stat: selectedStat ? selectedStat.id : 1,
   });
 
-  if (!persRaidStats || isLoading) return "Loading...";
+  if (!persRaidStats || isFetching) return "Loading...";
 
   console.log("persRaidStats", persRaidStats);
   console.log("data", data);

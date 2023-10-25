@@ -47,11 +47,11 @@ import { Font, Label } from "devextreme-react/chart";
 const Groups = () => {
   const [selectedRaid, setSelectedRaid] = useState(-1);
   console.log("🚀 ~ file: index.jsx:49 ~ Groups ~ selectedRaid:", selectedRaid);
-  const { data, isLoading } = useGetGroupsQuery(selectedRaid);
+  const { data, isFetching } = useGetGroupsQuery(selectedRaid);
   const { data: statslist } = useGetStatTypesQuery();
   const { data: professions } = useGetProfessionsQuery();
   const { data: fightsInfo } = useGetFightsByRaidQuery(selectedRaid);
-  const { data: characterList, isLoading: characterLoading } =
+  const { data: characterList, isFetching: characterLoading } =
     useGetCharactersByRaidQuery(selectedRaid);
   console.log(
     "🚀 ~ file: index.jsx:55 ~ Groups ~ characterList:",
@@ -76,7 +76,7 @@ const Groups = () => {
     setSelectedFight(1);
   }, [selectedRaid]);
 
-  if (!data || isLoading || characterLoading || !statslist || !fightsInfo) {
+  if (!data || isFetching || characterLoading || !statslist || !fightsInfo) {
     return "Is Loading...";
   }
   console.log("data groups", data);
