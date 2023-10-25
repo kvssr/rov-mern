@@ -10,9 +10,9 @@ import RaidTable from "./raidTable";
 const Dashboard = () => {
   const theme = useTheme();
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
-  const { data: raidInfoList, isLoading } = useGetRaidsInfoListQuery();
+  const { data: raidInfoList, isFetching } = useGetRaidsInfoListQuery();
   const [selectedRaid, setSelectedRaid] = useState(-1);
-  if (!raidInfoList || isLoading || raidInfoList.length === 0) {
+  if (!raidInfoList || isFetching || raidInfoList.length === 0) {
     return "Is Loading...";
   }
 

@@ -6,8 +6,8 @@ import { DataGrid } from "@mui/x-data-grid";
 
 const Characters = () => {
   const theme = useTheme();
-  const { data, isLoading } = useGetCharactersQuery();
-  if (!data || isLoading) return "Is Loading...";
+  const { data, isFetching } = useGetCharactersQuery();
+  if (!data || isFetching) return "Is Loading...";
   console.log("data", data);
 
   // console.log("players", players);
@@ -93,7 +93,7 @@ const Characters = () => {
         }}
       >
         <DataGrid
-          loading={isLoading || !data}
+          loading={isFetching || !data}
           // getRowId={}
           rows={players || []}
           columns={columns}

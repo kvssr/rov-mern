@@ -24,19 +24,31 @@ const RaidsChart = ({
   order = "Desc",
   orderBy = "Total",
 }) => {
-  const { data: profs } = useGetProfessionsQuery();
+  const { data: profs, isFetching: profFetching } = useGetProfessionsQuery();
 
   const getColor = (profName) => {
     return profs.filter((prof) => prof.name === profName)[0].color;
   };
 
-  const { data, isLoading } = useGetRaidByIdQuery({ id: raid_id, stat: view });
+  const raidData = useGetRaidByIdQuery({ id: raid_id, stat: view });
+  const { data, isFetching } = raidData;
   const theme = useTheme();
 
-  if (isLoading || raid_id < 0 || !data || data.length < 1 || !profs)
+  if (
+    isFetching ||
+    raid_id < 0 ||
+    !data ||
+    data.length < 1 ||
+    !profs ||
+    profFetching
+  ) {
     return <CircularProgress color="secondary" />;
+  }
+  // console.log("RaidData hook", raidData);
   // console.log("🚀 ~ file: RaidsChart.jsx:22 ~ data:", data);
-  // console.log(`Loading chart Extreme, ${view}, ${max}, ${order}, ${isLoading}`);
+  // console.log(
+  //   `Fetching chart Extreme, ${view}, ${max}, ${order}, ${isFetching}, ${profFetching}`
+  // );
 
   let raidBars = FormatData(data, orderBy, view, isDashboard);
 
@@ -142,7 +154,7 @@ const RaidsChart = ({
 
 const FormatData = (data, orderBy, view, isDashboard) => {
   let raidBars = [];
-  console.log("Formatting", data);
+  // console.log("Formatting", data);
   if (!data || data[0]["characterRaidStats"].length < 1) {
     return raidBars;
   }
