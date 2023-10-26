@@ -2,7 +2,13 @@ import { CircularProgress, CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter,
+  HashRouter,
+  Navigate,
+  Route,
+  Routes,
+} from "react-router-dom";
 import { themeSettings } from "theme";
 import Layout from "scenes/layout";
 import Dashboard from "scenes/dashboard";
@@ -42,7 +48,7 @@ function App() {
   }
   return (
     <div className="app">
-      <BrowserRouter>
+      <HashRouter>
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Routes>
@@ -125,7 +131,7 @@ function App() {
             </Route>{" "}
           </Routes>{" "}
         </ThemeProvider>{" "}
-      </BrowserRouter>{" "}
+      </HashRouter>{" "}
     </div>
   );
 }
