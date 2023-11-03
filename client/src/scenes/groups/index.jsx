@@ -46,17 +46,17 @@ import { Font, Label } from "devextreme-react/chart";
 
 const Groups = () => {
   const [selectedRaid, setSelectedRaid] = useState(-1);
-  console.log("🚀 ~ file: index.jsx:49 ~ Groups ~ selectedRaid:", selectedRaid);
+  // console.log("🚀 ~ file: index.jsx:49 ~ Groups ~ selectedRaid:", selectedRaid);
   const { data, isFetching } = useGetGroupsQuery(selectedRaid);
   const { data: statslist } = useGetStatTypesQuery();
   const { data: professions } = useGetProfessionsQuery();
   const { data: fightsInfo } = useGetFightsByRaidQuery(selectedRaid);
   const { data: characterList, isFetching: characterLoading } =
     useGetCharactersByRaidQuery(selectedRaid);
-  console.log(
-    "🚀 ~ file: index.jsx:55 ~ Groups ~ characterList:",
-    characterList
-  );
+  // console.log(
+  //   "🚀 ~ file: index.jsx:55 ~ Groups ~ characterList:",
+  //   characterList
+  // );
 
   const [selectedFight, setSelectedFight] = useState(1);
   const [expanded, setExpanded] = useState(true);
@@ -66,7 +66,7 @@ const Groups = () => {
   const visibleColumns = [
     "Damage Total",
     "Strips",
-    "Healing",
+    "Healing Total",
     "Cleanses",
     "Stability",
     "Deaths",
@@ -79,9 +79,9 @@ const Groups = () => {
   if (!data || isFetching || characterLoading || !statslist || !fightsInfo) {
     return "Is Loading...";
   }
-  console.log("data groups", data);
+  // console.log("data groups", data);
   const selectedFightInfo = fightsInfo[selectedFight - 1];
-  console.log("SelectedFightInfo", selectedFightInfo);
+  // console.log("SelectedFightInfo", selectedFightInfo);
   let fightGridData = [{ Type: "Total" }, { Type: "Average" }];
   if (selectedFightInfo) {
     selectedFightInfo.fightStats.forEach((stat) => {
@@ -89,10 +89,10 @@ const Groups = () => {
     });
   }
 
-  console.log("fightGridData", fightGridData);
+  // console.log("fightGridData", fightGridData);
 
   const handleSelectionChange = (e) => {
-    console.log("change e", e);
+    // console.log("change e", e);
     const id = e.addedItems[0].id;
     if (id === "back") {
       setSelectedFight(selectedFight - 1);
@@ -129,8 +129,8 @@ const Groups = () => {
     });
   }
 
-  console.log("profDist: ", profList);
-  console.log("profDist: ", profDist);
+  // console.log("profDist: ", profList);
+  // console.log("profDist: ", profDist);
 
   const getCharacterName = (cellData) => {
     if (!characterList[cellData.key]) return "";
@@ -308,8 +308,12 @@ const Groups = () => {
                 <Column
                   dataField={stat.id.toString()}
                   caption={stat.name}
+                  alignment="right"
                   visible={visibleColumns.includes(stat.name)}
                   format=",##0.##"
+                  customizeText={(option) => {
+                    return option.value ? option.valueText : "0";
+                  }}
                   key={stat.id}
                 ></Column>
               );
