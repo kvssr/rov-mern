@@ -4,8 +4,6 @@ import {
   useGetGroupsQuery,
   useGetCharactersByRaidQuery,
   useGetStatTypesQuery,
-  useGetFightsByRaidQuery,
-  useGetProfessionsQuery,
 } from "state/api";
 import {
   DataGrid,
@@ -32,25 +30,16 @@ import { useEffect } from "react";
 import Header from "components/Header";
 import { useSelector } from "react-redux";
 import Pagination from "components/Pagination";
-import { PieChart, ResponsiveBox } from "devextreme-react";
-import {
-  Annotation,
-  Border,
-  CommonAnnotationSettings,
-  Image,
-  Legend,
-  Series,
-} from "devextreme-react/pie-chart";
+import { ResponsiveBox } from "devextreme-react";
 import { Col, Location, Row } from "devextreme-react/responsive-box";
-import { Font, Label } from "devextreme-react/chart";
+import FightInfoTable from "./FightInfoTable";
+import ProfPieChart from "./ProfPieChart";
 
 const Groups = () => {
   const [selectedRaid, setSelectedRaid] = useState(-1);
   // console.log("🚀 ~ file: index.jsx:49 ~ Groups ~ selectedRaid:", selectedRaid);
   const { data, isFetching } = useGetGroupsQuery(selectedRaid);
   const { data: statslist } = useGetStatTypesQuery();
-  const { data: professions } = useGetProfessionsQuery();
-  const { data: fightsInfo } = useGetFightsByRaidQuery(selectedRaid);
   const { data: characterList, isFetching: characterLoading } =
     useGetCharactersByRaidQuery(selectedRaid);
   // console.log(
@@ -76,20 +65,10 @@ const Groups = () => {
     setSelectedFight(1);
   }, [selectedRaid]);
 
-  if (!data || isFetching || characterLoading || !statslist || !fightsInfo) {
+  if (!data || isFetching || characterLoading || !statslist) {
     return "Is Loading...";
   }
   // console.log("data groups", data);
-  const selectedFightInfo = fightsInfo[selectedFight - 1];
-  // console.log("SelectedFightInfo", selectedFightInfo);
-  let fightGridData = [{ Type: "Total" }, { Type: "Average" }];
-  if (selectedFightInfo) {
-    selectedFightInfo.fightStats.forEach((stat) => {
-      fightGridData[stat.valueTypeId - 1][stat.statTypeId] = stat.value;
-    });
-  }
-
-  // console.log("fightGridData", fightGridData);
 
   const handleSelectionChange = (e) => {
     // console.log("change e", e);
@@ -107,31 +86,6 @@ const Groups = () => {
     (item) => statBlacklist.includes(item.name) === false
   );
 
-  const profList = [];
-  const profDist = [];
-  if (data.length > 0 && characterList) {
-    data[selectedFight - 1].characters.forEach((row) => {
-      const character = characterList[row.id];
-      if (character) {
-        if (profList.includes(character.profession.name)) {
-          let dist = profDist.find(
-            (dist) => dist.prof === character.profession.name
-          );
-          dist.value += 1;
-        } else {
-          profList.push(character.profession.name);
-          profDist.push({
-            prof: character.profession.name,
-            value: 1,
-          });
-        }
-      }
-    });
-  }
-
-  // console.log("profDist: ", profList);
-  // console.log("profDist: ", profDist);
-
   const getCharacterName = (cellData) => {
     if (!characterList[cellData.key]) return "";
     const prof = characterList[cellData.key].profession.name;
@@ -142,12 +96,6 @@ const Groups = () => {
         {characterList[cellData.key].name}
       </div>
     );
-  };
-
-  const customizePoint = (point) => {
-    const profName = point.argument;
-    const prof = professions.find((p) => p.name === profName);
-    return { color: prof.color };
   };
 
   return (
@@ -190,44 +138,10 @@ const Groups = () => {
               onPageChange={handleSelectionChange}
             />
             <Box mt="1.5rem">
-              <DataGrid
-                id="dg-fightInfo"
-                dataSource={fightsInfo.length > 0 ? [selectedFightInfo] : []}
-                keyExpr="id"
-                hoverStateEnabled={true}
-                columnAutoWidth={true}
-              >
-                <Column
-                  dataField={"start_time"}
-                  caption="Start Time"
-                  customizeText={(text) => {
-                    return new Date(text.value).toLocaleTimeString();
-                  }}
-                ></Column>
-                <Column
-                  dataField={"end_time"}
-                  caption="End Time"
-                  customizeText={(text) => {
-                    return new Date(text.value).toLocaleTimeString();
-                  }}
-                ></Column>
-                <Column
-                  dataField={"allies"}
-                  caption="Allies"
-                ></Column>
-                <Column
-                  dataField={"enemies"}
-                  caption="Enemies"
-                ></Column>
-                <Column
-                  dataField={"kills"}
-                  caption="Kills"
-                ></Column>
-                <Column
-                  dataField={"deaths"}
-                  caption="Deaths"
-                ></Column>
-              </DataGrid>
+              <FightInfoTable
+                selectedFight={selectedFight}
+                selectedRaid={selectedRaid}
+              />
             </Box>
           </Box>
         </Item>
@@ -236,50 +150,12 @@ const Groups = () => {
             row={0}
             col={1}
           />
-          <PieChart
-            id="pie"
-            dataSource={profDist}
-            customizePoint={customizePoint}
-          >
-            <CommonAnnotationSettings
-              type="image"
-              color="transparent"
-              paddingLeftRight={0}
-              paddingTopBottom={-25}
-            >
-              <Image
-                height={20}
-                width={20}
-              />
-            </CommonAnnotationSettings>
-            {profDist.map((item) => (
-              <Annotation
-                key={item.prof}
-                argument={item.prof}
-                data={item.value}
-              >
-                <Image url={ProfessionIconLink(item.prof)} />
-                <Border visible={false} />
-              </Annotation>
-            ))}
-            <Series
-              argumentField="prof"
-              valueField="value"
-            >
-              <Label
-                visible
-                position="inside"
-                radialOffset={30}
-                backgroundColor="transparent"
-              >
-                <Font
-                  size={16}
-                  weight={600}
-                />
-              </Label>
-            </Series>
-            <Legend verticalAlignment="Middle"></Legend>
-          </PieChart>
+          <ProfPieChart
+            characters={
+              data[selectedFight - 1] ? data[selectedFight - 1].characters : []
+            }
+            characterList={characterList}
+          />
         </Item>
         <Item>
           <Location
