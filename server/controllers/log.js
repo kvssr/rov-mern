@@ -85,9 +85,14 @@ export const addLog = async (req, res) => {
         data["overall_squad_stats"]
       );
       const fights = await addFights(raid.id, data["fights"]);
-      data["players"].forEach(async (player) => {
-        const character_data = addCharacterData(raid.id, player);
-      });
+      // data["players"].forEach(async (player) => {
+      //   const character_data = addCharacterData(raid.id, player);
+      // });
+      await Promise.all(
+        data["players"].map(async (player) => {
+          const character_data = addCharacterData(raid.id, player);
+        })
+      );
       console.log("Successfully added log");
       res.status(200).json({ message: "raid added" });
     }

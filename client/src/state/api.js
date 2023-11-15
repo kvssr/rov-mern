@@ -144,14 +144,14 @@ export const api = createApi({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["Logs"],
+      invalidatesTags: ["Logs", "Raid"],
     }),
     deleteRaidLogs: build.mutation({
       query: (id) => ({
         url: `raid/delete/${id}`,
         method: "POST",
       }),
-      invalidatesTags: ["Raid"],
+      invalidatesTags: ["Logs", "Raid"],
     }),
     //Guild
     getGuildByApiId: build.query({
