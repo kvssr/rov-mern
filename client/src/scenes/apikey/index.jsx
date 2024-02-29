@@ -80,6 +80,16 @@ const ApiKey = ({ setAccountAdded }) => {
     }
   }, [accountData]);
 
+  const handleGuestClick = () => {
+    localStorage.setItem("accountId", JSON.stringify("0000-1111-2222"));
+    localStorage.setItem("accountName", JSON.stringify("Guest.1234"));
+    setAccountAdded(true);
+    setSnackbar({
+      children: "Logged in as Guest",
+      severity: "success",
+    });
+  };
+
   const handleSubmitClick = () => {
     localStorage.setItem("apikey", JSON.stringify(textkey));
     setApikey(textkey);
@@ -162,6 +172,15 @@ const ApiKey = ({ setAccountAdded }) => {
           }}
         >
           Delete
+        </Button>
+        <Button
+          variant="outlined"
+          sx={{ m: "0.5rem 1rem", color: theme.palette.secondary[100] }}
+          onClick={(e) => {
+            handleGuestClick();
+          }}
+        >
+          Continue as Guest
         </Button>
       </Box>
       <Box
