@@ -26,7 +26,8 @@ import {
   dataRole,
 } from "./data/index.js";
 
-const BASEURL = "/server/rov";
+// const BASEURL = "/server/rov";
+const BASEURL = "";
 
 /* CONFIGURATION */
 dotenv.config();

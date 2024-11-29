@@ -266,7 +266,9 @@ const addCharacterData = async (raid_id, data) => {
       character.id,
       stat_type.id,
       value_type.id,
-      data.total_stats[key],
+      typeof data.total_stats[key] === "object"
+        ? data.total_stats[key]["gen"]
+        : data.total_stats[key],
       data.consistency_stats[key]
     );
   }
@@ -331,7 +333,11 @@ const addCharacterData = async (raid_id, data) => {
     );
     fight_number += 1;
     for (const key in row) {
-      const value_type = await getValueType(data.total_stats[key]);
+      const value_type = await getValueType(
+        typeof data.total_stats[key] === "object"
+          ? data.total_stats[key]["gen"]
+          : data.total_stats[key]
+      );
       const stat_type = await prisma.statType.findFirst({
         where: { name_json: key },
       });
@@ -342,7 +348,7 @@ const addCharacterData = async (raid_id, data) => {
         character.id,
         stat_type.id,
         value_type.id,
-        row[key]
+        typeof row[key] === "object" ? row[key]["gen"] : row[key]
       );
     }
   }
