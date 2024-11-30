@@ -383,7 +383,7 @@ const addCharacterRaidInfo = async (raid_id, character_id, data) => {
     data: {
       raidId: raid_id,
       characterId: character_id,
-      attendance_percentage: data.attendance_percentage,
+      attendance_percentage: data.attendance_percentage.dmg_players,
       duration_active: Math.max(data["duration_present"].dmg_players, -1),
       duration_fights_present: Math.max(
         data["duration_present"].dmg_players,
