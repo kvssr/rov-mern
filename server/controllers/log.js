@@ -384,14 +384,17 @@ const addCharacterRaidInfo = async (raid_id, character_id, data) => {
       raidId: raid_id,
       characterId: character_id,
       attendance_percentage: data.attendance_percentage,
-      duration_active: Math.max(data["duration_present"].active, -1),
-      duration_fights_present: Math.max(data["duration_present"].total, -1),
-      duration_in_combat: Math.max(data["duration_present"].in_combat, -1),
-      normalization_time_allies: Math.max(
-        data["normalization_time_allies"].total,
+      duration_active: Math.max(data["duration_present"].dmg_players, -1),
+      duration_fights_present: Math.max(
+        data["duration_present"].dmg_players,
         -1
       ),
-      num_fights_present: data.num_fights_present,
+      duration_in_combat: Math.max(data["duration_present"].dmg_players, -1),
+      normalization_time_allies: Math.max(
+        data["normalization_time_allies"].dmg_players,
+        -1
+      ),
+      num_fights_present: data.num_fights_present.dmg_players,
       swapped_builds: data.swapped_build,
     },
   });
