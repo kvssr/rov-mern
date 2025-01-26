@@ -26,6 +26,9 @@ import {
   dataRole,
 } from "./data/index.js";
 
+// const BASEURL = "/server/rov";
+const BASEURL = "";
+
 /* CONFIGURATION */
 dotenv.config();
 const app = express();
@@ -38,16 +41,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
 /* ROUTES */
-app.use("/player", playerRoutes);
-app.use("/character", characterRoutes);
-app.use("/general", generalRoutes);
-app.use("/management", managementRoutes);
-app.use("/raid", raidRoutes);
-app.use("/log", logRoutes);
-app.use("/account", accountRoutes);
-app.use("/guild", guildRoutes);
-app.use("/fight", fightRoutes);
-app.use("/visitlog", visitlogRoutes);
+app.use(BASEURL.concat("/player"), playerRoutes);
+app.use(BASEURL.concat("/character"), characterRoutes);
+app.use(BASEURL.concat("/general"), generalRoutes);
+app.use(BASEURL.concat("/management"), managementRoutes);
+app.use(BASEURL.concat("/raid"), raidRoutes);
+app.use(BASEURL.concat("/log"), logRoutes);
+app.use(BASEURL.concat("/account"), accountRoutes);
+app.use(BASEURL.concat("/guild"), guildRoutes);
+app.use(BASEURL.concat("/fight"), fightRoutes);
+app.use(BASEURL.concat("/visitlog"), visitlogRoutes);
 
 /* PRISMA */
 export const prisma = new PrismaClient();
