@@ -326,8 +326,8 @@ const addCharacterData = async (raid_id, data) => {
     const character_fight_info = await addCharacterFightInfo(
       fight.id,
       character.id,
-      row["duration_present"].active,
-      row["duration_present"].in_combat,
+      row["duration_present"].dmg_players,
+      row["duration_present"].dmg_players,
       row.group,
       buildTypeId.id
     );
