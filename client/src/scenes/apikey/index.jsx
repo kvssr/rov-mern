@@ -67,8 +67,11 @@ const ApiKey = ({ setAccountAdded }) => {
       localStorage.setItem("accountName", JSON.stringify(accountData["name"]));
       let inGuild = false;
 
-      if (accountData["guilds"].includes(guildApiId)) {
-        localStorage.setItem("guild", JSON.stringify(guildApiId));
+      const matchingGuild = (accountData["guilds"] || []).find((g) =>
+        guildApiId.includes(g)
+      );
+      if (matchingGuild) {
+        localStorage.setItem("guild", JSON.stringify(matchingGuild));
         inGuild = true;
       }
       UpdateOrCreate({
@@ -78,7 +81,7 @@ const ApiKey = ({ setAccountAdded }) => {
       });
       setAccountAdded(true);
     }
-  }, [accountData]);
+  }, [accountData, guildApiId]);
 
   const handleGuestClick = () => {
     localStorage.setItem("accountId", JSON.stringify("0000-1111-2222"));

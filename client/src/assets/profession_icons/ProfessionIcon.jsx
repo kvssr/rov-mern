@@ -26,6 +26,15 @@ import Vindicator from "./Vindicator.png";
 import Virtuoso from "./Virtuoso.png";
 import Weaver from "./Weaver.png";
 import Willbender from "./Willbender.png";
+import Evoker from "./Evoker.png";
+import Troubadour from "./Troubadour.png";
+import Ritualist from "./Ritualist.png";
+import Amalgam from "./Amalgam.png";
+import Galeshot from "./Galeshot.png";
+import Antiquary from "./Antiquary.png";
+import Luminary from "./Luminary.png";
+import Conduit from "./Conduit.png";
+import Paragon from "./Paragon.png";
 
 const iconList = {
   Berserker: Berserker,
@@ -56,6 +65,15 @@ const iconList = {
   Virtuoso: Virtuoso,
   Weaver: Weaver,
   Willbender: Willbender,
+  Evoker: Evoker,
+  Troubadour: Troubadour,
+  Ritualist: Ritualist,
+  Amalgam: Amalgam,
+  Galeshot: Galeshot,
+  Antiquary: Antiquary,
+  Luminary: Luminary,
+  Conduit: Conduit,
+  Paragon: Paragon,
 };
 
 const ProfessionIcon = (prof, size = 50) => {

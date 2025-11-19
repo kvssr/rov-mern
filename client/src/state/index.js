@@ -8,7 +8,10 @@ const initialState = {
     "Med Kit",
   ],
   mode: "dark",
-  guildApiId: "48B067A2-21A7-4858-8007-4ECA99798EBF",
+  guildApiId: [
+    "48B067A2-21A7-4858-8007-4ECA99798EBF",
+    "C71A0BF8-083C-4205-BD13-E30D0C343335",
+  ],
 };
 
 export const globalSlice = createSlice({
