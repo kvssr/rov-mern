@@ -176,7 +176,7 @@ const ApiKey = ({ setAccountAdded }) => {
         >
           Delete
         </Button>
-        <Button
+        {/* <Button
           variant="outlined"
           sx={{ m: "0.5rem 1rem", color: theme.palette.secondary[100] }}
           onClick={(e) => {
@@ -184,7 +184,7 @@ const ApiKey = ({ setAccountAdded }) => {
           }}
         >
           Continue as Guest
-        </Button>
+        </Button> */}
       </Box>
       <Box
         mt="30px"
